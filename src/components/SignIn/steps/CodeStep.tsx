@@ -1,23 +1,17 @@
-import { useEffect, useState } from "react";
-import goBackIcon from "../../assets/icons/arrow-left.svg";
-import { formatPhone } from "./PhoneStep";
+import { useEffect, useRef, useState } from "react";
+import type { StepPropsTypes } from "../../../types/SignUpTypes";
+import GoBackButton from "../../SignUp/GoBackButton";
+import Heading from "../../SignUp/Heading";
 
-type CodeStepProps = {
-  onNext: () => void;
-  onBack: () => void;
-  formData: {
-    phone: string;
-    code: string;
-  };
-  updateForm: (data: Partial<{ code: string }>) => void;
-};
+type Props = StepPropsTypes<"code">;
 
-const CodeStep: React.FC<CodeStepProps> = ({
+const CodeStep: React.FC<Props> = ({
   onNext,
   onBack,
   formData,
   updateForm,
 }) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [code, setCode] = useState(formData.code || "");
   const [timer, setTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);
@@ -49,6 +43,10 @@ const CodeStep: React.FC<CodeStepProps> = ({
     const raw = e.target.value;
     const cleaned = unformatCode(raw);
     setCode(cleaned);
+
+    if (cleaned.length === 4) {
+      inputRef.current?.blur(); // Скрытие клавиатуры
+    }
   };
 
   const handleNext = (e?: React.FormEvent) => {
@@ -62,22 +60,16 @@ const CodeStep: React.FC<CodeStepProps> = ({
   const isCodeValid = code.length === 4;
 
   return (
-    <main className="px-2 pt-[3.672rem] min-h-screen flex flex-col items-center">
+    <main className="pt-[1rem] min-h-screen relative flex flex-col items-center">
       <div className="w-full max-w-md">
-        <article>
-          <button onClick={onBack}>
-            <img src={goBackIcon} alt="Go Back" />
-          </button>
-        </article>
+        <GoBackButton onBack={onBack} />
 
-        <section className="mt-[1.875rem] text-center">
-          <h1 className="font-semibold text-[2rem] leading-10 text-[#1A1A1A]">
-            Введите код
-          </h1>
-          <h2 className="w-[13.875rem] m-auto mt-[0.25rem] font-medium text-[1.25rem] leading-[1.5rem] text-[#1A1A1A]">
-            Отправили на номер +7 {formatPhone(formData.phone)}
-          </h2>
-        </section>
+        <Heading
+          title={"Введите код"}
+          subTitle={"Отправили на номер +7"}
+          formData={formData}
+          isCodeStep={true}
+        />
 
         <section className="mt-6 flex justify-center">
           <form
@@ -86,12 +78,13 @@ const CodeStep: React.FC<CodeStepProps> = ({
           >
             <div className="relative">
               <input
+                ref={inputRef}
                 type="tel"
                 inputMode="numeric"
                 value={formatCode(code)}
                 onChange={handleChange}
                 placeholder="0-0-0-0"
-                className="w-full text-center text-[2rem] tracking-widest py-2"
+                className="w-full text-center text-[2rem] tracking-widest py-2 outline-none focus:outline-none"
               />
             </div>
           </form>
@@ -103,11 +96,11 @@ const CodeStep: React.FC<CodeStepProps> = ({
           </h3>
         </section>
 
-        <section className="m-auto w-[18rem] flex flex-col items-center gap-[1rem] mt-[30vh] text-[1.125rem] leading-[1.25rem]">
+        <section className="absolute w-full bottom-[70px] rounded-t-[15px] text-[1.125rem] leading-[1.25rem] px-7">
           <button
             onClick={handleNext}
             disabled={!isCodeValid}
-            className={`w-full py-[0.75rem] rounded-[30px] font-bold text-white transition 
+            className={`w-full py-[0.75rem] mb-[20px] rounded-[30px] font-bold text-white transition 
               ${
                 isCodeValid
                   ? "bg-[#3D3D3D] cursor-pointer"
@@ -117,7 +110,7 @@ const CodeStep: React.FC<CodeStepProps> = ({
             Готово
           </button>
 
-          <div className="text-center text-[#3D3D3D] font-medium">
+          <div className="text-center text-[#3D3D3D] font-medium h-[40px]">
             {canResend ? (
               <button className="leading-[1.25rem] font-semibold text-[#3D3D3D] text-[1rem] underline">
                 Отправить код повторно

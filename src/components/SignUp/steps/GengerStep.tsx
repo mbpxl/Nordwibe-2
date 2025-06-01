@@ -1,0 +1,89 @@
+import GoBackButton from "../GoBackButton";
+import Heading from "../Heading";
+import female from "../../../assets/imgs/female.png";
+import male from "../../../assets/imgs/male.png";
+import type { StepPropsTypes } from "../../../types/SignUpTypes";
+
+type Props = StepPropsTypes<"gender">;
+
+const GenderStep: React.FC<Props> = ({
+  onNext,
+  onBack,
+  formData,
+  updateForm,
+}) => {
+  const handleGenderSelect = (gender: string) => {
+    updateForm({ gender });
+  };
+
+  const isMale = formData.gender === "male";
+  const isFemale = formData.gender === "female";
+
+  const handleNext = () => {
+    if (formData.gender) onNext();
+  };
+
+  const isGenderSelected = !!formData.gender;
+
+  return (
+    <main className="pt-[1rem] min-h-screen relative flex flex-col items-center">
+      <div className="w-full max-w-md">
+        <GoBackButton onBack={onBack} />
+
+        <Heading
+          title={"Ваш пол"}
+          subTitle={""}
+          formData={formData}
+          isCodeStep={true}
+        />
+      </div>
+
+      <section className="mt-[3.5rem]">
+        <div className="flex gap-[0.75rem]">
+          <div>
+            <button
+              onClick={() => handleGenderSelect("male")}
+              className={`w-[9.25rem] h-[9.25rem] flex justify-center items-center rounded-[20px] transition ${
+                isMale ? "bg-[#A0A0A0]" : "bg-[#D9D9D9]"
+              }`}
+            >
+              <img src={male} alt="male" />
+            </button>
+            <h2 className="text-center font-medium text-[1rem] leading-10 text-[#3D3D3D] mt-[0.75rem]">
+              Мужской
+            </h2>
+          </div>
+          <div>
+            <button
+              onClick={() => handleGenderSelect("female")}
+              className={`w-[9.25rem] h-[9.25rem] flex justify-center items-center rounded-[20px] transition ${
+                isFemale ? "bg-[#A0A0A0]" : "bg-[#D9D9D9]"
+              }`}
+            >
+              <img src={female} alt="female" />
+            </button>
+            <h2 className="text-center font-medium text-[1rem] leading-10 text-[#3D3D3D] mt-[0.75rem]">
+              Женский
+            </h2>
+          </div>
+        </div>
+      </section>
+
+      <section className="absolute w-full bottom-[130px] rounded-t-[15px] text-[1.125rem] leading-[1.25rem] px-7">
+        <button
+          onClick={handleNext}
+          disabled={!isGenderSelected}
+          className={`w-full py-[0.75rem] rounded-[30px] font-bold text-white transition ${
+            isGenderSelected
+              ? "bg-[#3D3D3D] cursor-pointer"
+              : "bg-gray-400 cursor-not-allowed opacity-50"
+          }`}
+        >
+          Продолжить
+        </button>
+      </section>
+    </main>
+  );
+};
+
+export default GenderStep;

@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
-import { SIGN_UP_ROUTE } from "../../utils/consts";
+import { SIGN_IN_ROUTE, SIGN_UP_ROUTE } from "../../utils/consts";
 
 const Welcome = () => {
   return (
     <main className="px-2">
-      <div className="pt-[3.8rem] flex flex-col items-center justify-center text-center h-screen overflow-scroll">
+      <div className="flex flex-col items-center justify-center text-center h-screen overflow-scroll">
         <section className="">
           <h1 className="text-[2rem] font-semibold leading-[2.5rem] text-[#1A1A1A] mb-[1.75rem]">
             Nordwibe
@@ -23,9 +23,12 @@ const Welcome = () => {
           >
             Зарегестрироваться
           </Link>
-          <button className="px-[1.25rem] py-[0.75rem] bg-[#3D3D3D] rounded-[30px]">
+          <Link
+            to={SIGN_IN_ROUTE}
+            className="px-[1.25rem] py-[0.75rem] bg-[#3D3D3D] rounded-[30px]"
+          >
             Войти
-          </button>
+          </Link>
         </section>
       </div>
     </main>
