@@ -1,10 +1,15 @@
 import { useState } from "react";
-import PhoneStep from "./PhoneStep";
-import CodeStep from "./CodeStep";
+import PhoneStep from "./steps/PhoneStep";
+import CodeStep from "./steps/CodeStep";
+import GengerStep from "./steps/GengerStep";
+import BirthStep from "./steps/BirthStep";
+import type { FormDataTypes } from "../../types/SignUpTypes";
+import NameStep from "./steps/NameStep";
+import PhotoStep from "./steps/PhotoStep";
 
 const SignUp = () => {
   const [step, setStep] = useState<number>(0);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormDataTypes>({
     phone: "",
     code: "",
     gender: "",
@@ -21,8 +26,37 @@ const SignUp = () => {
   };
 
   const steps = [
-    <PhoneStep onNext={nextStep} formData={formData} updateForm={updateForm} />,
+    <PhoneStep
+      onNext={nextStep}
+      onBack={prevStep}
+      formData={formData}
+      updateForm={updateForm}
+    />,
     <CodeStep
+      onNext={nextStep}
+      onBack={prevStep}
+      formData={formData}
+      updateForm={updateForm}
+    />,
+    <GengerStep
+      onNext={nextStep}
+      onBack={prevStep}
+      formData={formData}
+      updateForm={updateForm}
+    />,
+    <BirthStep
+      onNext={nextStep}
+      onBack={prevStep}
+      formData={formData}
+      updateForm={updateForm}
+    />,
+    <NameStep
+      onNext={nextStep}
+      onBack={prevStep}
+      formData={formData}
+      updateForm={updateForm}
+    />,
+    <PhotoStep
       onNext={nextStep}
       onBack={prevStep}
       formData={formData}

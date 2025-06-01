@@ -1,16 +1,11 @@
 import { Link } from "react-router-dom";
-import goBackIcon from "../../assets/icons/arrow-left.svg";
-import { useState } from "react";
-import { WELCOME_ROUTE } from "../../utils/consts";
+import goBackIcon from "../../../assets/icons/arrow-left.svg";
+import { useState, useRef } from "react";
+import { WELCOME_ROUTE } from "../../../utils/consts";
+import Heading from "../Heading";
+import type { StepPropsTypes } from "../../../types/SignUpTypes";
 
-type PhoneStepProps = {
-  onNext: () => void;
-  formData: {
-    phone: string;
-    code: string;
-  };
-  updateForm: (data: Partial<{ phone: string }>) => void;
-};
+type Props = StepPropsTypes<"phone">;
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const formatPhone = (value: string) => {
@@ -26,41 +21,48 @@ export const formatPhone = (value: string) => {
   return parts.join("");
 };
 
-const PhoneStep: React.FC<PhoneStepProps> = ({
-  onNext,
-  formData,
-  updateForm,
-}) => {
+const PhoneStep: React.FC<Props> = ({ onNext, formData, updateForm }) => {
   const [phone, setPhone] = useState(formData.phone);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const handleNext = () => {
     updateForm({ phone });
     onNext();
   };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value;
     const digits = input.replace(/\D/g, "");
     const clean = digits.startsWith("7") ? digits.slice(1) : digits;
     const limited = clean.slice(0, 10);
     setPhone(limited);
+
+    if (limited.length === 10) {
+      inputRef.current?.blur();
+    }
   };
 
   const isPhoneValid = phone.length === 10;
 
   return (
-    <main className="px-2 pt-[3.672rem]">
+    <main className="pt-[1rem]">
       <div>
-        <article>
+        <article className="pl-3">
           <Link to={WELCOME_ROUTE}>
             <img src={goBackIcon} alt="Go Back" />
           </Link>
         </article>
 
-        <section className="mt-[1.875rem] text-center">
-          <h1 className="font-semibold text-[2rem] leading-10 text-[#1A1A1A]">
-            Введите номер телефона
-          </h1>
-        </section>
+        <Heading
+          title={"Введите номер телефона"}
+          subTitle={""}
+          isCodeStep={false}
+          formData={{
+            phone: "",
+            code: "",
+            gender: "",
+          }}
+        />
 
         <section className="mt-6 flex justify-center">
           <form
@@ -74,16 +76,17 @@ const PhoneStep: React.FC<PhoneStepProps> = ({
               <input
                 type="tel"
                 inputMode="numeric"
+                ref={inputRef}
                 value={formatPhone(phone)}
                 onChange={handleInputChange}
                 placeholder="(000) 000-00-00"
-                className="w-full pl-[3.5rem] pr-4 py-2 text-[#1A1A1A]"
+                className="w-full pl-[3.5rem] pr-4 py-2 text-[#1A1A1A] outline-none focus:outline-none"
               />
             </div>
           </form>
         </section>
 
-        <section className="m-auto w-[18rem] flex flex-col gap-[1rem] mt-[50vh] font-bold text-[1.125rem] leading-[1.25rem] text-white">
+        <section className="m-auto w-[18rem] flex flex-col gap-[1rem] mt-[38vh] font-bold text-[1.125rem] leading-[1.25rem] text-white">
           <button
             onClick={handleNext}
             disabled={!isPhoneValid}
@@ -96,6 +99,12 @@ const PhoneStep: React.FC<PhoneStepProps> = ({
           >
             Получить код
           </button>
+          <p className="text-[#3D3D3D] font-medium text-[0.75rem] text-center leading-[1rem]">
+            Нажимая на кнопку «Получить код», я принимаю условия{" "}
+            <span className="underline text-black">
+              пользовательское соглашение и политику конфиденциальности
+            </span>
+          </p>
         </section>
       </div>
     </main>
