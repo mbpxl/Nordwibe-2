@@ -3,9 +3,10 @@ import PhoneStep from "./steps/PhoneStep";
 import CodeStep from "./steps/CodeStep";
 import GengerStep from "./steps/GengerStep";
 import BirthStep from "./steps/BirthStep";
-import type { FormDataTypes } from "../../types/SignUpTypes";
 import NameStep from "./steps/NameStep";
 import PhotoStep from "./steps/PhotoStep";
+import type { FormDataTypes } from "../../types/SignUpTypes";
+import AnimatedStepWrapper from "../AnimatedStepWrapper/AnimatedStepWrapper";
 
 const SignUp = () => {
   const [step, setStep] = useState<number>(0);
@@ -18,8 +19,17 @@ const SignUp = () => {
     photos: [],
   });
 
-  const nextStep = () => setStep((s) => s + 1);
-  const prevStep = () => setStep((s) => s - 1);
+  const [direction, setDirection] = useState<"forward" | "backward">("forward");
+
+  const nextStep = () => {
+    setDirection("forward");
+    setStep((s) => s + 1);
+  };
+
+  const prevStep = () => {
+    setDirection("backward");
+    setStep((s) => s - 1);
+  };
 
   const updateForm = (data: Partial<typeof formData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
@@ -64,7 +74,13 @@ const SignUp = () => {
     />,
   ];
 
-  return <div>{steps[step]}</div>;
+  return (
+    <div className="w-full max-w-md mx-auto px-4">
+      <AnimatedStepWrapper stepKey={step} direction={direction}>
+        {steps[step]}
+      </AnimatedStepWrapper>
+    </div>
+  );
 };
 
 export default SignUp;

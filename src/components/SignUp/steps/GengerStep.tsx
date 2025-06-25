@@ -5,6 +5,7 @@ import male from "/icons/male.svg";
 import female_active from "/icons/female-active.svg";
 import male_active from "/icons/male-active.svg";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
+import Continue from "../../Continue/Continue";
 
 type Props = StepPropsTypes<"gender">;
 
@@ -80,17 +81,11 @@ const GenderStep: React.FC<Props> = ({
       </section>
 
       <section className="absolute w-full bottom-[130px] rounded-t-[15px] text-[1.125rem] leading-[1.25rem] px-7">
-        <button
-          onClick={handleNext}
-          disabled={!isGenderSelected}
-          className={`w-full py-[0.75rem] rounded-[30px] font-bold text-white transition ${
-            isGenderSelected
-              ? "bg-purple-main cursor-pointer"
-              : "bg-purple-main-disabled cursor-not-allowed opacity-50"
-          }`}
-        >
-          Продолжить
-        </button>
+        <Continue
+          handleNext={handleNext}
+          isValid={isGenderSelected}
+          title={"Продолжить"}
+        />
       </section>
     </main>
   );

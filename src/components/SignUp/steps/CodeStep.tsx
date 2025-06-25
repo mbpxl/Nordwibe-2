@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import Heading from "../Heading";
 import GoBackButton from "../GoBackButton";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
+import Continue from "../../Continue/Continue";
 
 type Props = StepPropsTypes<"code">;
 
@@ -97,18 +98,11 @@ const CodeStep: React.FC<Props> = ({
         </section>
 
         <section className="absolute w-full bottom-[70px] rounded-t-[15px] text-[1.125rem] leading-[1.25rem] px-7">
-          <button
-            onClick={handleNext}
-            disabled={!isCodeValid}
-            className={`w-full py-[0.75rem] mb-[20px] rounded-[30px] font-bold text-white transition 
-              ${
-                isCodeValid
-                  ? "bg-purple-main cursor-pointer"
-                  : "bg-purple-main-disabled cursor-not-allowed opacity-50"
-              }`}
-          >
-            Готово
-          </button>
+          <Continue
+            handleNext={handleNext}
+            isValid={isCodeValid}
+            title={"Готово"}
+          />
 
           <div className="text-center text-[#3D3D3D] font-medium h-[40px]">
             {canResend ? (

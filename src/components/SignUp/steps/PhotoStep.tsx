@@ -4,10 +4,16 @@ import GoBackButton from "../GoBackButton";
 import Heading from "../Heading";
 import addPhotoImg from "/imgs/AddPhoto.png";
 import removePhoto from "/icons/removePhoto.svg";
+import Continue from "../../Continue/Continue";
 
 type Props = StepPropsTypes<"photos">;
 
-const PhotoStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
+const PhotoStep: React.FC<Props> = ({
+  onBack,
+  onNext,
+  formData,
+  updateForm,
+}) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const photos = (formData.photos || []) as File[];
 
@@ -54,6 +60,12 @@ const PhotoStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
     );
   };
 
+  const handleNext = () => {
+    onNext();
+  };
+
+  const isValid = photos?.length > 0;
+
   return (
     <main className="pt-[1rem] min-h-screen relative">
       <div className="w-full max-w-md">
@@ -98,15 +110,11 @@ const PhotoStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
 
       <section className="absolute w-full bottom-[130px] rounded-t-[15px] text-[1.125rem] leading-[1.25rem]">
         <div className="px-7 flex flex-col gap-3">
-          <button
-            className={`w-full py-[0.75rem] rounded-[30px] font-bold text-white transition ${
-              photos?.length > 0
-                ? "bg-purple-main cursor-pointer"
-                : "bg-purple-main-disabled cursor-not-allowed opacity-50"
-            }`}
-          >
-            Продолжить
-          </button>
+          <Continue
+            handleNext={handleNext}
+            isValid={isValid}
+            title={"Продолжить"}
+          />
         </div>
       </section>
     </main>

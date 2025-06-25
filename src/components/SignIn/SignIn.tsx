@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { FormDataTypes } from "../../types/SignUpTypes";
 import PhoneStep from "./steps/PhoneStep";
 import CodeStep from "./steps/CodeStep";
+import AnimatedStepWrapper from "../AnimatedStepWrapper/AnimatedStepWrapper";
 
 const SignIn = () => {
   const [step, setStep] = useState<number>(0);
@@ -10,8 +11,17 @@ const SignIn = () => {
     code: "",
   });
 
-  const nextStep = () => setStep((s) => s + 1);
-  const prevStep = () => setStep((s) => s - 1);
+  const [direction, setDirection] = useState<"forward" | "backward">("forward");
+
+  const nextStep = () => {
+    setDirection("forward");
+    setStep((s) => s + 1);
+  };
+
+  const prevStep = () => {
+    setDirection("backward");
+    setStep((s) => s - 1);
+  };
 
   const updateForm = (data: Partial<typeof formData>) => {
     setFormData((prev) => ({ ...prev, ...data }));
@@ -32,7 +42,13 @@ const SignIn = () => {
     />,
   ];
 
-  return <div>{steps[step]}</div>;
+  return (
+    <div className="w-full max-w-md mx-auto px-4">
+      <AnimatedStepWrapper stepKey={step} direction={direction}>
+        {steps[step]}
+      </AnimatedStepWrapper>
+    </div>
+  );
 };
 
 export default SignIn;
