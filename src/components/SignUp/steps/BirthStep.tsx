@@ -76,7 +76,7 @@ const BirthStep: React.FC<Props> = ({
               value={date}
               onChange={handleChange}
               maxLength={10}
-              className="w-full text-center text-[2rem] tracking-widest py-2 outline-none focus:outline-none"
+              className="placeholder:text-dark-sub-light text-black-heading w-full text-center text-[2rem] tracking-widest py-2 outline-none focus:outline-none"
             />
           </div>
         </form>
@@ -88,8 +88,8 @@ const BirthStep: React.FC<Props> = ({
           disabled={!isDateCorrect}
           className={`w-full py-[0.75rem] rounded-[30px] font-bold text-white transition ${
             isDateCorrect
-              ? "bg-[#3D3D3D] cursor-pointer"
-              : "bg-gray-400 cursor-not-allowed opacity-50"
+              ? "bg-purple-main cursor-pointer"
+              : "bg-purple-main-disabled cursor-not-allowed opacity-50"
           }`}
         >
           Продолжить

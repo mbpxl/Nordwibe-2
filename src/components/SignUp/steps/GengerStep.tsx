@@ -1,7 +1,9 @@
 import GoBackButton from "../GoBackButton";
 import Heading from "../Heading";
-import female from "../../../assets/imgs/female.png";
-import male from "../../../assets/imgs/male.png";
+import female from "/icons/female.svg";
+import male from "/icons/male.svg";
+import female_active from "/icons/female-active.svg";
+import male_active from "/icons/male-active.svg";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
 
 type Props = StepPropsTypes<"gender">;
@@ -44,10 +46,14 @@ const GenderStep: React.FC<Props> = ({
             <button
               onClick={() => handleGenderSelect("male")}
               className={`w-[9.25rem] h-[9.25rem] flex justify-center items-center rounded-[20px] transition ${
-                isMale ? "bg-[#A0A0A0]" : "bg-[#D9D9D9]"
+                isMale ? "bg-purple-main" : "bg-purple-background-gender"
               }`}
             >
-              <img src={male} alt="male" />
+              {isMale ? (
+                <img src={male} alt="male" />
+              ) : (
+                <img src={male_active} alt="male" />
+              )}
             </button>
             <h2 className="text-center font-medium text-[1rem] leading-10 text-[#3D3D3D] mt-[0.75rem]">
               Мужской
@@ -57,10 +63,14 @@ const GenderStep: React.FC<Props> = ({
             <button
               onClick={() => handleGenderSelect("female")}
               className={`w-[9.25rem] h-[9.25rem] flex justify-center items-center rounded-[20px] transition ${
-                isFemale ? "bg-[#A0A0A0]" : "bg-[#D9D9D9]"
+                isFemale ? "bg-purple-main" : "bg-purple-background-gender"
               }`}
             >
-              <img src={female} alt="female" />
+              {isFemale ? (
+                <img src={female} alt="female" />
+              ) : (
+                <img src={female_active} alt="female" />
+              )}
             </button>
             <h2 className="text-center font-medium text-[1rem] leading-10 text-[#3D3D3D] mt-[0.75rem]">
               Женский
@@ -75,8 +85,8 @@ const GenderStep: React.FC<Props> = ({
           disabled={!isGenderSelected}
           className={`w-full py-[0.75rem] rounded-[30px] font-bold text-white transition ${
             isGenderSelected
-              ? "bg-[#3D3D3D] cursor-pointer"
-              : "bg-gray-400 cursor-not-allowed opacity-50"
+              ? "bg-purple-main cursor-pointer"
+              : "bg-purple-main-disabled cursor-not-allowed opacity-50"
           }`}
         >
           Продолжить

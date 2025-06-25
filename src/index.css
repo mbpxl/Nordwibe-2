@@ -1,4 +1,24 @@
 @import "tailwindcss";
+
+@theme {
+  /* фиолетовые оттенки */
+  --color-purple-heading: #35339b;
+  --color-purple-main: #5755c4;
+  --color-purple-main-disabled: #8389be;
+  --color-purple-progress-content: #a1a0ff;
+  --color-purple-background-gender: #d8d8ff;
+  --color-purple-background-wrap: #e1e1f3;
+  --color-purple-sub-button: #6e6ce1;
+
+  /* темные оттенки */
+  --color-dark-primary: #646464;
+  --color-dark-light: #ced2d9;
+  --color-dark-sub-light: #737373;
+
+  /* черные оттенки */
+  --color-black-heading: #1a1a1a;
+}
+
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&display=swap");
 
 //<ОБНУЛИРОВАНИЕ>====================
@@ -36,6 +56,11 @@ body {
   height: 100vh;
   line-height: 1;
   font-family: "Montserrat", sans-serif;
-  overflow: hidden;
+  /* overflow: hidden; */
+}
+
+/*Убрать полосу прокрутки для всей страницы*/
+::-webkit-scrollbar {
+  width: 0;
 }
 //</ОБНУЛИРОВАНИЕ>====================

@@ -49,7 +49,7 @@ const NameStep: React.FC<Props> = ({
               maxLength={18}
               value={userName}
               onChange={handleChange}
-              className="w-full border text-[1.25rem] tracking-widest py-1 px-2 rounded-[12px]"
+              className="w-full border border-purple-main outline-none text-[1.25rem] tracking-widest py-1 px-2 rounded-[12px]"
             />
           </div>
         </form>
@@ -61,8 +61,8 @@ const NameStep: React.FC<Props> = ({
           disabled={!isValidName}
           className={`w-full py-[0.75rem] rounded-[30px] font-bold text-white transition ${
             isValidName
-              ? "bg-[#3D3D3D] cursor-pointer"
-              : "bg-gray-400 cursor-not-allowed opacity-50"
+              ? "bg-purple-main cursor-pointer"
+              : "bg-purple-main-disabled cursor-not-allowed opacity-50"
           }`}
         >
           Продолжить

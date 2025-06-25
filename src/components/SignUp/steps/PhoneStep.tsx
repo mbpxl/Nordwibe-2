@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import goBackIcon from "../../../assets/icons/arrow-left.svg";
+import goBackIcon from "/icons/arrow-left.svg";
 import { useState, useRef } from "react";
 import { WELCOME_ROUTE } from "../../../utils/consts";
 import Heading from "../Heading";
@@ -70,7 +70,7 @@ const PhoneStep: React.FC<Props> = ({ onNext, formData, updateForm }) => {
             onSubmit={handleNext}
           >
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1A1A1A] font-semibold">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-black-heading font-semibold">
                 +7
               </span>
               <input
@@ -80,7 +80,7 @@ const PhoneStep: React.FC<Props> = ({ onNext, formData, updateForm }) => {
                 value={formatPhone(phone)}
                 onChange={handleInputChange}
                 placeholder="(000) 000-00-00"
-                className="w-full pl-[3.5rem] pr-4 py-2 text-[#1A1A1A] outline-none focus:outline-none"
+                className="placeholder:text-color-dark-sub-light w-full pl-[3.5rem] pr-4 py-2 text-black-heading outline-none focus:outline-none"
               />
             </div>
           </form>
@@ -93,15 +93,15 @@ const PhoneStep: React.FC<Props> = ({ onNext, formData, updateForm }) => {
             className={`px-[1.25rem] py-[0.75rem] rounded-[30px] transition 
               ${
                 isPhoneValid
-                  ? "bg-[#3D3D3D] cursor-pointer"
-                  : "bg-gray-400 cursor-not-allowed opacity-50"
+                  ? "bg-purple-main cursor-pointer"
+                  : "bg-purple-main-disabled cursor-not-allowed opacity-50"
               }`}
           >
             Получить код
           </button>
-          <p className="text-[#3D3D3D] font-medium text-[0.75rem] text-center leading-[1rem]">
+          <p className="text-purple-main-disabled font-medium text-[0.75rem] text-center leading-[1rem]">
             Нажимая на кнопку «Получить код», я принимаю условия{" "}
-            <span className="underline text-black">
+            <span className="underline text-purple-heading">
               пользовательское соглашение и политику конфиденциальности
             </span>
           </p>
