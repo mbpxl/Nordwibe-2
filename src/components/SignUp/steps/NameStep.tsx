@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
 import GoBackButton from "../GoBackButton";
 import Heading from "../Heading";
+import Continue from "../../Continue/Continue";
 
 type Props = StepPropsTypes<"name">;
 
@@ -19,8 +20,8 @@ const NameStep: React.FC<Props> = ({
     setUserName(onlyLetters);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     updateForm({ name: userName });
     onNext();
   };
@@ -56,17 +57,11 @@ const NameStep: React.FC<Props> = ({
       </section>
 
       <section className="absolute w-full bottom-[130px] text-[1.125rem] leading-[1.25rem] rounded-t-[15px] px-7">
-        <button
-          onClick={handleSubmit}
-          disabled={!isValidName}
-          className={`w-full py-[0.75rem] rounded-[30px] font-bold text-white transition ${
-            isValidName
-              ? "bg-purple-main cursor-pointer"
-              : "bg-purple-main-disabled cursor-not-allowed opacity-50"
-          }`}
-        >
-          Продолжить
-        </button>
+        <Continue
+          handleNext={handleSubmit}
+          isValid={isValidName}
+          title={"Продолжить"}
+        />
       </section>
     </main>
   );

@@ -4,6 +4,8 @@ import { useState, useRef } from "react";
 import { WELCOME_ROUTE } from "../../../utils/consts";
 import Heading from "../Heading";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
+import Continue from "../../Continue/Continue";
+import UserAgreement from "../../UserAgreement/UserAgreement";
 
 type Props = StepPropsTypes<"phone">;
 
@@ -87,24 +89,12 @@ const PhoneStep: React.FC<Props> = ({ onNext, formData, updateForm }) => {
         </section>
 
         <section className="m-auto w-[18rem] flex flex-col gap-[1rem] mt-[38vh] font-bold text-[1.125rem] leading-[1.25rem] text-white">
-          <button
-            onClick={handleNext}
-            disabled={!isPhoneValid}
-            className={`px-[1.25rem] py-[0.75rem] rounded-[30px] transition 
-              ${
-                isPhoneValid
-                  ? "bg-purple-main cursor-pointer"
-                  : "bg-purple-main-disabled cursor-not-allowed opacity-50"
-              }`}
-          >
-            Получить код
-          </button>
-          <p className="text-purple-main-disabled font-medium text-[0.75rem] text-center leading-[1rem]">
-            Нажимая на кнопку «Получить код», я принимаю условия{" "}
-            <span className="underline text-purple-heading">
-              пользовательское соглашение и политику конфиденциальности
-            </span>
-          </p>
+          <Continue
+            handleNext={handleNext}
+            isValid={isPhoneValid}
+            title={"Получить код"}
+          />
+          <UserAgreement />
         </section>
       </div>
     </main>
