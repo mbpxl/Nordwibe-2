@@ -1,10 +1,14 @@
-import NavBar from "../components/NavBar/NavBar";
+import Content from "../components/Main/Content/Content";
+import Header from "../components/Heading/Heading";
+import News from "../components/Main/News";
 
 const MainPage = () => {
   return (
-    <div>
-      <NavBar />
-    </div>
+    <>
+      <Header title={"Главная"} imgSrc={"/icons/gear.svg"} />
+      <News />
+      <Content />
+    </>
   );
 };
 

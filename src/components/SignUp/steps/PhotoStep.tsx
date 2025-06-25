@@ -2,8 +2,8 @@ import { useRef } from "react";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
 import GoBackButton from "../GoBackButton";
 import Heading from "../Heading";
-import addPhotoImg from "../../../assets/imgs/AddPhoto.png";
-import removePhoto from "../../../assets/icons/removePhoto.svg";
+import addPhotoImg from "/imgs/AddPhoto.png";
+import removePhoto from "/icons/removePhoto.svg";
 
 type Props = StepPropsTypes<"photos">;
 
@@ -71,7 +71,7 @@ const PhotoStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
           {photos.length < 4 ? (
             <button
               onClick={handleClickAdd}
-              className="w-[9.25rem] h-[9.25rem] bg-[#6B6B6B] flex justify-center items-center rounded-[10px]"
+              className="w-[9.25rem] h-[9.25rem] bg-purple-sub-button flex justify-center items-center rounded-[10px]"
             >
               <img src={addPhotoImg} alt="add" />
             </button>
@@ -101,8 +101,8 @@ const PhotoStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
           <button
             className={`w-full py-[0.75rem] rounded-[30px] font-bold text-white transition ${
               photos?.length > 0
-                ? "bg-[#3D3D3D] cursor-pointer"
-                : "bg-gray-400 cursor-not-allowed opacity-50"
+                ? "bg-purple-main cursor-pointer"
+                : "bg-purple-main-disabled cursor-not-allowed opacity-50"
             }`}
           >
             Продолжить

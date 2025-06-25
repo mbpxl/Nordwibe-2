@@ -103,8 +103,8 @@ const CodeStep: React.FC<Props> = ({
             className={`w-full py-[0.75rem] mb-[20px] rounded-[30px] font-bold text-white transition 
               ${
                 isCodeValid
-                  ? "bg-[#3D3D3D] cursor-pointer"
-                  : "bg-gray-400 cursor-not-allowed opacity-50"
+                  ? "bg-purple-main cursor-pointer"
+                  : "bg-purple-main-disabled cursor-not-allowed opacity-50"
               }`}
           >
             Готово
@@ -112,13 +112,15 @@ const CodeStep: React.FC<Props> = ({
 
           <div className="text-center text-[#3D3D3D] font-medium h-[40px]">
             {canResend ? (
-              <button className="leading-[1.25rem] font-semibold text-[#3D3D3D] text-[1rem] underline">
+              <button className="leading-[1.25rem] font-semibold text-purple-heading text-[1rem] underline">
                 Отправить код повторно
               </button>
             ) : (
-              <button>
+              <button className="text-purple-main-disabled">
                 Отправить код повторно можно через{" "}
-                <span className="font-semibold">{timer} сек</span>
+                <span className="font-semibold text-purple-heading">
+                  {timer} сек
+                </span>
               </button>
             )}
           </div>
