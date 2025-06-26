@@ -3,15 +3,15 @@ import GoBackButton from "../GoBackButton";
 import Heading from "../Heading";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
 import Continue from "../../Continue/Continue";
+import { useSignFormStore } from "../../../store/SignFormStore";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type Props = StepPropsTypes<"birth">;
 
-const BirthStep: React.FC<Props> = ({
-  onNext,
-  onBack,
-  formData,
-  updateForm,
-}) => {
+const BirthStep: React.FC<Props> = ({ onNext, onBack }) => {
+  const { formData, updateForm } = useSignFormStore();
+
   const [date, setDate] = useState(formData.birth || "");
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -47,8 +47,17 @@ const BirthStep: React.FC<Props> = ({
     updateForm({ birth: date });
     onNext();
   };
+  const day = date.slice(0, 2); // получаем день из введённой строки
+  const month = date.slice(3, 5); // получаем месяц из введённой строки
+  const year = date.slice(6, date.length); // получаем год из введённой строки
+  const currentYear = new Date().getFullYear();
 
-  const isDateCorrect = date.length === 10;
+  const isDateCorrect =
+    date.length === 10 &&
+    Number(day) <= 31 &&
+    Number(month) <= 12 &&
+    Number(year) <= currentYear &&
+    Number(year) >= 1910;
 
   return (
     <main className="pt-[1rem] min-h-screen flex flex-col items-center relative">
@@ -90,6 +99,7 @@ const BirthStep: React.FC<Props> = ({
           title={"Продолжить"}
         />
       </section>
+      <ToastContainer />
     </main>
   );
 };
