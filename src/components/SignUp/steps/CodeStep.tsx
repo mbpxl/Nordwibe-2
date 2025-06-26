@@ -3,16 +3,14 @@ import Heading from "../Heading";
 import GoBackButton from "../GoBackButton";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
 import Continue from "../../Continue/Continue";
+import { useSignFormStore } from "../../../store/SignFormStore";
 
 type Props = StepPropsTypes<"code">;
 
-const CodeStep: React.FC<Props> = ({
-  onNext,
-  onBack,
-  formData,
-  updateForm,
-}) => {
+const CodeStep: React.FC<Props> = ({ onNext, onBack }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { formData, updateForm } = useSignFormStore();
+
   const [code, setCode] = useState(formData.code || "");
   const [timer, setTimer] = useState(30);
   const [canResend, setCanResend] = useState(false);

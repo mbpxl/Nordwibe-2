@@ -1,30 +1,30 @@
 import GoBackButton from "../GoBackButton";
 import Heading from "../Heading";
-import female from "/icons/female.svg";
-import male from "/icons/male.svg";
-import female_active from "/icons/female-active.svg";
-import male_active from "/icons/male-active.svg";
+import looking_for_neighbor from "/icons/looking_for_neighbor.svg";
+import looking_for_rent from "/icons/looking_for_rent.svg";
+import looking_for_neighbor_active from "/icons/looking_for_neighbor_active.svg";
+import looking_for_rent_active from "/icons/looking_for_rent_active.svg";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
 import Continue from "../../Continue/Continue";
 import { useSignFormStore } from "../../../store/SignFormStore";
 
-type Props = StepPropsTypes<"gender">;
+type Props = StepPropsTypes<"goal">;
 
-const GenderStep: React.FC<Props> = ({ onNext, onBack }) => {
+const GoalStep: React.FC<Props> = ({ onNext, onBack }) => {
   const { formData, updateForm } = useSignFormStore();
 
-  const handleGenderSelect = (gender: string) => {
-    updateForm({ gender });
+  const handleGenderSelect = (goal: string) => {
+    updateForm({ goal });
   };
 
-  const isMale = formData.gender === "male";
-  const isFemale = formData.gender === "female";
+  const isLookingForRent = formData.goal === "rent"; // человечек, который ищет жильё
+  const isLookingForNeighbor = formData.goal === "neighbor"; // человечек, у которого есть жилье, он ищет соседа
 
   const handleNext = () => {
-    if (formData.gender) onNext();
+    if (formData.goal) onNext();
   };
 
-  const isGenderSelected = !!formData.gender;
+  const isGoalSelected = !!formData.goal;
 
   return (
     <main className="pt-[1rem] min-h-screen relative flex flex-col items-center">
@@ -32,7 +32,7 @@ const GenderStep: React.FC<Props> = ({ onNext, onBack }) => {
         <GoBackButton onBack={onBack} />
 
         <Heading
-          title={"Ваш пол"}
+          title={"Какая у вас цель?"}
           subTitle={""}
           formData={formData}
           isCodeStep={true}
@@ -43,36 +43,40 @@ const GenderStep: React.FC<Props> = ({ onNext, onBack }) => {
         <div className="flex justify-center gap-4 w-full max-w-2xl mx-auto">
           {[
             {
-              gender: "male",
-              isSelected: isMale,
-              icon: isMale ? male : male_active,
-              label: "Мужской",
+              goal: "rent",
+              isSelected: isLookingForRent,
+              icon: isLookingForRent
+                ? looking_for_neighbor_active
+                : looking_for_neighbor,
+              text: "У меня есть жильё — ищу соседа(ей)",
             },
             {
-              gender: "female",
-              isSelected: isFemale,
-              icon: isFemale ? female : female_active,
-              label: "Женский",
+              goal: "neighbor",
+              isSelected: isLookingForNeighbor,
+              icon: isLookingForNeighbor
+                ? looking_for_rent_active
+                : looking_for_rent,
+              text: "Нет жилья — ищу жилье и соседа(ей)",
             },
-          ].map(({ gender, isSelected, icon, label }) => (
+          ].map(({ goal, isSelected, icon, text }) => (
             <div
-              key={gender}
+              key={goal}
               className="flex flex-col items-center flex-1 min-w-[148px]"
             >
               <button
-                onClick={() => handleGenderSelect(gender)}
+                onClick={() => handleGenderSelect(goal)}
                 className={`aspect-square w-full max-w-[200px] flex justify-center items-center rounded-[20px] transition ${
                   isSelected ? "bg-purple-main" : "bg-purple-background-gender"
                 }`}
               >
-                <img src={icon} alt={gender} />
+                <img src={icon} alt={goal} />
               </button>
               <h2
                 className={`text-center ${
                   isSelected ? "font-semibold" : "font-medium"
                 } text-[1rem] leading-5 text-black-heading mt-[0.75rem] w-full max-w-[200px]`}
               >
-                {label}
+                {text}
               </h2>
             </div>
           ))}
@@ -82,7 +86,7 @@ const GenderStep: React.FC<Props> = ({ onNext, onBack }) => {
       <section className="absolute w-full bottom-[130px] rounded-t-[15px] text-[1.125rem] leading-[1.25rem] px-7">
         <Continue
           handleNext={handleNext}
-          isValid={isGenderSelected}
+          isValid={isGoalSelected}
           title={"Продолжить"}
         />
       </section>
@@ -90,4 +94,4 @@ const GenderStep: React.FC<Props> = ({ onNext, onBack }) => {
   );
 };
 
-export default GenderStep;
+export default GoalStep;

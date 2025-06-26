@@ -3,15 +3,13 @@ import type { StepPropsTypes } from "../../../types/SignUpTypes";
 import GoBackButton from "../GoBackButton";
 import Heading from "../Heading";
 import Continue from "../../Continue/Continue";
+import { useSignFormStore } from "../../../store/SignFormStore";
 
 type Props = StepPropsTypes<"name">;
 
-const NameStep: React.FC<Props> = ({
-  onNext,
-  onBack,
-  formData,
-  updateForm,
-}) => {
+const NameStep: React.FC<Props> = ({ onNext, onBack }) => {
+  const { formData, updateForm } = useSignFormStore();
+
   const [userName, setUserName] = useState(formData.name || "");
   const isValidName = userName?.length >= 2;
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

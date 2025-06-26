@@ -6,6 +6,7 @@ import Heading from "../Heading";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
 import Continue from "../../Continue/Continue";
 import UserAgreement from "../../UserAgreement/UserAgreement";
+import { useSignFormStore } from "../../../store/SignFormStore";
 
 type Props = StepPropsTypes<"phone">;
 
@@ -23,9 +24,11 @@ export const formatPhone = (value: string) => {
   return parts.join("");
 };
 
-const PhoneStep: React.FC<Props> = ({ onNext, formData, updateForm }) => {
-  const [phone, setPhone] = useState(formData.phone);
+const PhoneStep: React.FC<Props> = ({ onNext }) => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const { formData, updateForm } = useSignFormStore();
+
+  const [phone, setPhone] = useState(formData.phone);
 
   const handleNext = () => {
     updateForm({ phone });
