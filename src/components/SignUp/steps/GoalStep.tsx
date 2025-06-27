@@ -72,9 +72,7 @@ const GoalStep: React.FC<Props> = ({ onNext, onBack }) => {
                 <img src={icon} alt={goal} />
               </button>
               <h2
-                className={`text-center ${
-                  isSelected ? "font-semibold" : "font-medium"
-                } text-[1rem] leading-5 text-black-heading mt-[0.75rem] w-full max-w-[200px]`}
+                className={`text-center font-medium text-[1rem] leading-5 text-black-heading mt-[0.75rem] w-full max-w-[200px]`}
               >
                 {text}
               </h2>

@@ -19,7 +19,7 @@ const Header: React.FC<{ title: string; imgSrc: string }> = ({
           )}
         </div>
         <div>
-          <h1>{title}</h1>
+          <h1 className="text-black-heading">{title}</h1>
         </div>
         <div>
           {location.pathname == "/search" ? (
