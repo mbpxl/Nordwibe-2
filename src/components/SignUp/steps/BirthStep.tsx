@@ -56,7 +56,7 @@ const BirthStep: React.FC<Props> = ({ onNext, onBack }) => {
     date.length === 10 &&
     Number(day) <= 31 &&
     Number(month) <= 12 &&
-    Number(year) <= currentYear &&
+    Number(year) <= currentYear - 18 &&
     Number(year) >= 1910;
 
   return (

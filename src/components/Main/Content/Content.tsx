@@ -5,7 +5,7 @@ import Slider from "./Slider";
 
 const Content = () => {
   return (
-    <div className="bg-[#F0F0F0] px-4 pb-2">
+    <div className="bg-purple-background-wrap min-[453px]:mt-2 px-4 pb-2">
       <Slider />
       <Carts />
     </div>
