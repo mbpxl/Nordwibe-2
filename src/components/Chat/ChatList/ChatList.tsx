@@ -20,7 +20,7 @@ const ChatList = () => {
 
   return (
     <>
-      <div className="bg-[#F0F0F0] px-3 pt-1 pb-16">
+      <div className="bg-purple-background-wrap px-3 pt-1 pb-16">
         <div>
           {arr.map((elem: any) => (
             <div className="mt-4">{elem}</div>
