@@ -1,7 +1,7 @@
 import { BrowserRouter, useLocation } from "react-router-dom";
-import AppRouter from "./components/AppRouter";
-import NavBar from "./components/NavBar/NavBar";
-import { hideNavBarRoutes } from "./utils/consts";
+import AppRouter from "./shared/Components/AppRouter";
+import NavBar from "./shared/Components/NavBar/NavBar";
+import { hideNavBarRoutes } from "./shared/utils/consts";
 
 function AppContent() {
   const location = useLocation();
