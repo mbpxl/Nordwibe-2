@@ -1,11 +1,11 @@
 import { lazy } from "react";
 
-import { CHAT_ROUTE, MAIN_ROUTE, MY_PROFILE_ROUTE, QUIZ_ROUTE, SEARCH_ROUTE, SIGN_IN_ROUTE, SIGN_UP_ROUTE, USER_PROFILE_ROUTE, WELCOME_ROUTE } from "./utils/consts";
-import WelcomePage from "./pages/WelcomePage";
-import SignInPage from "./pages/SignInPage";
-import SignUpPage from "./pages/SignUpPage";
-import MainPage from "./pages/MainPage";
-import ProfilePage from "./pages/MyProfilePage";
+import { CHAT_ROUTE, MAIN_ROUTE, MY_PROFILE_ROUTE, QUIZ_ROUTE, SEARCH_ROUTE, SIGN_IN_ROUTE, SIGN_UP_ROUTE, USER_PROFILE_ROUTE, WELCOME_ROUTE } from "./shared/utils/consts";
+import WelcomePage from "./pages/WelcomePage/WelcomePage";
+import SignInPage from "./pages/AuthPage/SignInPage";
+import SignUpPage from "./pages/AuthPage/SignUpPage";
+import MainPage from "./pages/MainPage/MainPage";
+import ProfilePage from "./pages/ProfilePage/MyProfilePage/MyProfilePage";
 
 export const routes = [
   {
@@ -22,11 +22,11 @@ export const routes = [
   },
   {
     path: SEARCH_ROUTE,
-    Component: lazy(() => import("./pages/SearchPage")),
+    Component: lazy(() => import("./pages/SearchPage/SearchPage")),
   },
   {
     path: CHAT_ROUTE,
-    Component: lazy(() => import("./pages/ChatPage")),
+    Component: lazy(() => import("./pages/ChatPage/ChatPage")),
   },
   {
     path: MAIN_ROUTE,
@@ -34,7 +34,7 @@ export const routes = [
   },
   {
     path: QUIZ_ROUTE,
-    Component: lazy(() => import("./pages/QuizPage")),
+    Component: lazy(() => import("./pages/QuizPage/QuizPage")),
   },
   {
     path: MY_PROFILE_ROUTE,
@@ -42,6 +42,6 @@ export const routes = [
   },
   {
     path: USER_PROFILE_ROUTE,
-    Component: lazy(() => import("./pages/UserProfilePage")),
+    Component: lazy(() => import("./pages/ProfilePage/UserProfilePage/UserProfilePage")),
   },
 ];

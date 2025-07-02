@@ -1,0 +1,68 @@
+import { useState } from "react";
+import type { StepPropsTypes } from "../../../types/SignUpTypes";
+import GoBackButton from "../GoBackButton";
+import Heading from "../Heading";
+import Continue from "../../Continue/Continue";
+import { useSignFormStore } from "../../../../../shared/store/SignFormStore";
+
+type Props = StepPropsTypes<"name">;
+
+const NameStep: React.FC<Props> = ({ onNext, onBack }) => {
+  const { formData, updateForm } = useSignFormStore();
+
+  const [userName, setUserName] = useState(formData.name || "");
+  const isValidName = userName?.length >= 2;
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target?.value;
+    const onlyLetters = value.replace(/[^a-zA-Zа-яА-ЯёЁ]/g, "");
+    setUserName(onlyLetters);
+  };
+
+  const handleSubmit = (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    updateForm({ name: userName });
+    onNext();
+  };
+
+  return (
+    <main className="relative pt-[1rem] min-h-screen flex flex-col items-center">
+      <div className="w-full max-w-md">
+        <GoBackButton onBack={onBack} />
+        <Heading
+          title={"Ваше имя"}
+          subTitle={"(2-18 символов, русские или английские буквы)"}
+          formData={formData}
+          isCodeStep={false}
+        />
+      </div>
+
+      <section className="mt-6 flex justify-center">
+        <form
+          onSubmit={handleSubmit}
+          className="w-[308px] font-medium text-[1.938rem] leading-10"
+        >
+          <div className="">
+            <input
+              type="text"
+              placeholder="Имя"
+              maxLength={18}
+              value={userName}
+              onChange={handleChange}
+              className="w-full border border-purple-main outline-none text-[1.25rem] tracking-widest py-1 px-2 rounded-[12px]"
+            />
+          </div>
+        </form>
+      </section>
+
+      <section className="absolute w-full bottom-[130px] text-[1.125rem] leading-[1.25rem] rounded-t-[15px] px-7">
+        <Continue
+          handleNext={handleSubmit}
+          isValid={isValidName}
+          title={"Продолжить"}
+        />
+      </section>
+    </main>
+  );
+};
+
+export default NameStep;
