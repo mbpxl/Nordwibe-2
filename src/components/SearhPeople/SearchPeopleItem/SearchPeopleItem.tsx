@@ -3,7 +3,7 @@ import HashTag from "../../HashTag/HashTag";
 const SearchPeopleItem = () => {
   return (
     <>
-      <div className="bg-[#A0A0A0] p-2 flex gap-3 max-w-[700px] rounded-[12px]">
+      <div className="bg-white p-2 flex gap-3 max-w-[700px] rounded-[12px]">
         <div className="w-[60px] h-[60px] bg-amber-950 rounded-[50%] shrink-0">
           {/* <img src="" alt="" /> */}
         </div>
@@ -12,7 +12,7 @@ const SearchPeopleItem = () => {
             <h2 className="text-[0.875rem] font-semibold leading-5 text-left">
               Аракадий, 21
             </h2>
-            <div className="bg-[#6B6B6B] rounded-[12px] text-[0.875rem] font-semibold leading-[0.75rem] text-white py-1 px-2">
+            <div className="bg-purple-sub-button rounded-[12px] text-[0.875rem] font-semibold leading-[0.75rem] text-white py-1 px-2">
               34%
             </div>
           </div>

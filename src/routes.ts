@@ -1,33 +1,32 @@
-import ChatPage from "./pages/ChatPage";
+import { lazy } from "react";
+
+import { CHAT_ROUTE, MAIN_ROUTE, MY_PROFILE_ROUTE, QUIZ_ROUTE, SEARCH_ROUTE, SIGN_IN_ROUTE, SIGN_UP_ROUTE, USER_PROFILE_ROUTE, WELCOME_ROUTE } from "./utils/consts";
+import WelcomePage from "./pages/WelcomePage";
+import SignInPage from "./pages/SignInPage";
+import SignUpPage from "./pages/SignUpPage";
 import MainPage from "./pages/MainPage";
-import ProfilePage from "./pages/ProfilePage";
-import QuizPage from "./pages/QuizPage";
-import SearchPage from "./pages/SearchPage";
-import SignIn from "./pages/SignInPage";
-import SignUp from "./pages/SignUpPage";
-import Welcome from "./pages/WelcomePage";
-import { CHAT_ROUTE, MAIN_ROUTE, PROFILE_ROUTE, QUIZ_ROUTE, SEARCH_ROUTE, SIGN_IN_ROUTE, SIGN_UP_ROUTE, WELCOME_ROUTE } from "./utils/consts";
+import ProfilePage from "./pages/MyProfilePage";
 
 export const routes = [
   {
     path: WELCOME_ROUTE,
-    Component: Welcome,
+    Component: WelcomePage,
   },
   {
     path: SIGN_UP_ROUTE,
-    Component: SignUp,
+    Component: SignUpPage,
   },
   {
     path: SIGN_IN_ROUTE,
-    Component: SignIn,
+    Component: SignInPage,
   },
   {
     path: SEARCH_ROUTE,
-    Component: SearchPage,
+    Component: lazy(() => import("./pages/SearchPage")),
   },
   {
     path: CHAT_ROUTE,
-    Component: ChatPage,
+    Component: lazy(() => import("./pages/ChatPage")),
   },
   {
     path: MAIN_ROUTE,
@@ -35,10 +34,14 @@ export const routes = [
   },
   {
     path: QUIZ_ROUTE,
-    Component: QuizPage,
+    Component: lazy(() => import("./pages/QuizPage")),
   },
   {
-    path: PROFILE_ROUTE,
+    path: MY_PROFILE_ROUTE,
     Component: ProfilePage,
+  },
+  {
+    path: USER_PROFILE_ROUTE,
+    Component: lazy(() => import("./pages/UserProfilePage")),
   },
 ];
