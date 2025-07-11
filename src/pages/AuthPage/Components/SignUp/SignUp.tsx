@@ -7,7 +7,7 @@ import PhotoStep from "./steps/PhotoStep";
 import GoalStep from "./steps/GoalStep";
 import AnimatedStepWrapper from "../../../../shared/Components/AnimatedStepWrapper/AnimatedStepWrapper";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { FormDataTypes } from "../../types/SignUpTypes";
 
 // Извлекаем сохранённые данные из localStorage или возаращаем дефолт
@@ -48,19 +48,19 @@ const SignUp = () => {
     localStorage.setItem("signup-form", JSON.stringify({ step, formData }));
   }, [step, formData]);
 
-  const nextStep = () => {
+  const nextStep = useCallback(() => {
     setDirection("forward");
     setStep((s) => s + 1);
-  };
+  }, []);
 
-  const prevStep = () => {
+  const prevStep = useCallback(() => {
     setDirection("backward");
     setStep((s) => s - 1);
-  };
+  }, []);
 
-  const updateForm = (data: Partial<FormDataTypes>) => {
+  const updateForm = useCallback((data: Partial<FormDataTypes>) => {
     setFormData((prev) => ({ ...prev, ...data }));
-  };
+  }, []);
 
   const steps = [
     <PhoneStep
