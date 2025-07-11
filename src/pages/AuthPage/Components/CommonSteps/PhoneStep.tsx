@@ -1,34 +1,22 @@
 import { Link } from "react-router-dom";
 import goBackIcon from "/icons/arrow-left.svg";
 import { useState, useRef } from "react";
-import { WELCOME_ROUTE } from "../../../../../shared/utils/consts";
-import Heading from "../Heading";
-import type { StepPropsTypes } from "../../../types/SignUpTypes";
-import Continue from "../../Continue/Continue";
-import UserAgreement from "../../UserAgreement/UserAgreement";
-import { useSignFormStore } from "../../../../../shared/store/SignFormStore";
+import { WELCOME_ROUTE } from "../../../../shared/utils/consts";
+import { useBackspacePhoneFix } from "../../hooks/useBackspacePhoneFix";
+import { usePhoneFormatter } from "../../hooks/usePhoneNumber";
+import type { StepPropsTypes } from "../../types/SignUpTypes";
+import Continue from "../Continue/Continue";
+import Heading from "../SignUp/Heading";
+import UserAgreement from "../UserAgreement/UserAgreement";
 
 type Props = StepPropsTypes<"phone">;
 
-// eslint-disable-next-line react-refresh/only-export-components
-export const formatPhone = (value: string) => {
-  const digits = value.replace(/\D/g, "").slice(0, 10);
-  const parts = [];
-
-  if (digits.length > 0) parts.push("(" + digits.slice(0, 3));
-  if (digits.length >= 3) parts[0] += ")";
-  if (digits.length > 3) parts.push(" " + digits.slice(3, 6));
-  if (digits.length > 6) parts.push("-" + digits.slice(6, 8));
-  if (digits.length > 8) parts.push("-" + digits.slice(8, 10));
-
-  return parts.join("");
-};
-
-const PhoneStep: React.FC<Props> = ({ onNext }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const { formData, updateForm } = useSignFormStore();
-
+const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
   const [phone, setPhone] = useState(formData.phone);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const { formatPhone } = usePhoneFormatter();
+  const handleKeyDown = useBackspacePhoneFix(inputRef, phone, formatPhone);
 
   const handleNext = () => {
     updateForm({ phone });
@@ -75,7 +63,7 @@ const PhoneStep: React.FC<Props> = ({ onNext }) => {
             onSubmit={handleNext}
           >
             <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-black-heading font-semibold">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1A1A1A] font-semibold">
                 +7
               </span>
               <input
@@ -84,8 +72,9 @@ const PhoneStep: React.FC<Props> = ({ onNext }) => {
                 ref={inputRef}
                 value={formatPhone(phone)}
                 onChange={handleInputChange}
+                onKeyDown={handleKeyDown}
                 placeholder="(000) 000-00-00"
-                className="placeholder:text-color-dark-sub-light w-full pl-[3.5rem] pr-4 py-2 text-black-heading outline-none focus:outline-none"
+                className="w-full pl-[3.5rem] pr-4 py-2 text-[#1A1A1A] outline-none focus:outline-none"
               />
             </div>
           </form>

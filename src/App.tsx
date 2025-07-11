@@ -1,11 +1,13 @@
-import { BrowserRouter, useLocation } from "react-router-dom";
+import { BrowserRouter, matchPath, useLocation } from "react-router-dom";
 import AppRouter from "./shared/Components/AppRouter";
 import NavBar from "./shared/Components/NavBar/NavBar";
 import { hideNavBarRoutes } from "./shared/utils/consts";
 
 function AppContent() {
   const location = useLocation();
-  const shouldHideNavBar = hideNavBarRoutes.includes(location.pathname);
+  const shouldHideNavBar =
+    hideNavBarRoutes.includes(location.pathname) ||
+    !!matchPath("/quiz/:id", location.pathname);
 
   return (
     <>

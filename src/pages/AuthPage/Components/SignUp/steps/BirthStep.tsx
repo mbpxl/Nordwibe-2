@@ -3,15 +3,17 @@ import GoBackButton from "../GoBackButton";
 import Heading from "../Heading";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
 import Continue from "../../Continue/Continue";
-import { useSignFormStore } from "../../../../../shared/store/SignFormStore";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 type Props = StepPropsTypes<"birth">;
 
-const BirthStep: React.FC<Props> = ({ onNext, onBack }) => {
-  const { formData, updateForm } = useSignFormStore();
-
+const BirthStep: React.FC<Props> = ({
+  onNext,
+  onBack,
+  formData,
+  updateForm,
+}) => {
   const [date, setDate] = useState(formData.birth || "");
   const inputRef = useRef<HTMLInputElement>(null);
 

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import Status from "../Status/Status";
+
+import Status from "../../../../shared/Components/Status/Status";
 
 const habbits = [
   {
