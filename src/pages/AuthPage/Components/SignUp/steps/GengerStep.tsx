@@ -6,13 +6,15 @@ import female_active from "/icons/female-active.svg";
 import male_active from "/icons/male-active.svg";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
 import Continue from "../../Continue/Continue";
-import { useSignFormStore } from "../../../../../shared/store/SignFormStore";
 
 type Props = StepPropsTypes<"gender">;
 
-const GenderStep: React.FC<Props> = ({ onNext, onBack }) => {
-  const { formData, updateForm } = useSignFormStore();
-
+const GenderStep: React.FC<Props> = ({
+  onNext,
+  onBack,
+  formData,
+  updateForm,
+}) => {
   const handleGenderSelect = (gender: string) => {
     updateForm({ gender });
   };

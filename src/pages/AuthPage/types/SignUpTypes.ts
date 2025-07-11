@@ -18,6 +18,6 @@ export type HeadingComponentTypes = {
 export type StepPropsTypes<Key extends keyof FormDataTypes> = {
   onNext: () => void;
   onBack: () => void;
-  // formData: FormDataTypes;
-  // updateForm: (data: Pick<FormDataTypes, Key>) => void;
+  formData: FormDataTypes;
+  updateForm: (data: Pick<FormDataTypes, Key>) => void;
 }

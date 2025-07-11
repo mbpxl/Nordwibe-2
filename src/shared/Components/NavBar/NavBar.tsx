@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 const NavBar = () => {
   return (
     <nav className="fixed bottom-0 w-full z-30">
-      <div className="bg-amber-200 px-2">
+      <div className="bg-white px-2">
         <ul className="flex justify-center gap-[2.5rem] pt-[0.531rem] pb-[1.094rem] text-[#A0A0A0]">
           <li className="flex flex-col items-center justify-center gap-0.5">
             <Link
@@ -50,12 +50,17 @@ const NavBar = () => {
             </Link>
           </li>
           <li className="flex flex-col items-center justify-center gap-0.5">
-            <img
-              src={quizIcon}
-              alt="icon"
-              className="min-w-6 min-h-6 shrink-0"
-            />
-            <p className="text-[0.5rem] leading-2 font-bold">Квизы</p>
+            <Link
+              className="flex flex-col items-center justify-center gap-0.5"
+              to={"/quiz"}
+            >
+              <img
+                src={quizIcon}
+                alt="icon"
+                className="min-w-6 min-h-6 shrink-0"
+              />
+              <p className="text-[0.5rem] leading-2 font-bold">Квизы</p>
+            </Link>
           </li>
           <li className="flex flex-col items-center justify-center gap-0.5">
             <img

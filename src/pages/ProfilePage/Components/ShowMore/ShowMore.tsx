@@ -23,7 +23,7 @@ const ShowMore: React.FC<ShowMoreProps> = ({
   }, [children, maxHeight]);
 
   return (
-    <div className="relative">
+    <div onClick={() => setIsOpened(!isOpened)} className="relative">
       <div
         ref={contentRef}
         className={`transition-all duration-300 ease-in-out overflow-hidden pr-6`}

@@ -6,13 +6,15 @@ import looking_for_neighbor_active from "/icons/looking_for_neighbor_active.svg"
 import looking_for_rent_active from "/icons/looking_for_rent_active.svg";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
 import Continue from "../../Continue/Continue";
-import { useSignFormStore } from "../../../../../shared/store/SignFormStore";
 
 type Props = StepPropsTypes<"goal">;
 
-const GoalStep: React.FC<Props> = ({ onNext, onBack }) => {
-  const { formData, updateForm } = useSignFormStore();
-
+const GoalStep: React.FC<Props> = ({
+  onNext,
+  onBack,
+  formData,
+  updateForm,
+}) => {
   const handleGenderSelect = (goal: string) => {
     updateForm({ goal });
   };

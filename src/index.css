@@ -8,6 +8,7 @@
   --color-purple-progress-content: #a1a0ff;
   --color-purple-background-gender: #d8d8ff;
   --color-purple-background-wrap: #e1e1f3;
+  --color-purple-progress-wrap: #a0a0a0;
   --color-purple-sub-button: #6e6ce1;
 
   /* темные оттенки */
@@ -17,6 +18,9 @@
 
   /* черные оттенки */
   --color-black-heading: #1a1a1a;
+
+  /* зеленые оттенки */
+  --color-green-correct: #05a300;
 }
 
 @import url("https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&display=swap");

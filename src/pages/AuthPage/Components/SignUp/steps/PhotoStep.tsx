@@ -5,13 +5,15 @@ import Heading from "../Heading";
 import addPhotoImg from "/imgs/AddPhoto.png";
 import removePhoto from "/icons/removePhoto.svg";
 import Continue from "../../Continue/Continue";
-import { useSignFormStore } from "../../../../../shared/store/SignFormStore";
 
 type Props = StepPropsTypes<"photos">;
 
-const PhotoStep: React.FC<Props> = ({ onBack, onNext }) => {
-  const { formData, updateForm } = useSignFormStore();
-
+const PhotoStep: React.FC<Props> = ({
+  onBack,
+  onNext,
+  formData,
+  updateForm,
+}) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const photos = (formData.photos || []) as File[];
 

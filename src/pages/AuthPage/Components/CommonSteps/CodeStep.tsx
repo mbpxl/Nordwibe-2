@@ -1,15 +1,22 @@
 import { useEffect, useRef, useState } from "react";
-import Heading from "../Heading";
-import GoBackButton from "../GoBackButton";
-import type { StepPropsTypes } from "../../../types/SignUpTypes";
-import Continue from "../../Continue/Continue";
-import { useSignFormStore } from "../../../../../shared/store/SignFormStore";
+import type { StepPropsTypes } from "../../types/SignUpTypes";
+import Continue from "../Continue/Continue";
+import GoBackButton from "../SignUp/GoBackButton";
+import Heading from "../SignUp/Heading";
+import useFormatUnformatCode from "../../hooks/useFormatCode";
 
 type Props = StepPropsTypes<"code">;
 
-const CodeStep: React.FC<Props> = ({ onNext, onBack }) => {
+const CodeStep: React.FC<Props> = ({
+  formData,
+  updateForm,
+  onNext,
+  onBack,
+}) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { formData, updateForm } = useSignFormStore();
+
+  // форматирование телефона в вид 0-0-0-0
+  const { formatCode, unformatCode } = useFormatUnformatCode();
 
   const [code, setCode] = useState(formData.code || "");
   const [timer, setTimer] = useState(30);
@@ -28,15 +35,6 @@ const CodeStep: React.FC<Props> = ({ onNext, onBack }) => {
 
     return () => clearInterval(interval);
   }, [timer]);
-
-  const formatCode = (input: string) => {
-    const digits = input.replace(/\D/g, "").slice(0, 4);
-    return digits.split("").join("-");
-  };
-
-  const unformatCode = (formatted: string) => {
-    return formatted.replace(/\D/g, "").slice(0, 4);
-  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
@@ -83,7 +81,7 @@ const CodeStep: React.FC<Props> = ({ onNext, onBack }) => {
                 value={formatCode(code)}
                 onChange={handleChange}
                 placeholder="0-0-0-0"
-                className="placeholder:text-dark-sub-light text-black-heading w-full text-center text-[2rem] tracking-widest py-2 outline-none focus:outline-none"
+                className="w-full text-center text-[2rem] tracking-widest py-2 outline-none focus:outline-none"
               />
             </div>
           </form>
