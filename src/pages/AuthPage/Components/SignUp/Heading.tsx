@@ -1,5 +1,5 @@
+import { usePhoneFormatter } from "../../hooks/usePhoneNumber";
 import type { HeadingComponentTypes } from "../../types/SignUpTypes";
-import { formatPhone } from "./steps/PhoneStep";
 
 const Heading: React.FC<HeadingComponentTypes> = ({
   title,
@@ -7,6 +7,8 @@ const Heading: React.FC<HeadingComponentTypes> = ({
   isCodeStep,
   formData,
 }) => {
+  const { formatPhone } = usePhoneFormatter();
+
   return (
     <section className="mt-[1.875rem] text-center">
       <h1 className="font-semibold text-[2rem] leading-10 text-black-heading">
