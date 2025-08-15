@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import Wrapper from "../../../../../shared/Components/Wrapper/Wrapper";
 import ChatItem from "../ChatItem/ChatItem";
 
 const ChatList = () => {
@@ -19,15 +20,13 @@ const ChatList = () => {
   ];
 
   return (
-    <>
-      <div className="bg-purple-background-wrap px-3 pt-1 pb-16">
-        <div>
-          {arr.map((elem: any) => (
-            <div className="mt-4">{elem}</div>
-          ))}
-        </div>
+    <Wrapper className={"bg-purple-background-wrap pt-1 pb-16"}>
+      <div>
+        {arr.map((elem: any) => (
+          <div className="mt-4">{elem}</div>
+        ))}
       </div>
-    </>
+    </Wrapper>
   );
 };
 

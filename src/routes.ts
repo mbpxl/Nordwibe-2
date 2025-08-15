@@ -1,6 +1,6 @@
 import { lazy } from "react";
 
-import { CHAT_ROUTE, MAIN_ROUTE, MY_PROFILE_ROUTE, QUIZ_PASSING_ROUTE, QUIZ_ROUTE, SEARCH_ROUTE, SIGN_IN_ROUTE, SIGN_UP_ROUTE, USER_PROFILE_ROUTE, WELCOME_ROUTE } from "./shared/utils/consts";
+import { CHAT_ROUTE, MAIN_ROUTE, MY_PROFILE_ROUTE, PROFILE_EDIT_ROUTE, QUIZ_PASSING_ROUTE, QUIZ_ROUTE, QUIZ_TEST_ROUTE, SEARCH_ROUTE, SIGN_IN_ROUTE, SIGN_UP_ROUTE, USER_PROFILE_ROUTE, WELCOME_ROUTE } from "./shared/utils/consts";
 import WelcomePage from "./pages/WelcomePage/WelcomePage";
 import MainPage from "./pages/MainPage/MainPage";
 import ProfilePage from "./pages/ProfilePage/MyProfilePage/MyProfilePage";
@@ -47,5 +47,13 @@ export const routes = [
   {
     path: USER_PROFILE_ROUTE,
     Component: lazy(() => import("./pages/ProfilePage/UserProfilePage/UserProfilePage")),
+  },
+  {
+    path: PROFILE_EDIT_ROUTE,
+    Component: lazy(() => import("./pages/EditProfilePage/EditProfilePage")),
+  },
+	{
+    path: QUIZ_TEST_ROUTE,
+    Component: lazy(() => import("./pages/QuizTestPage/QuizTestPage")),
   },
 ];

@@ -63,12 +63,17 @@ const NavBar = () => {
             </Link>
           </li>
           <li className="flex flex-col items-center justify-center gap-0.5">
-            <img
-              src={profileIcon}
-              alt="icon"
-              className="min-w-6 min-h-6 shrink-0"
-            />
-            <p className="text-[0.5rem] leading-2 font-bold">Профиль</p>
+            <Link
+              className="flex flex-col items-center justify-center gap-0.5"
+              to={"/profile"}
+            >
+              <img
+                src={profileIcon}
+                alt="icon"
+                className="min-w-6 min-h-6 shrink-0"
+              />
+              <p className="text-[0.5rem] leading-2 font-bold">Профиль</p>
+            </Link>
           </li>
         </ul>
       </div>

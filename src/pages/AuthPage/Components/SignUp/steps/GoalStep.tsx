@@ -4,30 +4,69 @@ import looking_for_neighbor from "/icons/looking_for_neighbor.svg";
 import looking_for_rent from "/icons/looking_for_rent.svg";
 import looking_for_neighbor_active from "/icons/looking_for_neighbor_active.svg";
 import looking_for_rent_active from "/icons/looking_for_rent_active.svg";
-import type { StepPropsTypes } from "../../../types/SignUpTypes";
+import type { GoalType, StepPropsTypes } from "../../../types/SignUpTypes";
 import Continue from "../../Continue/Continue";
+import { useFillProfile } from "../../../service/useFillProfileInfo";
+import { useNavigate } from "react-router-dom";
+import { MAIN_ROUTE } from "../../../../../shared/utils/consts";
 
 type Props = StepPropsTypes<"goal">;
 
-const GoalStep: React.FC<Props> = ({
-  onNext,
-  onBack,
-  formData,
-  updateForm,
-}) => {
-  const handleGenderSelect = (goal: string) => {
+const GoalStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
+  const handleGoalSelect = (goal: GoalType) => {
     updateForm({ goal });
   };
 
-  const isLookingForRent = formData.goal === "rent"; // человечек, который ищет жильё
-  const isLookingForNeighbor = formData.goal === "neighbor"; // человечек, у которого есть жилье, он ищет соседа
+  const navigate = useNavigate();
 
-  const handleNext = () => {
-    if (formData.goal) onNext();
+  const isLookingForRent = formData.goal === "Поиск жилья";
+  const isLookingForNeighbor = formData.goal === "Поиск соседа";
+
+  const { fillProfile, isError, isSuccess, error, data } = useFillProfile();
+
+  const handleFinishRegistration = () => {
+    const fullPhone = `+7${formData.phone}`;
+    const birthDate = formData.birth
+      ? new Date(formData.birth.split("/").reverse().join("-")).toISOString()
+      : "";
+
+    if (formData.goal) {
+      console.log(formData.goal);
+      fillProfile({
+        username: null,
+        phone: fullPhone,
+        name: formData.name!,
+        usage_goal: formData.goal,
+        max_budget: null,
+        occupation: null,
+        smoking_status: null,
+        gender: formData.gender,
+        pets: null,
+        religion: null,
+        about: null,
+        ready_for_smalltalk: false,
+        birth_date: birthDate,
+        city_id: null,
+        hashtags: [],
+      });
+    }
   };
+
+  if (isError) {
+    console.log(data?.data);
+  }
 
   const isGoalSelected = !!formData.goal;
 
+  if (isError) {
+    console.error("Ошибка при заполнении профиля"); // todo: добавить toast
+    console.log(error?.message || "Неизвестная ошибка");
+  }
+
+  if (isSuccess) {
+    navigate(MAIN_ROUTE);
+    console.log("Профиль успешно заполнен"); // todo: добавить toast
+  }
   return (
     <main className="pt-[1rem] min-h-screen relative flex flex-col items-center">
       <div className="w-full max-w-md">
@@ -45,7 +84,7 @@ const GoalStep: React.FC<Props> = ({
         <div className="flex justify-center gap-4 w-full max-w-2xl mx-auto">
           {[
             {
-              goal: "rent",
+              goal: "Поиск жилья" as GoalType,
               isSelected: isLookingForRent,
               icon: isLookingForRent
                 ? looking_for_neighbor_active
@@ -53,7 +92,7 @@ const GoalStep: React.FC<Props> = ({
               text: "У меня есть жильё — ищу соседа(ей)",
             },
             {
-              goal: "neighbor",
+              goal: "Поиск соседа" as GoalType,
               isSelected: isLookingForNeighbor,
               icon: isLookingForNeighbor
                 ? looking_for_rent_active
@@ -66,12 +105,12 @@ const GoalStep: React.FC<Props> = ({
               className="flex flex-col items-center flex-1 min-w-[148px]"
             >
               <button
-                onClick={() => handleGenderSelect(goal)}
+                onClick={() => handleGoalSelect(goal)}
                 className={`aspect-square w-full max-w-[200px] flex justify-center items-center rounded-[20px] transition ${
                   isSelected ? "bg-purple-main" : "bg-purple-background-gender"
                 }`}
               >
-                <img src={icon} alt={goal} />
+                <img src={icon} alt={"цель"} />
               </button>
               <h2
                 className={`text-center font-medium text-[1rem] leading-5 text-black-heading mt-[0.75rem] w-full max-w-[200px]`}
@@ -85,9 +124,9 @@ const GoalStep: React.FC<Props> = ({
 
       <section className="absolute w-full bottom-[130px] rounded-t-[15px] text-[1.125rem] leading-[1.25rem] px-7">
         <Continue
-          handleNext={handleNext}
+          handleNext={handleFinishRegistration}
           isValid={isGoalSelected}
-          title={"Продолжить"}
+          title={"Завершить регистрацию"}
         />
       </section>
     </main>

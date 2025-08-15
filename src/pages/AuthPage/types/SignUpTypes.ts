@@ -1,12 +1,14 @@
 export type FormDataTypes = {
   phone: string;
-  code?: string;
-  gender?: string;
+  code: string;
+  gender?: "Женский" | "Мужской" | null | undefined;
   birth?: string;
   name?: string;
   photos?: File[];
-  goal?: string;
+  goal?: "Поиск жилья" | "Поиск соседа" | "Сдать жильё" | "Поиск комнаты" | null | undefined;
 }
+export type GenderType = FormDataTypes['gender'];
+export type GoalType = FormDataTypes['goal'];
 
 export type HeadingComponentTypes = {
   title?: string;

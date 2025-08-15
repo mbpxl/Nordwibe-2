@@ -1,40 +1,46 @@
 import { useState } from "react";
-import { quizData } from "../../misc/quizData";
 import QuizSlideHeader from "../QuizSlideHeader/quizSlideHeader";
 import QuizProgress from "../QuizProgress/QuizProgress";
+import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
+import { mockQuizzes } from "../../misc/quizData";
+import QuizParagraphs from "../QuizTypography/QuizParagraph";
+import QuizTitle from "../QuizTypography/QuizTitle";
+import QuizImage from "../QuizTypography/QuizImage";
+import { useParams } from "react-router-dom";
+import Error from "../../../../shared/Components/ErrorPage/ErrorPage";
 
 const QuizSlide = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const data = quizData;
+	const { uuid } = useParams<{ uuid: string }>();
+	const selectedQuiz = mockQuizzes.find((quiz) => quiz.uuid === uuid);
+	if(!selectedQuiz) {
+		return <Error/>
+	}
 
-  const paragraphsStyles =
-    "text-black-heading text-[1rem] font-medium leading-5 mt-6";
+  const lessons = selectedQuiz.lessons;
+
+  const slide = lessons[currentSlide];
 
   return (
-    <div className="min-h-screen flex flex-col justify-between px-4 pb-[30px]">
+    <Wrapper className="min-h-screen flex flex-col justify-between pb-[30px]">
       <div className="h-[320px]">
         <div className="flex flex-col">
-          <QuizSlideHeader heading={data[currentSlide].heading} />
-          <img
-            src={data[currentSlide].img}
-            alt={`Quiz Image`}
-            className="self-center mb-3"
-          />
-          <h2 className="text-black-heading text-[1rem] font-semibold leading-5">
-            {data[currentSlide].title}
-          </h2>
-          <p className={paragraphsStyles}>{data[currentSlide].textPart1}</p>
-          <p className={paragraphsStyles}>{data[currentSlide].textPart2}</p>
-          <p className={paragraphsStyles}>{data[currentSlide].textPart3}</p>
+          <QuizSlideHeader heading={selectedQuiz.title} />
+
+          <QuizImage image_url={slide.image_url}/>
+					<QuizTitle title={slide.title}/>
+					<QuizParagraphs paragraphs={slide.text.split(". ").map(i=>i.replace(/\.*$/,"."))}/>
+					
         </div>
       </div>
 
       <QuizProgress
-        currentSlide={currentSlide}
-        setCurrentSlide={setCurrentSlide}
-        quizData={data}
-      />
-    </div>
+				currentSlide={currentSlide}
+				setCurrentSlide={setCurrentSlide}
+				quizData={lessons}
+				uuid={uuid!}
+			/>
+    </Wrapper>
   );
 };
 

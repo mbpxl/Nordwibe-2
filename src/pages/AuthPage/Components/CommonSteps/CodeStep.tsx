@@ -5,11 +5,17 @@ import GoBackButton from "../SignUp/GoBackButton";
 import Heading from "../SignUp/Heading";
 import useFormatUnformatCode from "../../hooks/useFormatCode";
 import React from "react";
+import { useConfirmPhone } from "../../service/useConfirmPhone";
+import { useLocation, useNavigate } from "react-router-dom";
+import { MAIN_ROUTE } from "../../../../shared/utils/consts";
+import { useAccessToken } from "../../../../shared/service/useAuthToken";
 
 type Props = StepPropsTypes<"code">;
 
 const CodeStep: React.FC<Props> = React.memo(
   ({ formData, updateForm, onNext, onBack }) => {
+    const fullPhoneNumber = `+7${formData.phone}`;
+
     const inputRef = useRef<HTMLInputElement>(null);
 
     // форматирование телефона в вид 0-0-0-0
@@ -18,6 +24,9 @@ const CodeStep: React.FC<Props> = React.memo(
     const [code, setCode] = useState(formData.code || "");
     const [timer, setTimer] = useState(30);
     const [canResend, setCanResend] = useState(false);
+
+    const navigate = useNavigate();
+    const location = useLocation();
 
     // Таймер 30 секунд
     useEffect(() => {
@@ -33,18 +42,42 @@ const CodeStep: React.FC<Props> = React.memo(
       return () => clearInterval(interval);
     }, [timer]);
 
+    const { mutate: getToken } = useAccessToken();
+
+    const handleSuccess = () => {
+      updateForm({ code });
+
+      getToken(undefined, {
+        onSuccess: () => {
+          onNext();
+          if (location.pathname === "/sign-in") {
+            navigate(MAIN_ROUTE);
+            localStorage.removeItem("signin-form");
+          }
+        },
+        onError: () => {
+          alert("Ошибка получения access токена"); // todo: Исправить данный функционал
+        },
+      });
+    };
+
+    const captcha_token = localStorage.getItem("captcha_token");
+
+    const { mutate, isError, isPending } = useConfirmPhone(handleSuccess);
+
     const handleNext = useCallback(
       (e?: React.FormEvent) => {
         if (e) e.preventDefault();
         if (code.length < 4) return;
 
-        updateForm({ code });
-        onNext();
+        if (captcha_token) {
+          mutate({ phone: fullPhoneNumber, code, captcha_token });
+        }
       },
-      [code, onNext, updateForm]
+      [captcha_token, code, fullPhoneNumber, mutate]
     );
 
-    const isCodeValid = code.length === 4;
+    const isCodeValid = code.length === 4 && !isPending && !!captcha_token;
 
     return (
       <main className="pt-[1rem] min-h-screen relative flex flex-col items-center">
@@ -58,7 +91,7 @@ const CodeStep: React.FC<Props> = React.memo(
             isCodeStep={true}
           />
 
-          <section className="mt-6 flex justify-center">
+          <section className="mt-6 flex flex-col items-center gap-2 justify-center">
             <form
               className="w-[308px] font-medium text-[1.938rem] leading-10"
               onSubmit={handleNext}
@@ -75,9 +108,17 @@ const CodeStep: React.FC<Props> = React.memo(
                 />
               </div>
             </form>
+
+            <p
+              className={`text-red-500 text-sm ${
+                isError ? "visible" : "invisible"
+              }`}
+            >
+              Неправильный код. Попробуйте ещё раз.
+            </p>
           </section>
 
-          <section className="mt-[1.75rem] flex justify-center">
+          <section className="mt-4 flex justify-center">
             <h3 className="font-medium text-[1rem] leading-10 text-[#3D3D3D]">
               Никому не сообщайте код
             </h3>
