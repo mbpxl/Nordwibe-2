@@ -9,7 +9,7 @@ const QuizSlideHeader: React.FC<{ heading: string }> = ({ heading }) => {
       </Link>
 
       <div className="flex-1 flex justify-center">
-        <h1 className="text-[20px] text-black-heading font-semibold leading-normal text-center">
+        <h1 className="text-[20px] text-black-heading font-semibold leading-normal text-center text-nowrap">
           {heading}
         </h1>
       </div>

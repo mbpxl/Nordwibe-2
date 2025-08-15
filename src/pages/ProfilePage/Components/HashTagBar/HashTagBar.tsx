@@ -2,21 +2,7 @@
 import HashTag from "../../../../shared/Components/HashTag/HashTag";
 import ShowMore from "../ShowMore/ShowMore";
 
-const HashTagBar = () => {
-  const hashTags = [
-    <HashTag hashtagTitle={"игры"} />,
-    <HashTag hashtagTitle={"фильмы"} />,
-    <HashTag hashtagTitle={"книги"} />,
-    <HashTag hashtagTitle={"кулинария"} />,
-    <HashTag hashtagTitle={"программирование"} />,
-    <HashTag hashtagTitle={"спорт"} />,
-    <HashTag hashtagTitle={"прогулки"} />,
-    <HashTag hashtagTitle={"книги"} />,
-    <HashTag hashtagTitle={"музыка"} />,
-    <HashTag hashtagTitle={"религия"} />,
-    <HashTag hashtagTitle={"саморзавитие"} />,
-  ];
-
+const HashTagBar = ({ hashTags }: { hashTags: string[] }) => {
   return (
     <div>
       <h1 className="text-black-heading text-[0.875rem] font-semibold leading-[0.75rem] mt-3 mb-2">
@@ -26,7 +12,7 @@ const HashTagBar = () => {
         <div className="flex flex-wrap gap-x-2 gap-y-2">
           {hashTags.map((hashTag: any) => (
             <div key={hashTag} className="shrink-0">
-              {hashTag}
+              <HashTag hashtagTitle={hashTag} />
             </div>
           ))}
         </div>

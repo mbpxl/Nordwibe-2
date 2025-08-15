@@ -1,4 +1,6 @@
-import QuizSlide from "./Components/QuizSlide/quizSlide";
+// страница, отвечающая за контент во время прохождения квиза
+
+import QuizSlide from "./Components/QuizSlide/QuizSlide";
 
 const QuizPassing = () => {
   return (

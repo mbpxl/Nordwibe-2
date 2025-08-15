@@ -4,33 +4,33 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --port 80",
     "dev:host": "vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "api-gen": "npx openapi-typescript https://3133319-bo35045.twc1.net/api/v2/c376775a-44d6-4800-8a80-fc8c56484385/openapi.json -o ./src/shared/api/schema.ts"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.1.1",
-    "@tailwindcss/vite": "^4.1.7",
+    "@tailwindcss/vite": "^4.1.11",
     "@tanstack/react-query": "^5.77.2",
-    "axios": "^1.9.0",
+    "@yandex/smart-captcha": "2.8.0",
+    "axios": "^1.10.0",
     "framer-motion": "^12.19.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-hook-form": "^7.60.0",
     "react-router-dom": "^6.30.1",
     "react-toastify": "^11.0.5",
-    "tailwindcss": "^4.1.7",
-    "zod": "^4.0.2"
+    "swiper": "^11.2.10",
+    "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
     "@tanstack/eslint-plugin-query": "^5.78.0",
-    "@types/nprogress": "^0.2.3",
+    "@types/node": "^24.2.0",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
-    "@types/react-input-mask": "^3.0.6",
     "@vitejs/plugin-react-swc": "^3.9.0",
     "eslint": "^9.25.0",
     "eslint-plugin-react-hooks": "^5.2.0",

@@ -1,7 +1,7 @@
 import Continue from "../../../AuthPage/Components/Continue/Continue";
 import type { cardType } from "../../types/cardType";
 
-const QuizItem: React.FC<cardType> = ({ time, title, description, img }) => {
+const QuizItem: React.FC<cardType> = ({uuid, time, title, description, img }) => {
   return (
     <div className="flex p-3 gap-x-3 bg-white rounded-[12px]">
       <div className="shrink-0">
@@ -17,7 +17,7 @@ const QuizItem: React.FC<cardType> = ({ time, title, description, img }) => {
         <p className="h-[65px] text-black-heading text-[0.75rem] font-normal leading-[0.75rem] max-[334px]:text-[0.635rem] max-[334px]:mb-[0.625rem]">
           {description}
         </p>
-        <Continue title={"Перейти"} to={`/quiz/${1}`} />
+        <Continue title={"Перейти"} to={`/quiz/${uuid}`} />
       </div>
     </div>
   );

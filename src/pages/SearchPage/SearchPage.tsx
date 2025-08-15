@@ -1,10 +1,14 @@
-import Heading from "../../shared/Components/Heading/Heading";
+import TopicHeader from "../../shared/Components/TopicHeader/TopicHeader";
 import SearchPeopleList from "./Components/SearhPeople/SearchPeopleList/SearchPeopleList";
+import funnel from "/icons/funnel.svg";
 
 const SearchPage = () => {
   return (
     <>
-      <Heading title={"Чаты"} imgSrc={"/icons/search.svg"} />
+      <TopicHeader>
+        <h1>Поиск людей</h1>
+        <img src={funnel} alt="funnel" />
+      </TopicHeader>
       <SearchPeopleList />
     </>
   );

@@ -4,7 +4,7 @@ import female from "/icons/female.svg";
 import male from "/icons/male.svg";
 import female_active from "/icons/female-active.svg";
 import male_active from "/icons/male-active.svg";
-import type { StepPropsTypes } from "../../../types/SignUpTypes";
+import type { GenderType, StepPropsTypes } from "../../../types/SignUpTypes";
 import Continue from "../../Continue/Continue";
 import React, { useCallback } from "react";
 
@@ -12,17 +12,15 @@ type Props = StepPropsTypes<"gender">;
 
 const GenderStep: React.FC<Props> = React.memo(
   ({ onNext, onBack, formData, updateForm }) => {
-    console.log(formData);
-
     const handleGenderSelect = useCallback(
-      (gender: string) => {
+      (gender: GenderType) => {
         updateForm({ gender });
       },
       [updateForm]
     );
 
-    const isMale = formData.gender === "male";
-    const isFemale = formData.gender === "female";
+    const isMale = formData.gender === "Мужской";
+    const isFemale = formData.gender === "Женский";
 
     const handleNext = useCallback(() => {
       if (formData.gender) onNext();
@@ -47,13 +45,13 @@ const GenderStep: React.FC<Props> = React.memo(
           <div className="flex justify-center gap-4 w-full max-w-2xl mx-auto">
             {[
               {
-                gender: "male",
+                gender: "Мужской" as GenderType,
                 isSelected: isMale,
                 icon: isMale ? male : male_active,
                 label: "Мужской",
               },
               {
-                gender: "female",
+                gender: "Женский" as GenderType,
                 isSelected: isFemale,
                 icon: isFemale ? female : female_active,
                 label: "Женский",
@@ -71,7 +69,7 @@ const GenderStep: React.FC<Props> = React.memo(
                       : "bg-purple-background-gender"
                   }`}
                 >
-                  <img src={icon} alt={gender} />
+                  <img src={icon} alt={"гендер"} />
                 </button>
                 <h2
                   className={`text-center ${

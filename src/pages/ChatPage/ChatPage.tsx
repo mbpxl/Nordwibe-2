@@ -1,10 +1,14 @@
-import Heading from "../../shared/Components/Heading/Heading";
+import TopicHeader from "../../shared/Components/TopicHeader/TopicHeader";
 import ChatList from "./Components/Chat/ChatList/ChatList";
+import search from "/icons/search.svg";
 
 const ChatPage = () => {
   return (
     <>
-      <Heading title={"Чаты"} imgSrc={"/icons/search.svg"} />
+      <TopicHeader>
+        <h1>Чат</h1>
+        <img src={search} alt="search" />
+      </TopicHeader>
       <ChatList />
     </>
   );

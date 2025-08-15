@@ -4,4 +4,5 @@ export type cardType = {
   description: string;
   img: string;
   completed?: boolean;
+	uuid: string;
 }
