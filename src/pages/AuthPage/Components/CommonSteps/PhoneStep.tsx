@@ -12,6 +12,7 @@ import Continue from "../Continue/Continue";
 import Heading from "../SignUp/Heading";
 import UserAgreement from "../UserAgreement/UserAgreement";
 import { WELCOME_ROUTE } from "../../../../shared/utils/consts";
+import React from "react";
 
 type Props = StepPropsTypes<"phone">;
 
@@ -23,7 +24,10 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
 
   const inputRef = useRef<HTMLInputElement>(null);
   const { formatPhone, handleInputChange } = usePhoneFormatter();
-  const handleKeyDown = useBackspacePhoneFix(inputRef, phone, formatPhone);
+  const handleKeyDown = useCallback(
+    useBackspacePhoneFix(inputRef, phone, formatPhone),
+    []
+  );
 
   // Получаем публичный токен капчи
   const {
@@ -31,17 +35,17 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
     isError: isCaptchaError, //todo:  добавить toast для ошибки
   } = useGetCaptchaToken();
 
-  // Сохраняем капча токен в localStorage
+  // Сохраняем капчy токен в localStorage
   useEffect(() => {
     if (captchaToken) {
       localStorage.setItem("captcha_token", captchaToken);
     }
   }, [captchaToken]);
 
-  const handleSuccess = () => {
+  const handleSuccess = useCallback(() => {
     updateForm({ phone });
     onNext();
-  };
+  }, [phone, updateForm, onNext]);
 
   if (isCaptchaError) {
     console.error("Ошибка получения токена капчи");

@@ -1,3 +1,4 @@
+import React from "react";
 import type { LessonsType } from "../../../types/quizDataTypes";
 import next from "/icons/quiz/quiz-next.svg";
 
@@ -6,7 +7,7 @@ export interface QuizButtonProps {
   isNext?: boolean;
   quizData: LessonsType[];
   currentSlide: number;
-	isLastQuizStep?: boolean;
+  isLastQuizStep?: boolean;
 }
 
 const QuizButton: React.FC<QuizButtonProps> = ({
@@ -14,7 +15,7 @@ const QuizButton: React.FC<QuizButtonProps> = ({
   isNext,
   quizData,
   currentSlide,
-	isLastQuizStep,
+  isLastQuizStep,
 }) => {
   const isDisabled = isNext
     ? currentSlide === quizData.length - 1
@@ -28,7 +29,9 @@ const QuizButton: React.FC<QuizButtonProps> = ({
 
   return (
     <button
-      className={`${isLastQuizStep ? "opacity-0" : "opacity-100"} w-[2.5rem] h-[2.5rem] rounded-[30px] flex justify-center items-center ${
+      className={`${
+        isLastQuizStep ? "opacity-0" : "opacity-100 "
+      } w-[2.5rem] h-[2.5rem] rounded-[30px] flex justify-center items-center ${
         isDisabled ? "bg-gray-300 cursor-not-allowed" : "bg-purple-sub-button"
       }`}
       onClick={handleClick}
@@ -44,5 +47,4 @@ const QuizButton: React.FC<QuizButtonProps> = ({
     </button>
   );
 };
-
 export default QuizButton;

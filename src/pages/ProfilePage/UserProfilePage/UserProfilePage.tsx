@@ -1,17 +1,63 @@
 import AboutMyself from "../Components/AboutMyself/AboutMyself";
 import HashTagBar from "../Components/HashTagBar/HashTagBar";
-import Heading from "../../../shared/Components/TopicHeader/TopicHeader";
-import StatusBar from "../Components/StatusBar/StatusBar";
 import Wrapper from "../../../shared/Components/Wrapper/Wrapper";
+import { useLocation, useParams } from "react-router-dom";
+import TopicHeader from "../../../shared/Components/TopicHeader/TopicHeader";
+import { PhotoSlider } from "../Components/ProfilePhotosBar/ProfilePhotosBar";
+import StatusBar from "../Components/StatusBar/StatusBar";
+import { useGetUser } from "../../SearchPage/service/useGetUser";
+import Loading from "../../../shared/Components/Loading/Loading";
+import Error from "../../../shared/Components/ErrorPage/ErrorPage";
+import ActionBar from "../Components/ActionBar/ActionBar";
+import { GoBackButton } from "../../../shared/Components/GoBackButton/GoBackButton";
 
 const UserProfilePage = () => {
+  const { state } = useLocation();
+  const { ids } = useParams<{ ids: string }>();
+  const userFromState = state?.user;
+
+  const shouldFetch = !userFromState && ids;
+  const { data, isLoading, isError } = shouldFetch
+    ? useGetUser(ids!)
+    : { data: null, isLoading: false, isError: false };
+
+  const user = userFromState || data?.[0];
+
+  if (isLoading && !user) {
+    return <Loading />;
+  }
+
+  if (isError || !user) {
+    return <Error />;
+  }
+
   return (
-    <Wrapper className="px-4">
-      <Heading title={"Александр, 21"} imgSrc={"/icons/show_more.svg"} />
-      <AboutMyself about={""} />
-      <HashTagBar hashTags={["Кушать", "Гулять"]} />
-      <StatusBar />
-    </Wrapper>
+    <div className="">
+      <Wrapper
+        className={
+          "flex flex-col max-w-[475px] m-auto overflow-hidden pb-28 relative"
+        }
+      >
+        <TopicHeader>
+          <GoBackButton />
+          <h1>{(user.username || "") + " " + (user.age || "")}</h1>
+        </TopicHeader>
+        <PhotoSlider
+          photos={[
+            "/imgs/profile-photos/slider1.jpg",
+            "/imgs/profile-photos/slider2.jpg",
+            "/imgs/profile-photos/slider3.jpg",
+          ]}
+        />
+        <div>
+          <AboutMyself about={user.about} />
+
+          <HashTagBar hashTags={user.hashtags_list} />
+          {user && <StatusBar data={user} />}
+        </div>
+      </Wrapper>
+      <ActionBar />
+    </div>
   );
 };
 

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import HashTag from "../../../../shared/Components/HashTag/HashTag";
 import ShowMore from "../ShowMore/ShowMore";
 

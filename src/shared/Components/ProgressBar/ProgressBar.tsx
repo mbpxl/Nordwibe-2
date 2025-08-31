@@ -8,14 +8,15 @@ const ProgressBar: React.FC<progressType> = ({
   const progressPercentage = (Number(progress) / totalProgress) * 100;
 
   return (
-    <div className="my-3 p-3 bg-white rounded-[12px]">
-      {title === "квизы" && (
+    <div className="w-full my-3 p-3 bg-white rounded-[12px]">
+      {(title === "квиз" || title === "тест") && (
         <div className="flex justify-between mb-3">
           <h1 className="text-[0.875rem] font-semibold leading-[0.75rem] text-black-heading">
             Ваш прогресс:
           </h1>
           <h2 className="text-black-heading text-[0.75rem] font-medium leading-3">
-            {progress} / {totalProgress} квизов
+            {/* квизов */}
+            {progress} / {totalProgress} {title}ов
           </h2>
         </div>
       )}

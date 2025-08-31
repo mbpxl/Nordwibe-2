@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
 
-// import "swiper/css";
-
 interface PhotoSliderProps {
   photos: string[];
 }
@@ -12,7 +10,7 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({ photos }) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <div className="w-full flex justify-center items-center overflow-hidden">
+    <div className="w-full h-[136px] flex justify-center items-center overflow-hidden">
       <Swiper
         initialSlide={1}
         spaceBetween={-15}

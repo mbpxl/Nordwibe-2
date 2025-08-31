@@ -1,3 +1,4 @@
+import React from "react";
 import goBackIcon from "/icons/arrow-left.svg";
 
 const GoBackButton: React.FC<{ onBack: () => void }> = ({ onBack }) => {

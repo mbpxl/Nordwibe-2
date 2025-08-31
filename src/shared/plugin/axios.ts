@@ -1,9 +1,12 @@
-import axios from "axios";
+import axios, { AxiosError, type AxiosRequestConfig } from "axios";
 import { getCookie } from "./getCookie";
+import { redirectToLogin } from "./redirectToLogin";
+import { clearUserData } from "./clearUserData";
 
+const baseURL = "https://3133319-bo35045.twc1.net/api/v2";
 
 export const api = axios.create({
-  baseURL: "https://3133319-bo35045.twc1.net/api/v2",
+  baseURL,
   withCredentials: true,
 });
 
@@ -21,3 +24,61 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
+
+let isRefreshing = false;
+
+api.interceptors.response.use(
+  (response) => response,
+  async (error: AxiosError) => {
+    const originalRequest = error.config as AxiosRequestConfig & {
+      _retry?: boolean;
+    };
+
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+
+      if (!isRefreshing) {
+        isRefreshing = true;
+        try {
+          // Запрос на обновление токена
+          const csrfToken = getCookie("csrftoken");
+          const refreshResponse = await axios.post(
+            `${baseURL}/auth/refresh_token`,
+            {},
+            {
+              withCredentials: true,
+              headers: {
+                "X-CSRFToken": csrfToken || "",
+                Authorization: `Bearer ${localStorage.getItem(
+                  "refresh_token"
+                )}`,
+              },
+            }
+          );
+
+          const { access_token, refresh_token } = refreshResponse.data;
+
+          localStorage.setItem("access_token", access_token);
+          if (refresh_token) {
+            localStorage.setItem("refresh_token", refresh_token);
+          }
+
+          if (!originalRequest.headers) originalRequest.headers = {};
+          originalRequest.headers["Authorization"] = "Bearer " + access_token;
+
+          return api(originalRequest);
+        } catch (err) {
+          clearUserData();
+          redirectToLogin();
+          return Promise.reject(err);
+        } finally {
+          isRefreshing = false;
+        }
+      } else {
+        return Promise.reject(error);
+      }
+    }
+
+    return Promise.reject(error);
+  }
+);

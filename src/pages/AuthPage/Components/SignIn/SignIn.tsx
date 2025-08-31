@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AnimatedStepWrapper from "../../../../shared/Components/AnimatedStepWrapper/AnimatedStepWrapper";
 import type { FormDataTypes } from "../../types/SignUpTypes";
 import PhoneStep from "../CommonSteps/PhoneStep";
@@ -29,9 +29,9 @@ const SignIn = () => {
 
   const [formData, setFormData] = useState<FormDataTypes>(initialFormData);
 
-  const updateForm = (data: Partial<FormDataTypes>) => {
+  const updateForm = useCallback((data: Partial<FormDataTypes>) => {
     setFormData((prev) => ({ ...prev, ...data }));
-  };
+  }, []);
 
   const [step, setStep] = useState<number>(initialStep);
 
@@ -42,15 +42,15 @@ const SignIn = () => {
     localStorage.setItem("signin-form", JSON.stringify({ step, formData }));
   }, [step, formData]);
 
-  const nextStep = () => {
+  const nextStep = useCallback(() => {
     setDirection("forward");
     setStep((s) => s + 1);
-  };
+  }, []);
 
-  const prevStep = () => {
+  const prevStep = useCallback(() => {
     setDirection("backward");
     setStep((s) => s - 1);
-  };
+  }, []);
 
   const steps = [
     <PhoneStep

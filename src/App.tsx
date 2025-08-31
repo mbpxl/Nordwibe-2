@@ -7,7 +7,10 @@ function AppContent() {
   const location = useLocation();
   const shouldHideNavBar =
     hideNavBarRoutes.includes(location.pathname) ||
-    !!matchPath("/quiz/:uuid", location.pathname) || matchPath("/quiz/test/:uuid", location.pathname);
+    !!matchPath("/quiz/:uuid", location.pathname) ||
+    matchPath("/quiz/test/:uuid", location.pathname) ||
+    matchPath("/test/:uuid", location.pathname) ||
+    matchPath("/profile/:ids", location.pathname);
 
   return (
     <>

@@ -9,6 +9,14 @@ export type QuizessTypes = Array<{
 	quiz: QuizTypes[];
 }>;
 
+export type QuizCardType = {
+	uuid: string;
+	title: string;
+	description: string;
+	image_url: string;
+	time: string;
+}
+
 export type LessonsType = {
 	uuid: string;
 	title: string;
