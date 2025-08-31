@@ -1,5 +1,6 @@
 import { useState, useRef, useLayoutEffect } from "react";
 import arrow from "/icons/arrow-left.svg";
+import React from "react";
 
 interface ShowMoreProps {
   children: React.ReactNode;
@@ -81,5 +82,4 @@ const ShowMore: React.FC<ShowMoreProps> = ({
     </div>
   );
 };
-
 export default ShowMore;

@@ -6,21 +6,25 @@ export const useAccessToken = () => {
   return useMutation({ mutationFn: fetchAccessToken });
 };
 
-export const fetchAccessToken = async(): Promise<string> => {
+export const fetchAccessToken = async (): Promise<string> => {
   const csrfToken = getCookie("csrfToken");
 
   const response = await api.post(
     "/auth/refresh_token",
+    {},
     {
-        headers: {
+      headers: {
         "X-CSRFToken": csrfToken ?? "",
       },
-    },
+    }
   );
 
-  const accessToken = response.data?.access_token;
-  if(!accessToken) throw new Error("Access token не получен");
+  const refreshToken = response.data?.refresh_token;
+  if (!refreshToken) throw new Error("Refresh token не получен");
+  localStorage.setItem("refresh_token", refreshToken);
 
+  const accessToken = response.data?.access_token;
+  if (!accessToken) throw new Error("Access token не получен");
   localStorage.setItem("access_token", accessToken);
   return accessToken;
 };

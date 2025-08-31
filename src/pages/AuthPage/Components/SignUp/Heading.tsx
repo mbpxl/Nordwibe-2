@@ -1,3 +1,4 @@
+import React from "react";
 import { usePhoneFormatter } from "../../hooks/usePhoneNumber";
 import type { HeadingComponentTypes } from "../../types/SignUpTypes";
 

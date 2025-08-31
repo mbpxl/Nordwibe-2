@@ -1,5 +1,5 @@
 export type progressType = {
-  progress: string;
+  progress: number | string;
   totalProgress: number;
-  title: "квизы" | "прохождение квиза";
+  title: "квиз" | "прохождение" | "тест";
 }

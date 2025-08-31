@@ -1,13 +1,20 @@
+import React from "react";
 import Continue from "../../../AuthPage/Components/Continue/Continue";
-import type { cardType } from "../../types/cardType";
+import type { QuizCardType } from "../../../QuizPassingPage/types/quizDataTypes";
 
-const QuizItem: React.FC<cardType> = ({uuid, time, title, description, img }) => {
+const QuizItem: React.FC<QuizCardType> = ({
+  uuid,
+  time,
+  title,
+  description,
+  image_url,
+}) => {
   return (
     <div className="flex p-3 gap-x-3 bg-white rounded-[12px]">
       <div className="shrink-0">
-        <img src={img} alt="quiz_image" />
+        <img src={image_url} alt="quiz_image" />
       </div>
-      <div>
+      <div className="max-w-[350.7px]">
         <p className="text-purple-heading text-[0.625rem] font-medium leading-[0.75rem] mb-1 max-[334px]:text-[0.58rem] max-[334px]:leading-[0.696rem]">
           Время прохождения: {time} мин
         </p>

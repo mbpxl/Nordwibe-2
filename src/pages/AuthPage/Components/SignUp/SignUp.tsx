@@ -26,11 +26,11 @@ const getInitialData = (): { formData: FormDataTypes; step: number } => {
     formData: {
       phone: "",
       code: "",
-      gender: "",
+      gender: null,
       birth: "",
       name: "",
       photos: [],
-      goal: "",
+      goal: null,
     },
   };
 };

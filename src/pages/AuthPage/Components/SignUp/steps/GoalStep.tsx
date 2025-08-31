@@ -6,9 +6,11 @@ import looking_for_neighbor_active from "/icons/looking_for_neighbor_active.svg"
 import looking_for_rent_active from "/icons/looking_for_rent_active.svg";
 import type { GoalType, StepPropsTypes } from "../../../types/SignUpTypes";
 import Continue from "../../Continue/Continue";
-import { useFillProfile } from "../../../service/useFillProfileInfo";
+import { useFillProfile } from "../../../../../shared/service/useFillProfileInfo";
 import { useNavigate } from "react-router-dom";
 import { MAIN_ROUTE } from "../../../../../shared/utils/consts";
+import React, { useCallback } from "react";
+//todo import { useGetMe } from "../../../../ProfilePage/service/useGetMe";
 
 type Props = StepPropsTypes<"goal">;
 
@@ -22,21 +24,21 @@ const GoalStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
   const isLookingForRent = formData.goal === "Поиск жилья";
   const isLookingForNeighbor = formData.goal === "Поиск соседа";
 
-  const { fillProfile, isError, isSuccess, error, data } = useFillProfile();
+  const { fillProfile, isError, isSuccess, error } = useFillProfile();
 
-  const handleFinishRegistration = () => {
-    const fullPhone = `+7${formData.phone}`;
+  const handleFinishRegistration = useCallback(() => {
     const birthDate = formData.birth
       ? new Date(formData.birth.split("/").reverse().join("-")).toISOString()
       : "";
 
     if (formData.goal) {
-      console.log(formData.goal);
       fillProfile({
         username: null,
-        phone: fullPhone,
         name: formData.name!,
+        birth_date: birthDate,
         usage_goal: formData.goal,
+        desired_length: null,
+        chronotype: null,
         max_budget: null,
         occupation: null,
         smoking_status: null,
@@ -45,16 +47,12 @@ const GoalStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
         religion: null,
         about: null,
         ready_for_smalltalk: false,
-        birth_date: birthDate,
         city_id: null,
-        hashtags: [],
+        hometown_id: null,
+        hashtags_ids: null,
       });
     }
-  };
-
-  if (isError) {
-    console.log(data?.data);
-  }
+  }, [formData, fillProfile]);
 
   const isGoalSelected = !!formData.goal;
 
@@ -80,7 +78,7 @@ const GoalStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
         />
       </div>
 
-      <section className="mt-[3.5rem] w-full px-4">
+      <section className="mt-[3.5rem] max-[352px]:mt-[1rem] w-full px-4">
         <div className="flex justify-center gap-4 w-full max-w-2xl mx-auto">
           {[
             {
@@ -102,7 +100,7 @@ const GoalStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
           ].map(({ goal, isSelected, icon, text }) => (
             <div
               key={goal}
-              className="flex flex-col items-center flex-1 min-w-[148px]"
+              className="flex flex-col items-center flex-1 min-w-[148px] max-[352px]:min-w-[80px]"
             >
               <button
                 onClick={() => handleGoalSelect(goal)}
@@ -122,7 +120,7 @@ const GoalStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
         </div>
       </section>
 
-      <section className="absolute w-full bottom-[130px] rounded-t-[15px] text-[1.125rem] leading-[1.25rem] px-7">
+      <section className="w-full fixed bottom-[108px] rounded-t-[15px] text-[1.125rem] leading-[1.25rem] px-7">
         <Continue
           handleNext={handleFinishRegistration}
           isValid={isGoalSelected}

@@ -3,4 +3,5 @@ export type MainPageCartsTypes = {
   headind: string;
   message: string;
   bg_image: string;
+	to: string;
 }
