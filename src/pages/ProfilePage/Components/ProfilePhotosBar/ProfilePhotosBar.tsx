@@ -4,10 +4,35 @@ import SwiperCore from "swiper";
 
 interface PhotoSliderProps {
   photos: string[];
+  username?: string;
 }
 
-export const PhotoSlider: React.FC<PhotoSliderProps> = ({ photos }) => {
+export const PhotoSlider: React.FC<PhotoSliderProps> = ({
+  photos,
+  username,
+}) => {
   const [activeIndex, setActiveIndex] = useState(0);
+
+  if (photos.length === 1) {
+    // ⚡️ Отдельный рендер для одного фото
+    return (
+      <div className="w-full h-[136px] flex justify-center items-center overflow-hidden">
+        <div className="w-[136px] h-[136px] rounded-full overflow-hidden">
+          {photos[0] ? (
+            <img
+              src={"https://3133319-bo35045.twc1.net/" + photos[0]}
+              alt="photo-0"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="flex justify-center items-center h-full bg-purple-sub-button text-white font-semibold text-4xl">
+              {username ? username[0].toUpperCase() : "П"}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full h-[136px] flex justify-center items-center overflow-hidden">
@@ -45,11 +70,17 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({ photos }) => {
                   transform: `scale(${isActive ? 1 : 0.68})`,
                 }}
               >
-                <img
-                  src={src}
-                  alt={`photo-${i}`}
-                  className="w-full h-full object-cover"
-                />
+                {src ? (
+                  <img
+                    src={"https://3133319-bo35045.twc1.net/" + src}
+                    alt={`photo-${i}`}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="flex justify-center items-center h-full bg-purple-sub-button text-white font-semibold text-4xl">
+                    {username ? username[0].toUpperCase() : "П"}
+                  </div>
+                )}
               </div>
             </SwiperSlide>
           );

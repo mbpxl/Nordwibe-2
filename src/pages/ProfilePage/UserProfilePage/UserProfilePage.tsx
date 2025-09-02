@@ -42,13 +42,7 @@ const UserProfilePage = () => {
           <GoBackButton />
           <h1>{(user.username || "") + " " + (user.age || "")}</h1>
         </TopicHeader>
-        <PhotoSlider
-          photos={[
-            "/imgs/profile-photos/slider1.jpg",
-            "/imgs/profile-photos/slider2.jpg",
-            "/imgs/profile-photos/slider3.jpg",
-          ]}
-        />
+        <PhotoSlider photos={[user.avatar_url]} username={user.username} />
         <div>
           <AboutMyself about={user.about} />
 
@@ -56,7 +50,7 @@ const UserProfilePage = () => {
           {user && <StatusBar data={user} />}
         </div>
       </Wrapper>
-      <ActionBar />
+      <ActionBar companiodId={user.id} />
     </div>
   );
 };

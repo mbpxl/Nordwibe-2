@@ -5,26 +5,34 @@ import type { MainPageCartsTypes } from "../../../types/MainPageCartsTypes";
 import { useQuizProgress } from "../../../hooks/useQuizProgress";
 import Loading from "../../../../../shared/Components/Loading/Loading";
 import Error from "../../../../../shared/Components/ErrorPage/ErrorPage";
+import { useGetCountCompletedTests } from "../../../hooks/useGetCountCompletedTests";
 
 const Carts = () => {
   const { isLoading, isError, completedQuizzesCount, totalQuizzes } =
     useQuizProgress();
 
-  if (isLoading) return <Loading />;
-  if (isError) return <Error />;
+  const {
+    isLoading: isTestsLoading,
+    isError: isTestsError,
+    completedTestsCount,
+    totalTests,
+  } = useGetCountCompletedTests();
+
+  if (isLoading || isTestsLoading) return <Loading />;
+  if (isError || isTestsError) return <Error />;
 
   const carts: MainPageCartsTypes[] = [
     {
       id: "1",
       headind: "Поиск людей",
-      message: "680 человек",
+      message: "56 человек",
       bg_image: "/icons/TapBar_MainPage/TapBar-search.svg",
       to: "/search",
     },
     {
       id: "2",
       headind: "Тесты",
-      message: "3/8 пройденных", // при желании тоже можно сделать динамическим
+      message: `${completedTestsCount}/${totalTests} пройденных`, // при желании тоже можно сделать динамическим
       bg_image: "/icons/TapBar_MainPage/TapBar-tests.svg",
       to: "/test",
     },

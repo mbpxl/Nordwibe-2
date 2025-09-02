@@ -1,6 +1,7 @@
 import { lazy } from "react";
 
 import {
+  CHAT_DIALOG,
   CHAT_ROUTE,
   MAIN_ROUTE,
   MY_PROFILE_ROUTE,
@@ -95,6 +96,10 @@ export const routes = [
   {
     path: SETTINGS_ROUTE,
     Component: lazy(() => import("./pages/SettingsPage/SettingsPage")),
+  },
+  {
+    path: CHAT_DIALOG,
+    Component: lazy(() => import("./pages/ChatDialogPage/ChatDialogPage")),
   },
   {
     path: "*",

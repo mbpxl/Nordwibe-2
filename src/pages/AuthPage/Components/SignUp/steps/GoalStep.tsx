@@ -33,8 +33,8 @@ const GoalStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
 
     if (formData.goal) {
       fillProfile({
-        username: null,
-        name: formData.name!,
+        username: formData.name!,
+        name: null,
         birth_date: birthDate,
         usage_goal: formData.goal,
         desired_length: null,
@@ -49,7 +49,7 @@ const GoalStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
         ready_for_smalltalk: false,
         city_id: null,
         hometown_id: null,
-        hashtags_ids: null,
+        hashtags_ids: [],
       });
     }
   }, [formData, fillProfile]);

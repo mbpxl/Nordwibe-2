@@ -1,6 +1,7 @@
 import React from "react";
 import Continue from "../../../AuthPage/Components/Continue/Continue";
 import type { QuizCardType } from "../../../QuizPassingPage/types/quizDataTypes";
+import { Link } from "react-router-dom";
 
 const QuizItem: React.FC<QuizCardType> = ({
   uuid,
@@ -10,7 +11,10 @@ const QuizItem: React.FC<QuizCardType> = ({
   image_url,
 }) => {
   return (
-    <div className="flex p-3 gap-x-3 bg-white rounded-[12px]">
+    <Link
+      className="flex p-3 gap-x-3 bg-white rounded-[12px]"
+      to={`/quiz/${uuid}`}
+    >
       <div className="shrink-0">
         <img src={image_url} alt="quiz_image" />
       </div>
@@ -26,7 +30,7 @@ const QuizItem: React.FC<QuizCardType> = ({
         </p>
         <Continue title={"Перейти"} to={`/quiz/${uuid}`} />
       </div>
-    </div>
+    </Link>
   );
 };
 

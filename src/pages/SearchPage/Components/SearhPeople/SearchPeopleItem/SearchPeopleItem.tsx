@@ -28,7 +28,11 @@ const SearchPeopleItem = ({ uuid }: { uuid: string }) => {
               {data[0].username[0].toUpperCase()}
             </div>
           ) : (
-            <img src={"" + data[0]?.avatar_url} alt="avatar" />
+            <img
+              className="w-[100px] h-[100px]"
+              src={"https://3133319-bo35045.twc1.net/" + data[0]?.avatar_url}
+              alt="avatar"
+            />
           )}
         </div>
         <div className="w-full">
@@ -41,9 +45,9 @@ const SearchPeopleItem = ({ uuid }: { uuid: string }) => {
             </div> */}
           </div>
           <div className="text-[0.75rem] leading-4">
-            {data[0]?.about?.slice(0, 56) + "..." || ""}
+            {data[0].about ? data[0]?.about?.slice(0, 56) + "..." : ""}
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1 mt-1">
             <div className="flex gap-1 flex-wrap">
               {data[0]?.hashtags_list?.map((hashtag) => (
                 <HashTag key={hashtag} hashtagTitle={hashtag} />
