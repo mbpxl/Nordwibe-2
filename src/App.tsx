@@ -10,7 +10,8 @@ function AppContent() {
     !!matchPath("/quiz/:uuid", location.pathname) ||
     matchPath("/quiz/test/:uuid", location.pathname) ||
     matchPath("/test/:uuid", location.pathname) ||
-    matchPath("/profile/:ids", location.pathname);
+    matchPath("/profile/:ids", location.pathname) ||
+    matchPath("/chats/:companiodId", location.pathname);
 
   return (
     <>

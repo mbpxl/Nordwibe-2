@@ -4,7 +4,10 @@ export const SIGN_UP_ROUTE = "/sign-up";
 export const SIGN_IN_ROUTE = "/sign-in";
 
 export const SEARCH_ROUTE = "/search";
+
 export const CHAT_ROUTE = "/chat";
+export const CHAT_DIALOG = "/chats/:companionId";
+
 export const MAIN_ROUTE = "/";
 
 export const MY_PROFILE_ROUTE = "/profile";

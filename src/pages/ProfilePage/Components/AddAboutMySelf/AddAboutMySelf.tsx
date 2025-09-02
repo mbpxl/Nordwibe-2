@@ -4,31 +4,44 @@ import { useFillProfile } from "../../../../shared/service/useFillProfileInfo";
 const AddAboutMySelf = ({ data }: any) => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const [aboutMySelfValue, setAboutMySelfValue] = useState<string>("");
+  const { fillProfile, isSuccess } = useFillProfile();
+
   const handleChangeEditMode = () => {
     setIsEditMode((prev) => !prev);
   };
 
-  const [aboutMySelfValue, setAboutMySelfValue] = useState<string>(
-    localStorage.getItem("about") || ""
-  );
   const handleChangeAboutMySelf = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    setAboutMySelfValue(e.target?.value);
-    localStorage.setItem("about", e.target?.value);
+    setAboutMySelfValue(e.target.value);
   };
 
-  const { fillProfile } = useFillProfile();
-
-  const handleAddAboutMySelf = () => {
-    fillProfile({ ...data, about: aboutMySelfValue });
-    localStorage.removeItem("about");
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (aboutMySelfValue.trim()) {
+      fillProfile({ ...data, about: aboutMySelfValue.trim() });
+    }
   };
 
+  const handleCancel = () => {
+    setAboutMySelfValue("");
+    setIsEditMode(false);
+  };
+
+  // Обработка успешной отправки
+  useEffect(() => {
+    if (isSuccess) {
+      setIsEditMode(false);
+      setAboutMySelfValue("");
+    }
+  }, [isSuccess]);
+
+  // Фокус на textarea при входе в режим редактирования
   useEffect(() => {
     if (isEditMode && textareaRef.current) {
       textareaRef.current.focus();
-
       const length = textareaRef.current.value.length;
       textareaRef.current.setSelectionRange(length, length);
     }
@@ -42,24 +55,34 @@ const AddAboutMySelf = ({ data }: any) => {
       <div className="">
         {isEditMode ? (
           <div className="">
-            <textarea
-              ref={textareaRef}
-              value={aboutMySelfValue}
-              onChange={handleChangeAboutMySelf}
-              onBlur={handleChangeEditMode}
-              className="w-full h-17 py-1.5 px-1 border-2 border-purple-sub-button rounded-[10px] outline-none"
-            ></textarea>
-            <div className="">
-              <button
-                onClick={handleAddAboutMySelf}
-                className="bg-purple-main text-white p-2 rounded-[12px]"
-              >
-                Добавить
-              </button>
-            </div>
+            <form onSubmit={handleSubmit}>
+              <textarea
+                ref={textareaRef}
+                value={aboutMySelfValue}
+                onChange={handleChangeAboutMySelf}
+                className="w-full h-17 py-1.5 px-1 border-2 border-purple-sub-button rounded-[10px] outline-none"
+                placeholder="Расскажите о себе"
+              />
+              <div className="flex gap-2 mt-2">
+                <button
+                  type="submit"
+                  disabled={!aboutMySelfValue.trim()}
+                  className="bg-purple-main text-white p-2 rounded-[12px] disabled:opacity-50"
+                >
+                  Добавить
+                </button>
+                <button
+                  type="button"
+                  onClick={handleCancel}
+                  className="bg-gray-300 text-gray-700 p-2 rounded-[12px] disabled:opacity-50"
+                >
+                  Отмена
+                </button>
+              </div>
+            </form>
           </div>
         ) : (
-          <div onClick={handleChangeEditMode}>
+          <div onClick={handleChangeEditMode} className="cursor-pointer">
             <h2 className="text-purple-main-disabled text-[1rem] font-medium leading-4">
               Хотите <span className="border-b-2">добавить</span> информацию о
               себе?

@@ -53,13 +53,7 @@ const ProfilePage = () => {
       <TopicHeader>
         <h1>{(data.username || "") + " " + (data.age || "")}</h1>
       </TopicHeader>
-      <PhotoSlider
-        photos={[
-          "/imgs/profile-photos/slider1.jpg",
-          "/imgs/profile-photos/slider2.jpg",
-          "/imgs/profile-photos/slider3.jpg",
-        ]}
-      />
+      <PhotoSlider photos={[data.avatar_url]} username={data.username} />
 
       <div className="relative">
         <EditButton

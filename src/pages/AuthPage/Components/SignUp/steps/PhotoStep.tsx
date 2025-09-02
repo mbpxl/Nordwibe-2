@@ -1,13 +1,14 @@
-import { useCallback, useMemo, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import type { StepPropsTypes } from "../../../types/SignUpTypes";
 import GoBackButton from "../GoBackButton";
 import Heading from "../Heading";
 import addPhotoImg from "/imgs/AddPhoto.png";
 import removePhoto from "/icons/removePhoto.svg";
 import Continue from "../../Continue/Continue";
-import React from "react";
+import { useUploadAvatar } from "../../../../../shared/service/useUploadProfilePhoto";
 
 type Props = StepPropsTypes<"photos">;
+type PhotoEntry = File | string;
 
 const PhotoStep: React.FC<Props> = ({
   onBack,
@@ -16,16 +17,51 @@ const PhotoStep: React.FC<Props> = ({
   updateForm,
 }) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const photos = useMemo(() => {
-    return (formData.photos || []) as File[];
-  }, [formData.photos]);
+  const { mutateAsync: uploadAvatar } = useUploadAvatar();
+  const [isUploading, setIsUploading] = useState(false);
+
+  // objectURL cache for File previews
+  const objectUrlsRef = useRef(new Map<File, string>());
+
+  // photos may contain File or string (url)
+  const photos = (formData.photos || []) as PhotoEntry[];
+
+  // helper: get or create preview URL for File
+  const getPreviewUrl = useCallback((file: File) => {
+    const exist = objectUrlsRef.current.get(file);
+    if (exist) return exist;
+    const url = URL.createObjectURL(file);
+    objectUrlsRef.current.set(file, url);
+    return url;
+  }, []);
+
+  const revokePreviewUrl = useCallback((file: File) => {
+    const url = objectUrlsRef.current.get(file);
+    if (url) {
+      URL.revokeObjectURL(url);
+      objectUrlsRef.current.delete(file);
+    }
+  }, []);
+
+  // cleanup on unmount — revoke all left object URLs
+  useEffect(() => {
+    return () => {
+      objectUrlsRef.current.forEach((url) => URL.revokeObjectURL(url));
+      objectUrlsRef.current.clear();
+    };
+  }, []);
 
   const handleAddPhoto = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       const files = event.target.files;
-      if (files && files[0] && photos.length < 4) {
-        updateForm({ photos: [...photos, files[0]] });
+      if (!files || !files[0]) return;
+      if (photos.length >= 4) {
+        event.target.value = "";
+        return;
       }
+      const file = files[0];
+      updateForm({ photos: [...photos, file] });
+      event.target.value = "";
     },
     [photos, updateForm]
   );
@@ -33,56 +69,83 @@ const PhotoStep: React.FC<Props> = ({
   const handleDelete = useCallback(
     (index: number) => {
       const updated = [...photos];
-      updated.splice(index, 1);
+      const removed = updated.splice(index, 1)[0];
+      // если удалили File, освобождаем его objectURL
+      if (removed instanceof File) {
+        revokePreviewUrl(removed);
+      }
       updateForm({ photos: updated });
     },
-    [photos, updateForm]
+    [photos, updateForm, revokePreviewUrl]
   );
 
   const handleClickAdd = useCallback(() => {
-    if (photos.length < 4) {
-      inputRef.current?.click();
-    }
+    if (photos.length < 4) inputRef.current?.click();
   }, [photos.length]);
 
-  const renderPhotoBox = useCallback(
-    (file: File, index: number) => {
-      if (!(file instanceof File)) {
-        console.error("Ожидался File, но пришло:", file);
-        return null;
+  // отправка всех File элементов на сервер, замена их на URL, затем onNext
+  const handleNext = useCallback(async () => {
+    if (photos.length === 0) {
+      onNext();
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      // создаём копию чтобы менять конкретные индексы
+      const newPhotos: PhotoEntry[] = [...photos];
+
+      for (let i = 0; i < photos.length; i++) {
+        const p = photos[i];
+        if (p instanceof File) {
+          // отправляем файл
+          const res = await uploadAvatar(p);
+          // заменяем на url
+          newPhotos[i] = res.url;
+          // освобождаем objectURL, потому что теперь используем серверный url
+          revokePreviewUrl(p);
+        }
+        // если p уже string — оставляем как есть
       }
 
-      const previewUrl = URL.createObjectURL(file);
-
-      return (
-        <div
-          key={index}
-          className="relative w-[9.25rem] h-[9.25rem] rounded-[10px] overflow-hidden"
-        >
-          <img
-            src={previewUrl}
-            alt={`photo-${index}`}
-            className="object-cover w-full h-full rounded-[10px]"
-          />
-          <button
-            onClick={() => handleDelete(index)}
-            className="absolute top-1 right-1 bg-black/50 rounded-full p-1 text-white"
-          >
-            <div className="w-[2.125rem] h-[2.125rem] rounded-full bg-[#F0F0F0] flex justify-center items-center">
-              <img src={removePhoto} alt="x" />
-            </div>
-          </button>
-        </div>
-      );
-    },
-    [handleDelete]
-  );
-
-  const handleNext = useCallback(() => {
-    onNext();
-  }, [onNext]);
+      // сохраняем в formData (теперь photos содержит строки + возможно оставшиеся File, но по логике все File уже загружены)
+      updateForm({ photos: newPhotos });
+      onNext();
+    } catch (err) {
+      console.error("Ошибка загрузки фото", err);
+      alert("Не удалось загрузить одно или несколько фото. Попробуй ещё раз.");
+    } finally {
+      setIsUploading(false);
+    }
+  }, [photos, uploadAvatar, updateForm, onNext, revokePreviewUrl]);
 
   const isValid = photos.length > 0;
+
+  const renderPhotoBox = (entry: PhotoEntry, index: number) => {
+    const isString = typeof entry === "string";
+    const src = isString ? (entry as string) : getPreviewUrl(entry as File);
+
+    return (
+      <div
+        key={index}
+        className="relative w-[9.25rem] h-[9.25rem] rounded-[10px] overflow-hidden"
+      >
+        <img
+          src={src}
+          alt={`photo-${index}`}
+          className="object-cover w-full h-full rounded-[10px]"
+        />
+        <button
+          onClick={() => handleDelete(index)}
+          className="absolute top-1 right-1 bg-black/50 rounded-full p-1 text-white"
+        >
+          <div className="w-[2.125rem] h-[2.125rem] rounded-full bg-[#F0F0F0] flex justify-center items-center">
+            <img src={removePhoto} alt="x" />
+          </div>
+        </button>
+      </div>
+    );
+  };
 
   return (
     <main className="pt-[1rem] min-h-screen relative">
@@ -101,12 +164,13 @@ const PhotoStep: React.FC<Props> = ({
           {photos.length < 4 ? (
             <button
               onClick={handleClickAdd}
-              className="w-[9.25rem] h-[9.25rem] max-[352px]:w-[6.6rem] max-[352px]:h-[6.6rem] bg-purple-sub-button flex justify-center items-center rounded-[10px]"
+              disabled={isUploading}
+              className="w-[9.25rem] h-[9.25rem] max-[352px]:w-[6.6rem] max-[352px]:h-[6.6rem] bg-purple-sub-button flex justify-center items-center rounded-[10px] disabled:opacity-50"
             >
               <img src={addPhotoImg} alt="add" />
             </button>
           ) : (
-            renderPhotoBox(photos[3], 3)
+            photos[3] && renderPhotoBox(photos[3], 3)
           )}
 
           {photos[0] && renderPhotoBox(photos[0], 0)}
@@ -134,8 +198,8 @@ const PhotoStep: React.FC<Props> = ({
         <div className="px-7 flex flex-col gap-3">
           <Continue
             handleNext={handleNext}
-            isValid={isValid}
-            title={"Продолжить"}
+            isValid={isValid && !isUploading}
+            title={isUploading ? "Загрузка..." : "Продолжить"}
           />
         </div>
       </section>

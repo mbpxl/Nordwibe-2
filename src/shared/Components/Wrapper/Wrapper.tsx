@@ -4,7 +4,7 @@ interface IWrapper {
 }
 
 const Wrapper: React.FC<IWrapper> = ({ children, className }) => {
-  const combinedClassName = ["px-[15px]", className].filter(Boolean).join(" ");
+  const combinedClassName = ["px-3", className].filter(Boolean).join(" ");
 
   return <div className={combinedClassName}>{children}</div>;
 };

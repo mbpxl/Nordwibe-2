@@ -10,12 +10,24 @@ import AnimatedStepWrapper from "../../../../shared/Components/AnimatedStepWrapp
 import { useCallback, useEffect, useState } from "react";
 import type { FormDataTypes } from "../../types/SignUpTypes";
 
-// Извлекаем сохранённые данные из localStorage или возаращаем дефолт
+// Читаем из localStorage, НО photos всегда инициализируем как []
 const getInitialData = (): { formData: FormDataTypes; step: number } => {
   try {
     const data = localStorage.getItem("signup-form");
     if (data) {
-      return JSON.parse(data);
+      const parsed = JSON.parse(data);
+      return {
+        step: parsed.step ?? 0,
+        formData: {
+          phone: parsed.formData?.phone ?? "",
+          code: parsed.formData?.code ?? "",
+          gender: parsed.formData?.gender ?? null,
+          birth: parsed.formData?.birth ?? "",
+          name: parsed.formData?.name ?? "",
+          photos: [], // ❗️фото не восстанавливаем из localStorage
+          goal: parsed.formData?.goal ?? null,
+        },
+      };
     }
   } catch (error) {
     console.log("Ошибка чтения из localStorage", error);
@@ -29,7 +41,7 @@ const getInitialData = (): { formData: FormDataTypes; step: number } => {
       gender: null,
       birth: "",
       name: "",
-      photos: [],
+      photos: [], // по умолчанию пусто
       goal: null,
     },
   };
@@ -40,12 +52,15 @@ const SignUp = () => {
 
   const [step, setStep] = useState<number>(initialStep);
   const [formData, setFormData] = useState<FormDataTypes>(initialFormData);
-
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
 
-  // Сохраняем formData и step при каждом изменении
+  // Сохраняем всё, КРОМЕ photos (File нельзя сериализовать)
   useEffect(() => {
-    localStorage.setItem("signup-form", JSON.stringify({ step, formData }));
+    const { photos: _omit, ...rest } = formData;
+    localStorage.setItem(
+      "signup-form",
+      JSON.stringify({ step, formData: rest })
+    );
   }, [step, formData]);
 
   const nextStep = useCallback(() => {
