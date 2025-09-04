@@ -87,7 +87,7 @@ const GoalStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
               icon: isLookingForRent
                 ? looking_for_neighbor_active
                 : looking_for_neighbor,
-              text: "У меня есть жильё — ищу соседа(ей)",
+              text: "Ищу жильё",
             },
             {
               goal: "Поиск соседа" as GoalType,
@@ -95,7 +95,7 @@ const GoalStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
               icon: isLookingForNeighbor
                 ? looking_for_rent_active
                 : looking_for_rent,
-              text: "Нет жилья — ищу жилье и соседа(ей)",
+              text: "Ищу соседа",
             },
           ].map(({ goal, isSelected, icon, text }) => (
             <div
