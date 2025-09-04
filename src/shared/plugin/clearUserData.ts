@@ -4,4 +4,5 @@ export function clearUserData() {
   localStorage.removeItem("signin-form");
   localStorage.removeItem("signup-form");
   localStorage.removeItem("search_filter");
+  localStorage.removeItem("about");
 }

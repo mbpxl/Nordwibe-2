@@ -73,73 +73,71 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
 
   return (
     <main className="pt-[1rem]">
-      <div>
-        <article className="pl-3">
-          <Link to={WELCOME_ROUTE}>
-            <img src={goBackIcon} alt="Go Back" />
-          </Link>
-        </article>
+      <article className="pl-3">
+        <Link to={WELCOME_ROUTE}>
+          <img src={goBackIcon} alt="Go Back" />
+        </Link>
+      </article>
 
-        <Heading
-          title="Введите номер телефона"
-          subTitle=""
-          isCodeStep={false}
-          formData={{
-            phone: "",
-            code: "",
-            gender: null,
+      <Heading
+        title="Введите номер телефона"
+        subTitle=""
+        isCodeStep={false}
+        formData={{
+          phone: "",
+          code: "",
+          gender: null,
+        }}
+      />
+
+      <section className="mt-6 flex flex-col items-center gap-2">
+        <form
+          className="w-[308px] font-medium text-[1.938rem] leading-10"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleNext();
           }}
+        >
+          <div className="relative">
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1A1A1A] font-semibold">
+              +7
+            </span>
+            <input
+              type="tel"
+              inputMode="numeric"
+              ref={inputRef}
+              value={formatPhone(phone)}
+              onChange={(e) => handleInputChange(e, setPhone, inputRef)}
+              onKeyDown={handleKeyDown}
+              placeholder="(000) 000-00-00"
+              className="w-full pl-[3.5rem] pr-4 py-0.5 text-[#1A1A1A] outline-none focus:outline-none"
+            />
+          </div>
+        </form>
+
+        <p
+          className={`text-red-500 text-sm ${
+            isPhoneError ? "visible" : "invisible"
+          }`}
+        >
+          Неправильный номер телефона. Попробуйте ещё раз.
+        </p>
+
+        <SmartCaptcha
+          sitekey={captchaPublicToken}
+          language="ru"
+          onSuccess={setCaptchaToken}
         />
+      </section>
 
-        <section className="mt-6 flex flex-col items-center gap-2">
-          <form
-            className="w-[308px] font-medium text-[1.938rem] leading-10"
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleNext();
-            }}
-          >
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1A1A1A] font-semibold">
-                +7
-              </span>
-              <input
-                type="tel"
-                inputMode="numeric"
-                ref={inputRef}
-                value={formatPhone(phone)}
-                onChange={(e) => handleInputChange(e, setPhone, inputRef)}
-                onKeyDown={handleKeyDown}
-                placeholder="(000) 000-00-00"
-                className="w-full pl-[3.5rem] pr-4 py-0.5 text-[#1A1A1A] outline-none focus:outline-none"
-              />
-            </div>
-          </form>
-
-          <p
-            className={`text-red-500 text-sm ${
-              isPhoneError ? "visible" : "invisible"
-            }`}
-          >
-            Неправильный номер телефона. Попробуйте ещё раз.
-          </p>
-
-          <SmartCaptcha
-            sitekey={captchaPublicToken}
-            language="ru"
-            onSuccess={setCaptchaToken}
-          />
-        </section>
-
-        <section className="m-auto w-[18rem] flex flex-col gap-[1rem] mt-[28vh] font-bold text-[1.125rem] leading-[1.25rem] text-white">
-          <Continue
-            handleNext={handleNext}
-            isValid={isPhoneValid && !!captchaToken}
-            title="Получить код"
-          />
-          <UserAgreement />
-        </section>
-      </div>
+      <section className="m-auto w-[18rem] flex flex-col gap-[1rem] mt-[25vh] font-bold text-[1.125rem] leading-[1.25rem] text-white">
+        <Continue
+          handleNext={handleNext}
+          isValid={isPhoneValid && !!captchaToken}
+          title="Получить код"
+        />
+        <UserAgreement />
+      </section>
     </main>
   );
 };

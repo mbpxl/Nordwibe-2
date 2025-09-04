@@ -127,7 +127,7 @@ const CodeStep: React.FC<Props> = ({
           </h3>
         </section>
 
-        <section className="absolute w-full bottom-[70px] rounded-t-[15px] text-[1.125rem] leading-[1.25rem] px-7">
+        <section className="flex flex-col items-center justify-center mt-10 gap-4 rounded-t-[15px] text-[1.125rem] leading-[1.25rem] px-7">
           <Continue
             handleNext={handleNext}
             isValid={isCodeValid}
