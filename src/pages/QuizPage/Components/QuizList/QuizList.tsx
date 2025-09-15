@@ -1,6 +1,7 @@
 import Loading from "../../../../shared/Components/Loading/Loading";
 import ProgressBar from "../../../../shared/Components/ProgressBar/ProgressBar";
 import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
+import { baseURLforImages } from "../../../../shared/plugin/axios";
 import { useGetCompletedQuizes } from "../../service/useGetCompletedQuizes";
 import { useGetQuiz } from "../../service/useGetQuiz";
 import AllQuizCompleted from "../AllQuizCompleted/AllQuizCompleted";
@@ -58,9 +59,7 @@ const QuizList = () => {
                   time={"5"}
                   title={item.title}
                   description={item.description}
-                  image_url={
-                    "https://3133319-bo35045.twc1.net/" + item.image_url
-                  }
+                  image_url={baseURLforImages + item.image_url}
                 />
               </div>
             ))}

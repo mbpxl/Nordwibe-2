@@ -9,6 +9,7 @@ import EducationImage from "../../../../shared/Components/Education/EducationsTy
 import EducationTitle from "../../../../shared/Components/Education/EducationsTypography/EducationTitle";
 import { useGetQuiz } from "../../../QuizPage/service/useGetQuiz";
 import Loading from "../../../../shared/Components/Loading/Loading";
+import { baseURLforImages } from "../../../../shared/plugin/axios";
 
 const QuizSlide = () => {
   const { data, isLoading } = useGetQuiz();
@@ -34,9 +35,7 @@ const QuizSlide = () => {
         <div className="flex flex-col">
           <EducationSlideHeader heading={selectedQuiz.title} unit={"/quiz"} />
 
-          <EducationImage
-            image_url={"https://3133319-bo35045.twc1.net/" + slide.image_url}
-          />
+          <EducationImage image_url={baseURLforImages + slide.image_url} />
 
           <EducationTitle title={slide.title} />
           <QuizParagraphs

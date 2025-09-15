@@ -3,6 +3,7 @@ import Stories from "react-insta-stories";
 
 import { useGetStories } from "../../service/useGetStories";
 import Loading from "../../../../shared/Components/Loading/Loading";
+import { baseURLforImages } from "../../../../shared/plugin/axios";
 
 const News = () => {
   const { data, isLoading, isError } = useGetStories();
@@ -50,7 +51,7 @@ const News = () => {
         <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
           <Stories
             stories={data[currentStory].story_parts.map((part: any) => ({
-              url: "https://3133319-bo35045.twc1.net/" + part.image_url,
+              url: baseURLforImages + part.image_url,
               header: {
                 heading: data[currentStory].title,
                 subheading: "", // например, сюда можно дату или описание

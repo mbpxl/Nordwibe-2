@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import SwiperCore from "swiper";
+import { baseURLforImages } from "../../../../shared/plugin/axios";
 
 interface PhotoSliderProps {
   photos: string[];
@@ -20,7 +21,7 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
         <div className="w-[136px] h-[136px] rounded-full overflow-hidden">
           {photos[0] ? (
             <img
-              src={"https://3133319-bo35045.twc1.net/" + photos[0]}
+              src={baseURLforImages + photos[0]}
               alt="photo-0"
               className="w-full h-full object-cover"
             />
@@ -72,7 +73,7 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
               >
                 {src ? (
                   <img
-                    src={"https://3133319-bo35045.twc1.net/" + src}
+                    src={baseURLforImages + src}
                     alt={`photo-${i}`}
                     className="w-full h-full object-cover"
                   />

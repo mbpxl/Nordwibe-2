@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { baseURLforImages } from "../../../../../shared/plugin/axios";
 
 type ChatItemProps = {
   name: string;
@@ -22,7 +23,7 @@ const ChatItem = ({ name, message, avatar, companionId }: ChatItemProps) => {
       >
         {avatar ? (
           <img
-            src={"https://3133319-bo35045.twc1.net/" + avatar}
+            src={baseURLforImages + avatar}
             alt={name}
             className="w-full h-full object-cover"
           />

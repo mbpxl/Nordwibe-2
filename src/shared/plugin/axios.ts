@@ -3,7 +3,9 @@ import { getCookie } from "./getCookie";
 import { redirectToLogin } from "./redirectToLogin";
 import { clearUserData } from "./clearUserData";
 
-const baseURL = "https://3133319-bo35045.twc1.net/api/v2";
+const baseURL = "https://nordwibe.com/api/v2/";
+
+export const baseURLforImages = "https://nordwibe.com/";
 
 export const api = axios.create({
   baseURL,
@@ -43,7 +45,7 @@ api.interceptors.response.use(
           // Запрос на обновление токена
           const csrfToken = getCookie("csrftoken");
           const refreshResponse = await axios.post(
-            `${baseURL}/auth/refresh_token`,
+            `${baseURL}auth/refresh_token`,
             {},
             {
               withCredentials: true,
@@ -68,6 +70,7 @@ api.interceptors.response.use(
 
           return api(originalRequest);
         } catch (err) {
+          console.log("Пизда ебаная с токеном");
           clearUserData();
           redirectToLogin();
           return Promise.reject(err);
