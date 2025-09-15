@@ -16,6 +16,7 @@ import type {
   ScaleMap,
   SelectedAnswer,
 } from "../../../TestResultPage/types/test";
+import { baseURLforImages } from "../../../../shared/plugin/axios";
 
 const TestSlide = () => {
   const { data, isLoading, isError } = useGetTests();
@@ -72,9 +73,7 @@ const TestSlide = () => {
         <div className="flex flex-col">
           <EducationSlideHeader heading={selectedTest.title} unit={"/test"} />
 
-          <EducationImage
-            image_url={"https://3133319-bo35045.twc1.net/" + slide.image_url}
-          />
+          <EducationImage image_url={baseURLforImages + slide.image_url} />
 
           <AnimatedStepWrapper stepKey={currentSlide} direction={direction}>
             <EducationTitle title={slide.question} />

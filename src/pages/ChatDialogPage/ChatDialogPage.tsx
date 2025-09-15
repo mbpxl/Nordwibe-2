@@ -6,6 +6,7 @@ import Loading from "../../shared/Components/Loading/Loading";
 import Error from "../../shared/Components/ErrorPage/ErrorPage";
 import ChatContent from "./components/ChatContent/ChatContent";
 import InputMessage from "./components/InputMessage/InputMessage";
+import { baseURLforImages } from "../../shared/plugin/axios";
 
 const ChatDialogPage = () => {
   const { companionId } = useParams<{ companionId: string }>();
@@ -33,12 +34,12 @@ const ChatDialogPage = () => {
             {user[0].avatar_url ? (
               <img
                 className="w-10 h-10 rounded-[50%] shrink-0"
-                src={"https://3133319-bo35045.twc1.net/" + user[0].avatar_url}
+                src={baseURLforImages + user[0].avatar_url}
                 alt="avatar"
               />
             ) : (
               <div className="w-10 h-10 bg-purple-sub-button text-white font-semibold text-3xl flex items-center justify-center rounded-[50%] shrink-0">
-                {user[0].username[0].toUpperCase()}
+                {user[0].username ? user[0].username[0].toUpperCase() : ""}
               </div>
             )}
 

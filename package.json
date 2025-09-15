@@ -8,8 +8,7 @@
     "dev:host": "vite --host",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview",
-    "api-gen": "npx openapi-typescript https://3133319-bo35045.twc1.net/api/v2/c376775a-44d6-4800-8a80-fc8c56484385/openapi.json -o ./src/shared/api/schema.ts"
+    "preview": "vite preview"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",

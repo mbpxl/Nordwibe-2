@@ -9,6 +9,7 @@ import SearchPeopleItem from "../SearchPeopleItem/SearchPeopleItem";
 
 const SearchPeopleList = () => {
   const { data: users, isLoading, isError } = useRanking();
+  console.log(users);
 
   if (isLoading) {
     return <Loading />;

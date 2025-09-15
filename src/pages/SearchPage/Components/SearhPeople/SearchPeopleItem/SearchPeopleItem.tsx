@@ -3,6 +3,7 @@ import HashTag from "../../../../../shared/Components/HashTag/HashTag";
 import { useGetUser } from "../../../service/useGetUser";
 import Loading from "../../../../../shared/Components/Loading/Loading";
 import Error from "../../../../../shared/Components/ErrorPage/ErrorPage";
+import { baseURLforImages } from "../../../../../shared/plugin/axios";
 
 const SearchPeopleItem = ({ uuid }: { uuid: string }) => {
   const { data, isLoading, isError } = useGetUser(uuid);
@@ -15,6 +16,8 @@ const SearchPeopleItem = ({ uuid }: { uuid: string }) => {
     return <Error />;
   }
 
+  console.log(data[0]);
+
   return (
     <>
       <Link
@@ -25,12 +28,12 @@ const SearchPeopleItem = ({ uuid }: { uuid: string }) => {
         <div className="w-[100px] h-[100px] bg-purple-sub-button rounded-xl shrink-0">
           {!data[0]?.avatar_url ? (
             <div className="flex justify-center items-center h-full text-white font-semibold text-4xl">
-              {data[0].username[0].toUpperCase()}
+              {data[0].username ? data[0].username[0].toUpperCase() : ""}
             </div>
           ) : (
             <img
               className="w-[100px] h-[100px]"
-              src={"https://3133319-bo35045.twc1.net/" + data[0]?.avatar_url}
+              src={baseURLforImages + data[0]?.avatar_url}
               alt="avatar"
             />
           )}
