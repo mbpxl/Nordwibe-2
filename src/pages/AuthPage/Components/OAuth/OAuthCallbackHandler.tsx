@@ -1,9 +1,7 @@
-// components/OAuthCallbackHandler.tsx
 import { useEffect } from "react";
 
 export const OAuthCallbackHandler = () => {
   const { mutateAsync: handleCallback } = useOAuthCallback();
-  const { mutateAsync: refreshToken } = useAccessToken();
 
   useEffect(() => {
     const processCallback = async () => {
@@ -14,25 +12,35 @@ export const OAuthCallbackHandler = () => {
       const device_id = urlParams.get("device_id") || undefined;
 
       if (!code || !state) {
-        throw new Error("Отсутствуют необходимые параметры");
+        console.error("Отсутствуют необходимые параметры");
+        return;
       }
 
-      await handleCallback({ code, state, type, device_id });
-      await refreshToken();
+      try {
+        // Получаем и сохраняем токены
+        const { accessToken, refreshToken } = await handleCallback({
+          code,
+          state,
+          type,
+          device_id,
+        });
 
-      // Перенаправляем на главную после успешной аутентизации
-      window.location.href = "/";
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("refreshToken", refreshToken);
+
+        // Редиректим на главную без query-параметров
+        window.location.replace("/");
+      } catch (err) {
+        console.error("Ошибка при обработке OAuth callback", err);
+        window.location.replace("/login");
+      }
     };
 
     processCallback();
-  }, [handleCallback, refreshToken]);
+  }, [handleCallback]);
 
   return <div>Обработка аутентификации...</div>;
 };
 function useOAuthCallback(): { mutateAsync: any } {
-  throw new Error("Function not implemented.");
-}
-
-function useAccessToken(): { mutateAsync: any } {
   throw new Error("Function not implemented.");
 }
