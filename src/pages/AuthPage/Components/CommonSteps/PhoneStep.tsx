@@ -13,7 +13,7 @@ import Heading from "../SignUp/Heading";
 import UserAgreement from "../UserAgreement/UserAgreement";
 import { WELCOME_ROUTE } from "../../../../shared/utils/consts";
 import React from "react";
-import { OAuthButtons } from "../OAuth/OAuthButton";
+import { OAuthButtons } from "../OAuth/OAuthButtons";
 
 type Props = StepPropsTypes<"phone">;
 

@@ -1,39 +1,27 @@
-import { useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../../../shared/plugin/axios";
 
-const handleOAuthCallback = async (params: {
+interface OAuth2CallbackParams {
   code: string;
   state: string;
   type?: string;
   device_id?: string;
-}) => {
-  const response = await api.get("/auth/oauth2/callback", { params });
-  return response.data;
-};
+}
 
-export const useOAuthCallback = (params: {
-  code: string | null;
-  state: string | null;
-  type?: string;
-  device_id?: string;
-}) => {
-  const navigate = useNavigate();
+export const useOAuth2Callback = () => {
+  return useMutation({
+    mutationFn: async (params: OAuth2CallbackParams) => {
+      const queryParams = new URLSearchParams({
+        code: params.code,
+        state: params.state,
+        ...(params.type && { type: params.type }),
+        ...(params.device_id && { device_id: params.device_id }),
+      });
 
-  const { data, error, isLoading } = useQuery({
-    queryKey: ["oauth-callback", params],
-    queryFn: () => handleOAuthCallback(params as any),
-    enabled: !!(params.code && params.state),
-    retry: false,
+      const response = await api.get(
+        `/auth/oauth2/callback?${queryParams.toString()}`
+      );
+      return response.data;
+    },
   });
-
-  useEffect(() => {
-    if (data?.access_token) {
-      localStorage.setItem("access_token", data.access_token);
-      navigate("/");
-    }
-  }, [data, navigate]);
-
-  return { isLoading, error };
 };

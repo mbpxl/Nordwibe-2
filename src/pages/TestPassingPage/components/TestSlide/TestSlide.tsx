@@ -8,7 +8,6 @@ import EducationImage from "../../../../shared/Components/Education/EducationsTy
 import EducationTitle from "../../../../shared/Components/Education/EducationsTypography/EducationTitle";
 import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
 import Error from "../../../../shared/Components/ErrorPage/ErrorPage";
-import AnimatedStepWrapper from "../../../../shared/Components/AnimatedStepWrapper/AnimatedStepWrapper";
 import { useGetTests } from "../../../TestPage/service/useGetTests";
 import Loading from "../../../../shared/Components/Loading/Loading";
 import type {
@@ -75,15 +74,13 @@ const TestSlide = () => {
 
           <EducationImage image_url={baseURLforImages + slide.image_url} />
 
-          <AnimatedStepWrapper stepKey={currentSlide} direction={direction}>
-            <EducationTitle title={slide.question} />
-            <TestAnswersList
-              answers={slide.answers}
-              questionUuid={slide.uuid}
-              selectedAnswerUuid={selectedAnswers[slide.uuid]?.answerId}
-              onSelect={handleSelectAnswer}
-            />
-          </AnimatedStepWrapper>
+          <EducationTitle title={slide.question} />
+          <TestAnswersList
+            answers={slide.answers}
+            questionUuid={slide.uuid}
+            selectedAnswerUuid={selectedAnswers[slide.uuid]?.answerId}
+            onSelect={handleSelectAnswer}
+          />
 
           <TestNext
             setCurrentSlide={setCurrentSlide}

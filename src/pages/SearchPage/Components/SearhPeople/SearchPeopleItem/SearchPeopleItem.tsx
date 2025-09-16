@@ -16,8 +16,6 @@ const SearchPeopleItem = ({ uuid }: { uuid: string }) => {
     return <Error />;
   }
 
-  console.log(data[0]);
-
   return (
     <>
       <Link
@@ -28,7 +26,9 @@ const SearchPeopleItem = ({ uuid }: { uuid: string }) => {
         <div className="w-[100px] h-[100px] bg-purple-sub-button rounded-xl shrink-0">
           {!data[0]?.avatar_url ? (
             <div className="flex justify-center items-center h-full text-white font-semibold text-4xl">
-              {data[0].username ? data[0].username[0].toUpperCase() : ""}
+              {data[0].username
+                ? data[0].username[0].toUpperCase()
+                : data[0].name?.charAt(0) || ""}
             </div>
           ) : (
             <img
@@ -41,7 +41,7 @@ const SearchPeopleItem = ({ uuid }: { uuid: string }) => {
         <div className="w-full">
           <div className="flex justify-between">
             <h2 className="text-[0.875rem] font-semibold leading-5 text-left">
-              {data[0].username}, {data[0].age}
+              {data[0].username || data[0].name || "Неизвестный"}, {data[0].age}
             </h2>
             {/* <div className="bg-purple-sub-button rounded-[12px] text-[0.875rem] font-semibold leading-[0.75rem] text-white py-1 px-2">
               {compatibility ? compatibility + " %" : ""}

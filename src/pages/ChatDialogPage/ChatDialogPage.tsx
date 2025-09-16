@@ -39,7 +39,9 @@ const ChatDialogPage = () => {
               />
             ) : (
               <div className="w-10 h-10 bg-purple-sub-button text-white font-semibold text-3xl flex items-center justify-center rounded-[50%] shrink-0">
-                {user[0].username ? user[0].username[0].toUpperCase() : ""}
+                {user[0].username
+                  ? user[0].username[0].toUpperCase()
+                  : user[0].name?.charAt(0) || ""}
               </div>
             )}
 
@@ -47,7 +49,7 @@ const ChatDialogPage = () => {
               className="text-[1.25rem] font-semibold leading-5"
               to={"/profile/" + companionId}
             >
-              {user[0].username}, {user[0].age}
+              {user[0].username || user[0].name}, {user[0].age}
             </Link>
           </div>
         </h1>

@@ -1,19 +1,38 @@
 // components/OAuthCallbackHandler.tsx
-import { useSearchParams } from "react-router-dom";
-import { useOAuthCallback } from "../../service/useOAuthCallback";
+import { useEffect } from "react";
 
 export const OAuthCallbackHandler = () => {
-  const [searchParams] = useSearchParams();
+  const { mutateAsync: handleCallback } = useOAuthCallback();
+  const { mutateAsync: refreshToken } = useAccessToken();
 
-  const { isLoading, error } = useOAuthCallback({
-    code: searchParams.get("code"),
-    state: searchParams.get("state"),
-    type: searchParams.get("type") || undefined,
-    device_id: searchParams.get("device_id") || undefined,
-  });
+  useEffect(() => {
+    const processCallback = async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const code = urlParams.get("code");
+      const state = urlParams.get("state");
+      const type = urlParams.get("type") || undefined;
+      const device_id = urlParams.get("device_id") || undefined;
 
-  if (isLoading) return <div>Processing OAuth login...</div>;
-  if (error) return <div>Error: {error.message}</div>;
+      if (!code || !state) {
+        throw new Error("Отсутствуют необходимые параметры");
+      }
 
-  return <div>Redirecting...</div>;
+      await handleCallback({ code, state, type, device_id });
+      await refreshToken();
+
+      // Перенаправляем на главную после успешной аутентизации
+      window.location.href = "/";
+    };
+
+    processCallback();
+  }, [handleCallback, refreshToken]);
+
+  return <div>Обработка аутентификации...</div>;
 };
+function useOAuthCallback(): { mutateAsync: any } {
+  throw new Error("Function not implemented.");
+}
+
+function useAccessToken(): { mutateAsync: any } {
+  throw new Error("Function not implemented.");
+}

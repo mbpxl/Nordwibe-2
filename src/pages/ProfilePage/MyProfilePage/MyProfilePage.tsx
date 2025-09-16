@@ -51,7 +51,7 @@ const ProfilePage = () => {
       }
     >
       <TopicHeader>
-        <h1>{(data.username || "") + " " + (data.age || "")}</h1>
+        <h1>{(data.username || data.name || "") + " " + (data.age || "")}</h1>
       </TopicHeader>
       <PhotoSlider photos={[data.avatar_url]} username={data.username} />
 
