@@ -88,7 +88,7 @@ const CodeStep: React.FC<Props> = ({
         <GoBackButton onBack={onBack} />
 
         <Heading
-          title={"Введите код"}
+          title={"Введите последние 4 цифры"}
           subTitle={"Отправили на номер +7"}
           formData={formData}
           isCodeStep={true}
@@ -123,7 +123,7 @@ const CodeStep: React.FC<Props> = ({
 
         <section className="mt-4 flex justify-center">
           <h3 className="font-medium text-[1rem] leading-10 text-[#3D3D3D]">
-            Никому не сообщайте код
+            Никому не сообщайте номер
           </h3>
         </section>
 
@@ -133,21 +133,6 @@ const CodeStep: React.FC<Props> = ({
             isValid={isCodeValid}
             title={"Готово"}
           />
-
-          <div className="text-center text-[#3D3D3D] font-medium h-[40px]">
-            {canResend ? (
-              <button className="leading-[1.25rem] font-semibold text-purple-heading text-[1rem] underline">
-                Отправить код повторно
-              </button>
-            ) : (
-              <button className="text-purple-main-disabled">
-                Отправить код повторно можно через{" "}
-                <span className="font-semibold text-purple-heading">
-                  {timer} сек
-                </span>
-              </button>
-            )}
-          </div>
         </section>
       </div>
     </main>

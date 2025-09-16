@@ -13,6 +13,7 @@ import Heading from "../SignUp/Heading";
 import UserAgreement from "../UserAgreement/UserAgreement";
 import { WELCOME_ROUTE } from "../../../../shared/utils/consts";
 import React from "react";
+import { OAuthButtons } from "../OAuth/OAuthButton";
 
 type Props = StepPropsTypes<"phone">;
 
@@ -129,6 +130,10 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
           onSuccess={setCaptchaToken}
         />
       </section>
+
+      <div className="mt-3 flex justify-center">
+        <OAuthButtons />
+      </div>
 
       <section className="m-auto w-[18rem] flex flex-col gap-[1rem] mt-[25vh] font-bold text-[1.125rem] leading-[1.25rem] text-white">
         <Continue
