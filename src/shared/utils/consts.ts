@@ -2,6 +2,7 @@
 export const WELCOME_ROUTE = "/welcome";
 export const SIGN_UP_ROUTE = "/sign-up";
 export const SIGN_IN_ROUTE = "/sign-in";
+export const OAUTH_CALLBACK = "/oauth-callback";
 
 export const SEARCH_ROUTE = "/search";
 

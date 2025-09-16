@@ -5,6 +5,7 @@ import {
   CHAT_ROUTE,
   MAIN_ROUTE,
   MY_PROFILE_ROUTE,
+  OAUTH_CALLBACK,
   PROFILE_EDIT_ROUTE,
   QUIZ_PASSING_ROUTE,
   QUIZ_RESULT_ROUTE,
@@ -23,6 +24,7 @@ import {
 import WelcomePage from "./pages/WelcomePage/WelcomePage";
 import MainPage from "./pages/MainPage/MainPage";
 import ProfilePage from "./pages/ProfilePage/MyProfilePage/MyProfilePage";
+import { OAuthCallbackHandler } from "./pages/AuthPage/Components/OAuth/OAuthCallbackHandler";
 
 // где lazy() - ленивая подгрузка. То есть компонента булет загружена в момент перехода, а не в момент запуска приложения
 
@@ -30,6 +32,10 @@ export const routes = [
   {
     path: WELCOME_ROUTE,
     Component: WelcomePage,
+  },
+  {
+    path: OAUTH_CALLBACK,
+    Component: OAuthCallbackHandler,
   },
   {
     path: SIGN_UP_ROUTE,
