@@ -17,7 +17,10 @@ export const OAuthButtons = () => {
         >
           <img className="w-11 h-11" src="/icons/oauth/VK.svg" alt="" />
         </button>
-        <button onClick={() => loginWithOAuth2("yandex")} disabled={true}>
+        <button
+          onClick={() => loginWithOAuth2("yandex")}
+          disabled={isAuthenticating}
+        >
           <img className="w-11 h-11" src="/icons/oauth/Yandex.png" alt="" />
         </button>
       </div>
