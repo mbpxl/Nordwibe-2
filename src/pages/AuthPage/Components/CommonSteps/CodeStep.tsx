@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import type { StepPropsTypes } from "../../types/SignUpTypes";
 import Continue from "../Continue/Continue";
 import GoBackButton from "../SignUp/GoBackButton";
@@ -26,24 +26,9 @@ const CodeStep: React.FC<Props> = ({
   const { formatCode, handleChange } = useFormatUnformatCode();
 
   const [code, setCode] = useState(formData.code || "");
-  const [timer, setTimer] = useState(30);
-  const [canResend, setCanResend] = useState(false);
 
   const navigate = useNavigate();
   const location = useLocation();
-
-  useEffect(() => {
-    if (timer <= 0) {
-      setCanResend(true);
-      return;
-    }
-
-    const interval = setInterval(() => {
-      setTimer((prev) => prev - 1);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [timer]);
 
   const { mutate: getToken } = useAccessToken();
 

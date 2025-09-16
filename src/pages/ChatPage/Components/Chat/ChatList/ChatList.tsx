@@ -86,7 +86,7 @@ const ChatList = () => {
             return (
               <ChatItem
                 key={chat.id}
-                name={user?.username || "Неизвестный"}
+                name={user?.username || user?.name || "Неизвестный"}
                 message={
                   chat.from_user_id === currentUserId
                     ? `Вы: ${chat.text}`
