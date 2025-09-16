@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useAccessToken } from "../../../shared/service/useAuthToken";
 import { useOAuthStart } from "./useOAuthStart";
 
-export const useAuth = () => {
+export const useOAuth = () => {
   const { mutateAsync: startOAuth2 } = useOAuthStart();
   const { mutateAsync: refreshToken, isPending: isRefreshing } =
     useAccessToken();
