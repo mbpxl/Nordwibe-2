@@ -1,7 +1,7 @@
-import { useAuth } from "../../service/useAuth";
+import { useOAuth } from "../../service/useOAuth";
 
 export const OAuthButtons = () => {
-  const { loginWithOAuth2, isAuthenticating } = useAuth();
+  const { loginWithOAuth2, isAuthenticating } = useOAuth();
 
   if (isAuthenticating) {
     return <div>Проверка аутентификации...</div>;
