@@ -14,7 +14,6 @@ import UserAgreement from "../UserAgreement/UserAgreement";
 import { WELCOME_ROUTE } from "../../../../shared/utils/consts";
 import React from "react";
 import { OAuthButtons } from "../OAuth/OAuthButtons";
-import { clearUserData } from "../../../../shared/plugin/clearUserData";
 
 type Props = StepPropsTypes<"phone">;
 
@@ -60,9 +59,6 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
   } = usePhoneRequest(handleSuccess);
 
   const handleNext = useCallback(() => {
-    // чистим localStorage, если остались данные с прошлой сессии, иначе не получим токен
-    clearUserData();
-
     const fullPhoneNumber = `+7${phone}`;
     if (!captchaToken) return;
 

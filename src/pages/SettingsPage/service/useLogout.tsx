@@ -14,7 +14,7 @@ export const useLogout = () => {
     mutationFn: logout,
     onSuccess: () => {
       console.log("Logout activated");
-      clearUserData(true);
+      clearUserData();
       redirectToLogin();
     },
     onError: (error: any) => {
