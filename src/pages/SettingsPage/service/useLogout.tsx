@@ -19,6 +19,8 @@ export const useLogout = () => {
         })
       );
       clearUserData(true);
+      console.log("Logout activated");
+      clearUserData();
       redirectToLogin();
     },
     onError: (error: any) => {

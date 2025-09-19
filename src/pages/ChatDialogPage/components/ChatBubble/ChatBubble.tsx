@@ -11,7 +11,7 @@ const ChatBubble: React.FC<ChatBubbleTypes> = ({ fromMe, message }) => {
           fromMe ? "bg-white" : "bg-[#E1E1F3] text-[#35339B]"
         } relative rounded-xl`}
       >
-        <h1 className="break-all">{message}</h1>
+        <h1>{message}</h1>
         <h2 className="absolute right-1 bottom-1 text-[#35339B] text-[0.625rem]">
           {""}
         </h2>
