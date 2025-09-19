@@ -18,7 +18,7 @@ export const useLogout = () => {
           detail: { isAuthenticated: false },
         })
       );
-      clearUserData(true);
+      clearUserData();
       console.log("Logout activated");
       clearUserData();
       redirectToLogin();
