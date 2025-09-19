@@ -61,6 +61,7 @@ body {
   line-height: 1;
   font-family: "Montserrat", sans-serif;
 	color: #1a1a1a;
+	overscroll-behavior: none;
   /* overflow: hidden; */
 }
 

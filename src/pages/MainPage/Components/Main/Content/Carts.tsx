@@ -6,8 +6,19 @@ import { useQuizProgress } from "../../../hooks/useQuizProgress";
 import Loading from "../../../../../shared/Components/Loading/Loading";
 import Error from "../../../../../shared/Components/ErrorPage/ErrorPage";
 import { useGetCountCompletedTests } from "../../../hooks/useGetCountCompletedTests";
+import { useRanking } from "../../../../SearchPage/service/useRanking";
+import { useProfileCompletion } from "../../../hooks/useProfileCompletion";
 
 const Carts = () => {
+  const { completionPercentage, isLoading: isProfileCompletionLoading } =
+    useProfileCompletion();
+
+  const {
+    data: rankingData,
+    isLoading: isRankingLoading,
+    isError: isRankingError,
+  } = useRanking();
+
   const { isLoading, isError, completedQuizzesCount, totalQuizzes } =
     useQuizProgress();
 
@@ -18,21 +29,27 @@ const Carts = () => {
     totalTests,
   } = useGetCountCompletedTests();
 
-  if (isLoading || isTestsLoading) return <Loading />;
-  if (isError || isTestsError) return <Error />;
+  if (
+    isLoading ||
+    isTestsLoading ||
+    isRankingLoading ||
+    isProfileCompletionLoading
+  )
+    return <Loading />;
+  if (isError || isTestsError || isRankingError) return <Error />;
 
   const carts: MainPageCartsTypes[] = [
     {
       id: "1",
       headind: "Поиск людей",
-      message: "56 человек",
+      message: `${rankingData?.length} человек`,
       bg_image: "/icons/TapBar_MainPage/TapBar-search.svg",
       to: "/search",
     },
     {
       id: "2",
       headind: "Тесты",
-      message: `${completedTestsCount}/${totalTests} пройденных`, // при желании тоже можно сделать динамическим
+      message: `${completedTestsCount}/${totalTests} пройденных`,
       bg_image: "/icons/TapBar_MainPage/TapBar-tests.svg",
       to: "/test",
     },
@@ -46,7 +63,7 @@ const Carts = () => {
     {
       id: "4",
       headind: "Профиль",
-      message: "Заполнен на 70%",
+      message: `Заполнен на ${completionPercentage} %`,
       bg_image: "/icons/TapBar_MainPage/TapBar-profile.svg",
       to: "/profile",
     },
@@ -54,11 +71,10 @@ const Carts = () => {
 
   return (
     <div className="">
-      <div className="grid grid-cols-2 gap-2 mx-auto mb-[70px]">
+      <div className="grid grid-cols-2 gap-2 mx-auto">
         {carts.map((cart) => (
-          <Link to={cart.to}>
+          <Link key={cart.id} to={cart.to}>
             <div
-              key={cart.id}
               className={`min-[443px]: relative z-30 overflow-hidden bg-white rounded-[12px] p-4`}
             >
               <img
