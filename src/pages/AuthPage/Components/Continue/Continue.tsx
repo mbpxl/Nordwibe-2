@@ -6,6 +6,7 @@ interface ContinueProps {
   isValid?: boolean;
   title: string;
   to?: string;
+  isPending?: boolean;
 }
 
 const Continue: React.FC<ContinueProps> = ({
@@ -13,6 +14,7 @@ const Continue: React.FC<ContinueProps> = ({
   isValid = true,
   title,
   to,
+  isPending,
 }) => {
   const linkClasses =
     "w-full py-[0.25rem] rounded-[30px] font-bold text-white transition bg-purple-main cursor-pointer";
@@ -35,7 +37,17 @@ const Continue: React.FC<ContinueProps> = ({
 
   return (
     <button onClick={handleNext} disabled={!isValid} className={classes}>
-      {title}
+      {isPending ? (
+        <div className="flex justify-center items-center">
+          <img
+            className="w-10 h-5"
+            src="/icons/sign-in/loading-spinner.svg"
+            alt=""
+          />
+        </div>
+      ) : (
+        title
+      )}
     </button>
   );
 };

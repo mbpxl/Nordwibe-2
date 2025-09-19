@@ -6,7 +6,7 @@ import Slider from "./Slider";
 
 const Content = () => {
   return (
-    <Wrapper className="bg-purple-background-wrap min-h-screen min-[453px]:mt-2 pb-2">
+    <Wrapper className="bg-purple-background-wrap h-screen min-[453px]:mt-2">
       <div className="max-w-[630px] m-auto">
         <Slider />
         <Carts />
