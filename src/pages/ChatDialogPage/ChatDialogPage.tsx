@@ -26,7 +26,7 @@ const ChatDialogPage = () => {
   }
 
   return (
-    <div className="">
+    <div className="h-screen">
       <TopicHeader>
         <GoBackButton />
         <h1>

@@ -9,6 +9,8 @@ import { useConfirmPhone } from "../../service/useConfirmPhone";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MAIN_ROUTE } from "../../../../shared/utils/consts";
 import { useAccessToken } from "../../../../shared/service/useAuthToken";
+import ContinueWrapper from "../ContinueWrapper/ContinueWrapper";
+import WrongData from "../PhoneErrorMsg/PhoneErrorMsg";
 
 type Props = StepPropsTypes<"code">;
 
@@ -73,10 +75,11 @@ const CodeStep: React.FC<Props> = ({
         <GoBackButton onBack={onBack} />
 
         <Heading
-          title={"Введите последние 4 цифры"}
-          subTitle={"Отправили на номер +7"}
-          formData={formData}
-          isCodeStep={true}
+          title={"Вам поступит звонок-сброс"}
+          subTitle={
+            "Введите последние четыре цифры номера, с которого поступил звонок-сброс"
+          }
+          isCodeStep
         />
 
         <section className="mt-6 flex flex-col items-center gap-2 justify-center">
@@ -97,13 +100,10 @@ const CodeStep: React.FC<Props> = ({
             </div>
           </form>
 
-          <p
-            className={`text-red-500 text-sm ${
-              isError ? "visible" : "invisible"
-            }`}
-          >
-            Неправильный код. Попробуйте ещё раз.
-          </p>
+          <WrongData
+            isError={isError}
+            message={"Неправильный код. Попробуйте ещё раз"}
+          />
         </section>
 
         <section className="mt-4 flex justify-center">
@@ -112,13 +112,13 @@ const CodeStep: React.FC<Props> = ({
           </h3>
         </section>
 
-        <section className="flex flex-col items-center justify-center mt-10 gap-4 rounded-t-[15px] text-[1.125rem] leading-[1.25rem] px-7">
+        <ContinueWrapper>
           <Continue
             handleNext={handleNext}
             isValid={isCodeValid}
             title={"Готово"}
           />
-        </section>
+        </ContinueWrapper>
       </div>
     </main>
   );
