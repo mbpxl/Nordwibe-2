@@ -14,7 +14,6 @@ import UserAgreement from "../UserAgreement/UserAgreement";
 import { WELCOME_ROUTE } from "../../../../shared/utils/consts";
 import React from "react";
 import { OAuthButtons } from "../OAuth/OAuthButtons";
-import { clearUserData } from "../../../../shared/plugin/clearUserData";
 import ContinueWrapper from "../ContinueWrapper/ContinueWrapper";
 import WrongData from "../PhoneErrorMsg/PhoneErrorMsg";
 

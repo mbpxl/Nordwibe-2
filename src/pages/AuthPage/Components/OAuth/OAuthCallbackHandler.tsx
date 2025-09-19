@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useOAuth2Callback } from "../../service/useOauthCallback";
+import { useOAuth2Callback } from "../../service/useOAuthCallback";
 
 export const OAuthCallbackHandler = () => {
   const { mutateAsync: handleCallback } = useOAuth2Callback();
