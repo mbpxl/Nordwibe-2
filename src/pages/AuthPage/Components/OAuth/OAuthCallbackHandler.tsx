@@ -1,8 +1,7 @@
 import { useEffect } from "react";
-import { useOAuth2Callback } from "../../service/useOauthCallback";
 
 export const OAuthCallbackHandler = () => {
-  const { mutateAsync: handleCallback } = useOAuth2Callback();
+  const { mutateAsync: handleCallback } = useOAuthCallback();
 
   useEffect(() => {
     const processCallback = async () => {
@@ -13,12 +12,12 @@ export const OAuthCallbackHandler = () => {
       const device_id = urlParams.get("device_id") || undefined;
 
       if (!code || !state) {
-        console.error("Missing required parameters");
-        window.location.replace("/login?error=missing_params");
+        console.error("Отсутствуют необходимые параметры");
         return;
       }
 
       try {
+        // Получаем и сохраняем токены
         const { accessToken, refreshToken } = await handleCallback({
           code,
           state,
@@ -26,28 +25,22 @@ export const OAuthCallbackHandler = () => {
           device_id,
         });
 
-        // Сохраняем токены
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
 
-        // Создаем кастомное событие для уведомления приложения об изменении аутентификации
-        window.dispatchEvent(
-          new CustomEvent("authChange", {
-            detail: { isAuthenticated: true },
-          })
-        );
-
-        // Очищаем URL параметры и редиректим
-        window.history.replaceState({}, document.title, "/");
-        window.location.href = "/";
+        // Редиректим на главную без query-параметров
+        window.location.replace("/");
       } catch (err) {
-        console.error("OAuth callback error:", err);
-        window.location.replace("/login?error=oauth_failed");
+        console.error("Ошибка при обработке OAuth callback", err);
+        window.location.replace("/login");
       }
     };
 
     processCallback();
   }, [handleCallback]);
 
-  return <div>Завершение аутентификации...</div>;
+  return <div>Обработка аутентификации...</div>;
 };
+function useOAuthCallback(): { mutateAsync: any } {
+  throw new Error("Function not implemented.");
+}

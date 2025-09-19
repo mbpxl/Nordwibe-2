@@ -6,7 +6,7 @@ import gear from "/icons/gear.svg";
 
 const MainPage = () => {
   return (
-    <div className="">
+    <>
       <TopicHeader>
         <h1>Главная</h1>
         <Link to={"/settings"}>
@@ -15,7 +15,7 @@ const MainPage = () => {
       </TopicHeader>
       <News />
       <Content />
-    </div>
+    </>
   );
 };
 

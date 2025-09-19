@@ -14,10 +14,6 @@ import UserAgreement from "../UserAgreement/UserAgreement";
 import { WELCOME_ROUTE } from "../../../../shared/utils/consts";
 import React from "react";
 import { OAuthButtons } from "../OAuth/OAuthButtons";
-import { clearUserData } from "../../../../shared/plugin/clearUserData";
-import ContinueWrapper from "../ContinueWrapper/ContinueWrapper";
-import WrongData from "../PhoneErrorMsg/PhoneErrorMsg";
-
 
 type Props = StepPropsTypes<"phone">;
 
@@ -58,6 +54,7 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
   const {
     sendPhoneRequest,
     isPending,
+    response,
     isError: isPhoneError,
   } = usePhoneRequest(handleSuccess);
 
@@ -73,6 +70,8 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
 
   const isPhoneValid = phone.length === 10 || !!captchaToken || !isPending;
 
+  console.log(response); //!!!!!!!!!
+
   return (
     <main className="pt-[1rem]">
       <article className="pl-3">
@@ -81,7 +80,16 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
         </Link>
       </article>
 
-      <Heading title="Введите номер телефона" subTitle="" />
+      <Heading
+        title="Введите номер телефона"
+        subTitle=""
+        isCodeStep={false}
+        formData={{
+          phone: "",
+          code: "",
+          gender: null,
+        }}
+      />
 
       <section className="mt-6 flex flex-col items-center gap-2">
         <form
@@ -108,6 +116,14 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
           </div>
         </form>
 
+        <p
+          className={`text-red-500 text-sm ${
+            isPhoneError ? "visible" : "invisible"
+          }`}
+        >
+          Неправильный номер телефона. Попробуйте ещё раз.
+        </p>
+
         <SmartCaptcha
           sitekey={captchaPublicToken}
           language="ru"
@@ -119,20 +135,14 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
         <OAuthButtons />
       </div>
 
-      <WrongData
-        isError={isPhoneError}
-        message={"Неправильный номер телефона!"}
-      />
-
-      <ContinueWrapper>
+      <section className="m-auto w-[18rem] flex flex-col gap-[1rem] mt-[25vh] font-bold text-[1.125rem] leading-[1.25rem] text-white">
         <Continue
           handleNext={handleNext}
-          isPending={isPending}
           isValid={isPhoneValid && !!captchaToken}
           title="Получить код"
         />
         <UserAgreement />
-      </ContinueWrapper>
+      </section>
     </main>
   );
 };

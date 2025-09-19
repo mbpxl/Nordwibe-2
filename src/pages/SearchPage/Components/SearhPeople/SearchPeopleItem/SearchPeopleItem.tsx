@@ -5,13 +5,7 @@ import Loading from "../../../../../shared/Components/Loading/Loading";
 import Error from "../../../../../shared/Components/ErrorPage/ErrorPage";
 import { baseURLforImages } from "../../../../../shared/plugin/axios";
 
-const SearchPeopleItem = ({
-  uuid,
-  compatibility,
-}: {
-  uuid: string;
-  compatibility: number;
-}) => {
+const SearchPeopleItem = ({ uuid }: { uuid: string }) => {
   const { data, isLoading, isError } = useGetUser(uuid);
 
   if (isLoading) {
@@ -26,7 +20,7 @@ const SearchPeopleItem = ({
     <>
       <Link
         to={"/profile/" + uuid}
-        state={{ user: data[0], compatibility }}
+        state={{ user: data[0] }}
         className="bg-white p-2 flex gap-3 max-w-[700px] rounded-[12px] mt-4"
       >
         <div className="w-[100px] h-[100px] bg-purple-sub-button rounded-xl shrink-0">
@@ -49,9 +43,9 @@ const SearchPeopleItem = ({
             <h2 className="text-[0.875rem] font-semibold leading-5 text-left">
               {data[0].username || data[0].name || "Неизвестный"}, {data[0].age}
             </h2>
-            <div className="text-nowrap h-5 bg-purple-sub-button rounded-[12px] text-[0.875rem] font-semibold leading-[0.75rem] text-white py-1 px-2">
+            {/* <div className="bg-purple-sub-button rounded-[12px] text-[0.875rem] font-semibold leading-[0.75rem] text-white py-1 px-2">
               {compatibility ? compatibility + " %" : ""}
-            </div>
+            </div> */}
           </div>
           <div className="text-[0.75rem] leading-4">
             {data[0].about ? data[0]?.about?.slice(0, 56) + "..." : ""}
