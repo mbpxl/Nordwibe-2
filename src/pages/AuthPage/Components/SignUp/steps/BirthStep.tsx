@@ -36,7 +36,12 @@ const BirthStep: React.FC<Props> = ({
     <main className="pt-[1rem] min-h-screen flex flex-col items-center relative">
       <div className="w-full max-w-md">
         <GoBackButton onBack={onBack} />
-        <Heading title={"Дата рождения"} subTitle={""} />
+        <Heading
+          title={"Дата рождения"}
+          subTitle={""}
+          formData={formData}
+          isCodeStep={false}
+        />
       </div>
 
       <section className="mt-6 flex justify-center">

@@ -3,10 +3,7 @@ import MessageUserButton from "./MessageUserButton";
 import Сompatibility from "./Сompatibility";
 import Modal from "../../../../shared/Components/Modal/Modal";
 
-const ActionBar: React.FC<{ companiodId: string; compatibility: number }> = ({
-  companiodId,
-  compatibility,
-}) => {
+const ActionBar: React.FC<{ companiodId: string }> = ({ companiodId }) => {
   const [isСompatibilityActive, setIsСompatibilityActive] =
     useState<boolean>(false);
 
@@ -19,14 +16,11 @@ const ActionBar: React.FC<{ companiodId: string; compatibility: number }> = ({
       <div className="bg-white px-4 max-w-[475px] m-auto">
         <div className="flex justify-between items-center gap-5 pt-[0.531rem] pb-[1.094rem] text-white">
           <MessageUserButton companionId={companiodId} />
-          <Сompatibility
-            onChange={handleChange}
-            compatibility={compatibility}
-          />
+          <Сompatibility onChange={handleChange} />
 
           <Modal closeModal={handleChange} isOpen={isСompatibilityActive}>
             <div className="text-black-heading">
-              <h3>Подробная статистика совместимости скоро будет доступна!</h3>
+              <h3>Процент совместимости скоро будет доступен!</h3>
             </div>
           </Modal>
         </div>

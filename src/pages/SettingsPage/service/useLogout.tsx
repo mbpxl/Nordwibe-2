@@ -13,12 +13,6 @@ export const useLogout = () => {
   const { mutate, isPending, isError } = useMutation({
     mutationFn: logout,
     onSuccess: () => {
-      window.dispatchEvent(
-        new CustomEvent("authChange", {
-          detail: { isAuthenticated: false },
-        })
-      );
-      clearUserData(true);
       console.log("Logout activated");
       clearUserData();
       redirectToLogin();

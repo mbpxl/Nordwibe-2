@@ -37,7 +37,12 @@ const GenderStep: React.FC<Props> = ({
       <div className="w-full max-w-md">
         <GoBackButton onBack={onBack} />
 
-        <Heading title={"Ваш пол"} subTitle={""} />
+        <Heading
+          title={"Ваш пол"}
+          subTitle={""}
+          formData={formData}
+          isCodeStep={true}
+        />
       </div>
 
       <section className="mt-[3.5rem] w-full px-4 max-[361px]:mt-[1.3rem]">

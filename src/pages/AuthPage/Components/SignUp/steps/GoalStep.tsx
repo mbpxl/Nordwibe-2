@@ -70,7 +70,12 @@ const GoalStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
       <div className="w-full max-w-md">
         <GoBackButton onBack={onBack} />
 
-        <Heading title={"Какая у вас цель?"} subTitle={""} />
+        <Heading
+          title={"Какая у вас цель?"}
+          subTitle={""}
+          formData={formData}
+          isCodeStep={true}
+        />
       </div>
 
       <section className="mt-[3.5rem] max-[352px]:mt-[1rem] w-full px-4">

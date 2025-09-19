@@ -15,7 +15,6 @@ const UserProfilePage = () => {
   const { state } = useLocation();
   const { ids } = useParams<{ ids: string }>();
   const userFromState = state?.user;
-  const compatibility = state?.compatibility;
 
   const shouldFetch = !userFromState && ids;
   const { data, isLoading, isError } = shouldFetch
@@ -51,7 +50,7 @@ const UserProfilePage = () => {
           {user && <StatusBar data={user} />}
         </div>
       </Wrapper>
-      <ActionBar companiodId={user.id} compatibility={compatibility} />
+      <ActionBar companiodId={user.id} />
     </div>
   );
 };
