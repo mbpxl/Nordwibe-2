@@ -40,8 +40,6 @@ const NameStep: React.FC<Props> = ({
         <Heading
           title={"Ваше имя"}
           subTitle={"(2-18 символов, русские или английские буквы)"}
-          formData={formData}
-          isCodeStep={false}
         />
       </div>
 

@@ -20,7 +20,6 @@ export type HeadingComponentTypes = {
   title?: string;
   subTitle?: string;
   isCodeStep?: boolean;
-  formData: FormDataTypes;
 };
 
 export type StepPropsTypes<Key extends keyof FormDataTypes> = {

@@ -28,7 +28,11 @@ const SearchPeopleList = () => {
       <Wrapper className="bg-purple-background-wrap min-h-screen pt-1 pb-16">
         <div>
           {users?.map((user) => (
-            <SearchPeopleItem key={user.user_id} uuid={user.user_id} />
+            <SearchPeopleItem
+              key={user.user_id}
+              uuid={user.user_id}
+              compatibility={user.score}
+            />
           ))}
         </div>
       </Wrapper>

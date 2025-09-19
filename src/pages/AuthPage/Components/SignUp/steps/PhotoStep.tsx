@@ -151,12 +151,7 @@ const PhotoStep: React.FC<Props> = ({
     <main className="pt-[1rem] min-h-screen relative">
       <div className="w-full max-w-md m-auto">
         <GoBackButton onBack={onBack} />
-        <Heading
-          title="Добавь фото"
-          subTitle="Выбери от 1 до 4 фото"
-          formData={formData}
-          isCodeStep={false}
-        />
+        <Heading title="Добавь фото" subTitle="Выбери от 1 до 4 фото" />
       </div>
 
       <section className="mt-[2.5rem] max-[352px]:mt-[1rem] flex flex-col items-center gap-4">
