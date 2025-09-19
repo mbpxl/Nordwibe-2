@@ -33,7 +33,7 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
     []
   );
 
-  // Получаем публичный токен капчи
+  // Получаем публичный токен капчиdasdsa
   const {
     data: captchaPublicToken,
     isError: isCaptchaError, //todo:  добавить toast для ошибки
