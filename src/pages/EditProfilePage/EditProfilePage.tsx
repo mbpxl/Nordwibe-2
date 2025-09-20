@@ -63,39 +63,18 @@ const EditProfilePage = () => {
       ? new Date(date.split("/").reverse().join("-")).toISOString()
       : "";
 
-  // const updatedUserData = {
-  //   username: nameValue,
-  //   name: myProfileData.name || null,
-  //   usage_goal: myProfileData.usage_goal || null,
-  //   chronotype: myProfileData.chronotype || null,
-  //   occupation: myProfileData.occupation || null,
-  //   gender: myProfileData.gender || null,
-  //   pets: petOption,
-  //   about: myProfileData.about || null,
-  //   ready_for_smalltalk: myProfileData.ready_for_smalltalk || false,
-  //   birth_date: null,
-  //   smoking_status: smokingOption,
-  //   religion: religionOption,
-  //   city_id: myProfileData.city_id,
-  //   hometown_id: cityValue?.id || "",
-  //   max_budget: +budget.max,
-  //   desired_length: durationOption,
-  //   hashtags_ids: hashtagsList.filter((t) => t.id).map((t) => t.id),
-  // };
-
   const updatedUserData = {
-    username: nameValue,
-    pets: petOption,
-    birth_date: birthDate,
-    smoking_status: smokingOption,
-    religion: religionOption,
-    hometown_id: cityValue?.id || "",
-    max_budget: +budget.max,
-    desired_length: durationOption,
-    hashtags_ids: hashtagsList.filter((t) => t.id).map((t) => t.id),
+    username: nameValue || myProfileData.userName || null,
+    pets: petOption || myProfileData.pets || null,
+    birth_date: birthDate || myProfileData.bith_date || null,
+    smoking_status: smokingOption || myProfileData.smoking_status || null,
+    religion: religionOption || myProfileData.religion || null,
+    hometown_id: cityValue?.id || null,
+    max_budget: +budget.max || myProfileData.max_budget || null,
+    desired_length: durationOption || myProfileData.desired_length || null,
+    hashtags_ids: hashtagsList.filter((t) => t.id).map((t) => t.id) || myProfileData.hashtags_ids || [],
   };
 
-  console.log(updatedUserData);
 
   const handleUpdateProfileData = () => {
     fillProfile({ ...myProfileData, ...updatedUserData });
