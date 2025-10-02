@@ -58,7 +58,7 @@ const ChatList = () => {
     data: usersData,
     isLoading: isUsersLoading,
     isError: isUsersError,
-  } = useGetUser(ids);
+  } = useGetUser([ids]);
 
   const isLoading = isMeLoading || isChatsLoading || isUsersLoading;
   const isError = isChatsError || isUsersError;
