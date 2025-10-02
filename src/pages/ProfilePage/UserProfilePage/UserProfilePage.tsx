@@ -19,7 +19,7 @@ const UserProfilePage = () => {
 
   const shouldFetch = !userFromState && ids;
   const { data, isLoading, isError } = shouldFetch
-    ? useGetUser(ids!)
+    ? useGetUser([ids!])
     : { data: null, isLoading: false, isError: false };
 
   const user = userFromState || data?.[0];

@@ -13,10 +13,8 @@ import Heading from "../SignUp/Heading";
 import UserAgreement from "../UserAgreement/UserAgreement";
 import { WELCOME_ROUTE } from "../../../../shared/utils/consts";
 import React from "react";
-import { OAuthButtons } from "../OAuth/OAuthButtons";
 import ContinueWrapper from "../ContinueWrapper/ContinueWrapper";
 import WrongData from "../PhoneErrorMsg/PhoneErrorMsg";
-
 
 type Props = StepPropsTypes<"phone">;
 
@@ -113,10 +111,6 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
           onSuccess={setCaptchaToken}
         />
       </section>
-
-      <div className="mt-3 flex justify-center">
-        <OAuthButtons />
-      </div>
 
       <WrongData
         isError={isPhoneError}

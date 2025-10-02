@@ -15,7 +15,7 @@ const ChatDialogPage = () => {
     data: user,
     isLoading: isUserLoading,
     isError: isUserError,
-  } = useGetUser(companionId!);
+  } = useGetUser([companionId!]);
 
   if (isUserLoading) {
     return <Loading />;

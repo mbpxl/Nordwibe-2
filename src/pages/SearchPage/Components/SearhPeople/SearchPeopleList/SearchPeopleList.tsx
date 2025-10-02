@@ -4,39 +4,58 @@ import Error from "../../../../../shared/Components/ErrorPage/ErrorPage";
 import Loading from "../../../../../shared/Components/Loading/Loading";
 import NoResults from "../../../../../shared/Components/NoResults/NoResults";
 import Wrapper from "../../../../../shared/Components/Wrapper/Wrapper";
+import { useGetUser } from "../../../service/useGetUser";
 import { useRanking } from "../../../service/useRanking";
 import SearchPeopleItem from "../SearchPeopleItem/SearchPeopleItem";
 
 const SearchPeopleList = () => {
-  const { data: users, isLoading, isError } = useRanking();
-  console.log(users);
+  const {
+    data: ranking,
+    isLoading: rankingLoading,
+    isError: rankingError,
+  } = useRanking();
 
-  if (isLoading) {
+  // вытаскиваем все user_id
+  const userIds = ranking?.map((r) => r.user_id) || [];
+
+  // загружаем сразу пачкой
+  const {
+    data: users,
+    isLoading: usersLoading,
+    isError: usersError,
+  } = useGetUser(userIds);
+
+  if (rankingLoading || usersLoading) {
     return <Loading />;
   }
 
-  if (isError) {
+  if (rankingError || usersError) {
     return <Error />;
   }
 
-  if (users?.length === 0) {
+  if (!ranking?.length || !users?.length) {
     return <NoResults />;
   }
 
+  // делаем мапинг: user_id → userData
+  const usersMap = new Map(users.map((u) => [u.id, u]));
+
   return (
-    <>
-      <Wrapper className="bg-purple-background-wrap min-h-screen pt-1 pb-16">
-        <div>
-          {users?.map((user) => (
+    <Wrapper className="bg-purple-background-wrap min-h-screen pt-1 pb-16">
+      <div>
+        {ranking.map((r) => {
+          const user = usersMap.get(r.user_id);
+          if (!user) return null;
+          return (
             <SearchPeopleItem
-              key={user.user_id}
-              uuid={user.user_id}
-              compatibility={user.score}
+              key={r.user_id}
+              user={user}
+              compatibility={r.score}
             />
-          ))}
-        </div>
-      </Wrapper>
-    </>
+          );
+        })}
+      </div>
+    </Wrapper>
   );
 };
 
