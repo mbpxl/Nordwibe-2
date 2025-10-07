@@ -26,6 +26,8 @@ export const TEST_ROUTE = "/test";
 export const TEST_PASSING_ROUTE = "/test/:uuid";
 export const TEST_RESULT_PAGE = "/test/:uuid/result";
 
+export const PRIVACY_ROUTE = "/privacy";
+
 // СТРАНИЦЫ, ГДЕ БУДЕТ СКРЫТ НАВБАР
 export const hideNavBarRoutes = [
   "/sign-up",

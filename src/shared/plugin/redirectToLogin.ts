@@ -1,4 +1,4 @@
 export function redirectToLogin() {
-  if (window.location.pathname !== "/sign-in")
-    window.location.href = "/sign-in";
+  if (window.location.pathname !== "/welcome")
+    window.location.href = "/welcome";
 }

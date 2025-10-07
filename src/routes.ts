@@ -5,6 +5,7 @@ import {
   CHAT_ROUTE,
   MAIN_ROUTE,
   MY_PROFILE_ROUTE,
+  PRIVACY_ROUTE,
   PROFILE_EDIT_ROUTE,
   QUIZ_PASSING_ROUTE,
   QUIZ_RESULT_ROUTE,
@@ -23,21 +24,36 @@ import {
 import WelcomePage from "./pages/WelcomePage/WelcomePage";
 import MainPage from "./pages/MainPage/MainPage";
 import ProfilePage from "./pages/ProfilePage/MyProfilePage/MyProfilePage";
+import SignUpPage from "./pages/AuthPage/SignUpPage";
+import SignInPage from "./pages/AuthPage/SignInPage";
+import SettingsPage from "./pages/SettingsPage/SettingsPage";
+import ErrorPage from "./shared/Components/ErrorPage/ErrorPage";
+import PrivacyPage from "./pages/PrivacyPage/PrivacyPage";
+import QuizPage from "./pages/QuizPage/QuizPage";
+import TestPage from "./pages/TestPage/TestPage";
 
 // где lazy() - ленивая подгрузка. То есть компонента булет загружена в момент перехода, а не в момент запуска приложения
 
 export const routes = [
+  {
+    path: MAIN_ROUTE,
+    Component: MainPage,
+  },
   {
     path: WELCOME_ROUTE,
     Component: WelcomePage,
   },
   {
     path: SIGN_UP_ROUTE,
-    Component: lazy(() => import("./pages/AuthPage/SignUpPage")),
+    Component: SignUpPage,
   },
   {
     path: SIGN_IN_ROUTE,
-    Component: lazy(() => import("./pages/AuthPage/SignInPage")),
+    Component: SignInPage,
+  },
+  {
+    path: PRIVACY_ROUTE,
+    Component: PrivacyPage,
   },
   {
     path: SEARCH_ROUTE,
@@ -48,12 +64,8 @@ export const routes = [
     Component: lazy(() => import("./pages/ChatPage/ChatPage")),
   },
   {
-    path: MAIN_ROUTE,
-    Component: MainPage,
-  },
-  {
     path: QUIZ_ROUTE,
-    Component: lazy(() => import("./pages/QuizPage/QuizPage")),
+    Component: QuizPage,
   },
   {
     path: QUIZ_PASSING_ROUTE,
@@ -83,7 +95,7 @@ export const routes = [
   },
   {
     path: TEST_ROUTE,
-    Component: lazy(() => import("./pages/TestPage/TestPage")),
+    Component: TestPage,
   },
   {
     path: TEST_PASSING_ROUTE,
@@ -95,7 +107,7 @@ export const routes = [
   },
   {
     path: SETTINGS_ROUTE,
-    Component: lazy(() => import("./pages/SettingsPage/SettingsPage")),
+    Component: SettingsPage,
   },
   {
     path: CHAT_DIALOG,
@@ -103,6 +115,6 @@ export const routes = [
   },
   {
     path: "*",
-    Component: lazy(() => import("./shared/Components/ErrorPage/ErrorPage")),
+    Component: ErrorPage,
   },
 ];
