@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import HashTag from "../../../../../shared/Components/HashTag/HashTag";
 import { baseURLforImages } from "../../../../../shared/plugin/axios";
 import type { userTypes } from "../../../types/userTypes";
+import { setCompatibilityStyle } from "../../../utils/setCompatibilityStyle";
 
 const SearchPeopleItem = ({
   user,
@@ -36,8 +37,12 @@ const SearchPeopleItem = ({
           <h2 className="text-[0.875rem] font-semibold leading-5 text-left">
             {user.username || user.name || "Неизвестный"}, {user.age}
           </h2>
-          <div className="text-nowrap h-5 bg-purple-sub-button rounded-[12px] text-[0.875rem] font-semibold leading-[0.75rem] text-white py-1 px-2">
-            {compatibility ? compatibility + " %" : ""}
+          <div
+            className={`${setCompatibilityStyle(
+              compatibility
+            )} text-nowrap h-5 rounded-[12px] text-[0.875rem] font-semibold leading-[0.75rem] text-white py-1 px-2`}
+          >
+            {compatibility ? compatibility + " %" : "???"}
           </div>
         </div>
         <div className="text-[0.75rem] leading-4 break-all">

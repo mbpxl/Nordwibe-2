@@ -72,11 +72,6 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
   const isPhoneValid =
     phone.length === 10 && Boolean(captchaToken) && !isPending;
 
-  console.log("Phone length: ", phone.length);
-  console.log("captcha token: " + Boolean(captchaToken));
-  console.log("isPending: ", isPending);
-  console.log("isPhoneValid: ", isPhoneValid);
-
   return (
     <main className="pt-[1rem]">
       <article className="pl-3">

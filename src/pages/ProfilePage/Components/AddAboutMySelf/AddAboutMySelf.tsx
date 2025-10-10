@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useFillProfile } from "../../../../shared/service/useFillProfileInfo";
 
-const AddAboutMySelf = ({ data }: any) => {
+const AddAboutMySelf = ({ data, handleChangeEditAboutMyself }: any) => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -23,14 +23,17 @@ const AddAboutMySelf = ({ data }: any) => {
     if (aboutMySelfValue.trim()) {
       fillProfile({ ...data, about: aboutMySelfValue.trim() });
     }
+    handleChangeEditAboutMyself();
   };
 
   const handleCancel = () => {
     setAboutMySelfValue("");
     setIsEditMode(false);
+    if (data.about) {
+      handleChangeEditAboutMyself();
+    }
   };
 
-  // Обработка успешной отправки
   useEffect(() => {
     if (isSuccess) {
       setIsEditMode(false);
@@ -38,7 +41,6 @@ const AddAboutMySelf = ({ data }: any) => {
     }
   }, [isSuccess]);
 
-  // Фокус на textarea при входе в режим редактирования
   useEffect(() => {
     if (isEditMode && textareaRef.current) {
       textareaRef.current.focus();
