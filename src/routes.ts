@@ -6,6 +6,7 @@ import {
   MAIN_ROUTE,
   MY_PROFILE_ROUTE,
   PRIVACY_ROUTE,
+  PRIVATE_SETTINGS,
   PROFILE_EDIT_ROUTE,
   QUIZ_PASSING_ROUTE,
   QUIZ_RESULT_ROUTE,
@@ -31,6 +32,7 @@ import ErrorPage from "./shared/Components/ErrorPage/ErrorPage";
 import PrivacyPage from "./pages/PrivacyPage/PrivacyPage";
 import QuizPage from "./pages/QuizPage/QuizPage";
 import TestPage from "./pages/TestPage/TestPage";
+import PrivateSettingsPage from "./pages/PrivateSettingsPage/PrivateSettingsPage";
 
 // где lazy() - ленивая подгрузка. То есть компонента булет загружена в момент перехода, а не в момент запуска приложения
 
@@ -112,6 +114,10 @@ export const routes = [
   {
     path: CHAT_DIALOG,
     Component: lazy(() => import("./pages/ChatDialogPage/ChatDialogPage")),
+  },
+  {
+    path: PRIVATE_SETTINGS,
+    Component: PrivateSettingsPage,
   },
   {
     path: "*",

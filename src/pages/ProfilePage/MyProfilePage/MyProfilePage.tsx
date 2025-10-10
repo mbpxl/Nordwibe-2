@@ -35,6 +35,11 @@ const ProfilePage = () => {
     localStorage.setItem("showToolTip", "ok");
   };
 
+  const [isEditAbouMyself, setIsEditAboutMyself] = useState<boolean>(false);
+  const handleChangeEditAboutMyself = () => {
+    setIsEditAboutMyself((prev) => !prev);
+  };
+
   if (isLoading || isTestsLoading) {
     return <Loading />;
   }
@@ -72,10 +77,17 @@ const ProfilePage = () => {
       )}
 
       <div>
-        {data.about ? (
-          <AboutMyself about={data.about} />
+        {data.about && !isEditAbouMyself ? (
+          <AboutMyself
+            about={data.about}
+            handleChange={handleChangeEditAboutMyself}
+            isMyProfile
+          />
         ) : (
-          <AddAboutMySelf data={data} />
+          <AddAboutMySelf
+            data={data}
+            handleChangeEditAboutMyself={handleChangeEditAboutMyself}
+          />
         )}
         <HashTagBar hashTags={data.hashtags_list} />
         {data && <StatusBar data={data} />}

@@ -70,9 +70,7 @@ const QuizResultPage = () => {
                     }`}
                   >
                     <input type="checkbox" checked={isSelected} disabled />
-                    <span
-                      className={isCorrect ? "text-green-600 font-medium" : ""}
-                    >
+                    <span className="text-black-heading font-medium">
                       {ans.answer}
                     </span>
                   </div>

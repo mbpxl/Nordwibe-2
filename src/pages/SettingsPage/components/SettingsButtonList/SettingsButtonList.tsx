@@ -10,10 +10,10 @@ const buttonsData: SettingsButtonTypes[] = [
   //   title: "Сменить номер телефона",
   //   isPhoneChange: true,
   // },
-  // {
-  //   title: "Черный список",
-  //   to: "/blacklist",
-  // },
+  {
+    title: "Настройки приватности",
+    to: "/private",
+  },
   // {
   //   title: "О приложении",
   //   to: "/about",
