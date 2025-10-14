@@ -42,6 +42,8 @@ const TestList = () => {
       !(test.questions || []).some((q: any) => completedQuestionIds.has(q.uuid))
   );
 
+  console.log("Availables tests: ", allTests);
+
   return (
     <Wrapper className="min-h-screen pt-1 pb-12 bg-purple-background-wrap flex flex-col items-center">
       <div className="max-w-[600px]">

@@ -5,6 +5,7 @@ import {
   CHAT_ROUTE,
   MAIN_ROUTE,
   MY_PROFILE_ROUTE,
+  OAUTH_CALLBACK,
   PRIVACY_ROUTE,
   PRIVATE_SETTINGS,
   PROFILE_EDIT_ROUTE,
@@ -45,6 +46,10 @@ export const routes = [
     path: WELCOME_ROUTE,
     Component: WelcomePage,
   },
+  // {
+  //   path: OAUTH_CALLBACK,
+  //   Component: OAuthCallbackHandler,
+  // },
   {
     path: SIGN_UP_ROUTE,
     Component: SignUpPage,
