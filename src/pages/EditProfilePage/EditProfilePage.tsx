@@ -64,13 +64,6 @@ const EditProfilePage = () => {
       setReligionOption(myProfileData.religion || null);
       setDurationOption(myProfileData.desired_length || null);
 
-      if (myProfileData.birth_date) {
-        const birthDate = new Date(myProfileData.birth_date);
-        const day = String(birthDate.getDate()).padStart(2, "0");
-        const month = String(birthDate.getMonth() + 1).padStart(2, "0");
-        const year = birthDate.getFullYear();
-      }
-
       if (myProfileData.hometown_id && myProfileData.hometown_name) {
         setCityValue({
           id: myProfileData.hometown_id,
