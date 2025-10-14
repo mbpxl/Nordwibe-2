@@ -15,21 +15,17 @@ import { useNavigate } from "react-router-dom";
 import TextField from "./components/TextField/TextField";
 import BirthField from "./components/BirthField/BirthField";
 import useFormatBirthDate from "../AuthPage/hooks/useFormatBirthDate";
+import WrongData from "../AuthPage/Components/PhoneErrorMsg/PhoneErrorMsg";
 
 const EditProfilePage = () => {
-  // получаем данные о себе, чтобы заполнить недостающие поля для обновления профиля
   const {
     data: myProfileData,
     isLoading: isProfileDataLoading,
     isError: isProfileDataError,
   } = useGetMe();
 
-  const naviagate = useNavigate();
-
+  const navigate = useNavigate();
   const { fillProfile, isPending, isSuccess } = useFillProfile();
-  if (isSuccess) {
-    naviagate("/profile");
-  }
 
   const [nameValue, setNameValue] = useState<string>("");
   const { date, inputRef, handleChange } = useFormatBirthDate("");
@@ -40,7 +36,7 @@ const EditProfilePage = () => {
     | "Нейтрально"
     | "Христианство"
     | "Ислам"
-    | "Иидуизм"
+    | "Иудаизм"
     | "Буддизм"
     | "Атеизм"
     | null
@@ -58,27 +54,127 @@ const EditProfilePage = () => {
     { id: string; name: string }[]
   >([]);
 
-  const birthDate =
-    date && date.length === 10
-      ? new Date(date.split("/").reverse().join("-")).toISOString()
-      : "";
+  const [isFormTouched, setIsFormTouched] = useState(false);
+
+  useEffect(() => {
+    if (myProfileData && !isFormTouched) {
+      setNameValue(myProfileData.username || "");
+      setPetOption(myProfileData.pets || null);
+      setSmokingOption(myProfileData.smoking_status || null);
+      setReligionOption(myProfileData.religion || null);
+      setDurationOption(myProfileData.desired_length || null);
+
+      if (myProfileData.birth_date) {
+        const birthDate = new Date(myProfileData.birth_date);
+        const day = String(birthDate.getDate()).padStart(2, "0");
+        const month = String(birthDate.getMonth() + 1).padStart(2, "0");
+        const year = birthDate.getFullYear();
+      }
+
+      if (myProfileData.hometown_id && myProfileData.hometown_name) {
+        setCityValue({
+          id: myProfileData.hometown_id,
+          name: myProfileData.hometown_name,
+        });
+      }
+
+      if (myProfileData.max_budget) {
+        setBudget((prev) => ({
+          ...prev,
+          max: String(myProfileData.max_budget),
+        }));
+      }
+
+      if (myProfileData.min_budget) {
+        setBudget((prev) => ({
+          ...prev,
+          min: String(myProfileData.min_budget),
+        }));
+      }
+
+      if (myProfileData.hashtags) {
+        setHashtagsList(myProfileData.hashtags);
+      }
+    }
+  }, [myProfileData, isFormTouched]);
+
+  useEffect(() => {
+    if (!isFormTouched) {
+      setIsFormTouched(true);
+    }
+  }, [
+    nameValue,
+    date,
+    petOption,
+    smokingOption,
+    religionOption,
+    cityValue,
+    budget,
+    durationOption,
+    hashtagsList,
+  ]);
+
+  const isBirthDateValid = date && date.length === 10;
+
+  const birthDate = isBirthDateValid
+    ? new Date(date.split("/").reverse().join("-")).toISOString()
+    : "";
 
   const updatedUserData = {
-    username: nameValue || myProfileData.userName || null,
-    pets: petOption || myProfileData.pets || null,
-    birth_date: birthDate || myProfileData.bith_date || null,
-    smoking_status: smokingOption || myProfileData.smoking_status || null,
-    religion: religionOption || myProfileData.religion || null,
-    hometown_id: cityValue?.id || null,
-    max_budget: +budget.max || myProfileData.max_budget || null,
-    desired_length: durationOption || myProfileData.desired_length || null,
-    hashtags_ids: hashtagsList.filter((t) => t.id).map((t) => t.id) || myProfileData.hashtags_ids || [],
+    ...(nameValue !== myProfileData?.username && { username: nameValue }),
+    ...(isBirthDateValid && { birth_date: birthDate }),
+    ...(petOption !== myProfileData?.pets && { pets: petOption }),
+    ...(animalType !== myProfileData?.animal_type && {
+      animal_type: animalType,
+    }),
+    ...(smokingOption !== myProfileData?.smoking_status && {
+      smoking_status: smokingOption,
+    }),
+    ...(religionOption !== myProfileData?.religion && {
+      religion: religionOption,
+    }),
+    ...(cityValue?.id !== myProfileData?.hometown_id && {
+      hometown_id: cityValue?.id,
+    }),
+    ...(budget.max !== String(myProfileData?.max_budget || "") && {
+      max_budget: +budget.max,
+    }),
+    ...(durationOption !== myProfileData?.desired_length && {
+      desired_length: durationOption,
+    }),
+    ...{
+      hashtags_ids: hashtagsList.filter((t) => t.id).map((t) => t.id) || [],
+    },
   };
 
+  const filteredUserData = Object.fromEntries(
+    Object.entries(updatedUserData).filter(([_, value]) => {
+      if (value === null || value === undefined) return false;
+      if (Array.isArray(value)) return value.length > 0;
+      if (typeof value === "string") return value.trim() !== "";
+      return true;
+    })
+  );
 
   const handleUpdateProfileData = () => {
-    fillProfile({ ...myProfileData, ...updatedUserData });
+    if (!isBirthDateValid) {
+      alert("Пожалуйста, заполните поле даты рождения!");
+      return;
+    }
+
+    const dataToSend = {
+      ...filteredUserData,
+      birth_date: birthDate,
+    };
+
+    fillProfile({ ...myProfileData, ...dataToSend });
   };
+
+  useEffect(() => {
+    if (isSuccess) {
+      navigate("/profile");
+    }
+  }, [isSuccess, navigate]);
 
   const {
     data: cities = [],
@@ -89,7 +185,6 @@ const EditProfilePage = () => {
   const [hashtagInput, setHashtagInput] = useState<string>("");
   const [isAddHashTagClick, setIsAddHashTagClick] = useState<boolean>(false);
   const [newHashTagValue, setNewHashTagValue] = useState<string>("");
-
   const [pendingCreatedTag, setPendingCreatedTag] = useState<string | null>(
     null
   );
@@ -143,7 +238,10 @@ const EditProfilePage = () => {
       setPendingCreatedTag(null);
     }
   }, [isCreateSuccess, pendingCreatedTag]);
-  console.log(birthDate);
+
+  // Проверяем, есть ли изменения для сохранения
+  const hasChanges =
+    Object.keys(filteredUserData).length > 0 || !isBirthDateValid;
 
   return (
     <>
@@ -160,10 +258,15 @@ const EditProfilePage = () => {
           />
 
           <BirthField
-            title={"Дата рождения"}
+            title={"Дата рождения *"}
             value={date}
             onChange={handleChange}
             ref={inputRef}
+            error={
+              !isBirthDateValid && isFormTouched
+                ? "Обязательное поле"
+                : undefined
+            }
           />
 
           <InlineSelect
@@ -198,7 +301,14 @@ const EditProfilePage = () => {
 
           <InlineSelect
             title="Курение"
-            options={["Редко", "Часто", "Вейп", "Нейтрально", "Аллергия"]}
+            options={[
+              "Не курю",
+              "Редко",
+              "Часто",
+              "Вейп",
+              "Нейтрально",
+              "Аллергия",
+            ]}
             value={smokingOption}
             onChange={setSmokingOption}
           />
@@ -258,10 +368,20 @@ const EditProfilePage = () => {
               setIsAddHashTagClick(true);
             }}
           />
+
           <SaveButton
-            isDisabled={isProfileDataError || isProfileDataLoading}
+            isDisabled={
+              isProfileDataError ||
+              isProfileDataLoading ||
+              !isBirthDateValid ||
+              !hasChanges
+            }
             isPending={isPending}
             onSubmit={handleUpdateProfileData}
+          />
+          <WrongData
+            isError={Boolean(!isBirthDateValid)}
+            message={"Заполните дату рождения"}
           />
         </div>
       </Wrapper>
