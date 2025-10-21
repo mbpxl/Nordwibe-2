@@ -7,22 +7,23 @@ import QuizTestAction from "./components/QuizTestAction/QuizTestAction";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Wrapper from "../../shared/Components/Wrapper/Wrapper";
-import { useGetQuiz } from "../QuizPage/service/useGetQuiz";
-import Loading from "../../shared/Components/Loading/Loading";
-import { usePostQuiz } from "./service/usePostQuiz";
+// import { useGetQuiz } from "../QuizPage/service/useGetQuiz";
+// import Loading from "../../shared/Components/Loading/Loading";
+// import { usePostQuiz } from "./service/usePostQuiz";
+import { quizMock } from "../QuizPage/misc/quizMock";
 
 const QuizTestPage = () => {
-  const { data, isLoading } = useGetQuiz();
-  const { mutate } = usePostQuiz();
+  // const { data, isLoading } = useGetQuiz();
+  // const { mutate } = usePostQuiz();
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
 
   const { uuid } = useParams<{ uuid: string }>();
   const navigate = useNavigate();
 
-  const selectedQuiz = data.find((quiz: any) => quiz.uuid === uuid);
+  const selectedQuiz = quizMock.find((quiz: any) => quiz.uuid === uuid);
   if (!selectedQuiz) return <Error />;
 
   const quizData = selectedQuiz.quiz[0];
@@ -47,20 +48,19 @@ const QuizTestPage = () => {
     if (!isAllAnswered) return;
 
     if (isAllCorrect) {
-      const payload = quizData.questions.flatMap((q: any) =>
-        (userAnswers[q.uuid] || []).map((a) => ({
-          question_id: q.uuid,
-          answer_id: a,
-        }))
-      );
-
-      mutate(payload, {
-        onSuccess: () => {
-          navigate(`/quiz/${uuid}/result`, {
-            state: { userAnswers, quizData, isAllCorrect },
-          });
-        },
-      });
+      // const payload = quizData.questions.flatMap((q: any) =>
+      //   (userAnswers[q.uuid] || []).map((a) => ({
+      //     question_id: q.uuid,
+      //     answer_id: a,
+      //   }))
+      // );
+      // mutate(payload, {
+      //   onSuccess: () => {
+      //     navigate(`/quiz/${uuid}/result`, {
+      //       state: { userAnswers, quizData, isAllCorrect },
+      //     });
+      //   },
+      // });
     } else {
       navigate(`/quiz/${uuid}/result`, {
         state: { userAnswers, quizData, isAllCorrect },

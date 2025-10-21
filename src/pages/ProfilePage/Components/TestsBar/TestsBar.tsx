@@ -1,8 +1,7 @@
-import type { TestType } from "../../../TestPage/types/testDataTypes";
 import TestsItem from "./TestsItem";
 
 type TestsBarProps = {
-  tests: TestType[];
+  tests: any;
 };
 
 const TestsBar: React.FC<TestsBarProps> = ({ tests }) => {
@@ -12,7 +11,7 @@ const TestsBar: React.FC<TestsBarProps> = ({ tests }) => {
         Тесты
       </h2>
       <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
-        {tests.map((test) => (
+        {tests.map((test: any) => (
           <TestsItem key={test.uuid} test={test} />
         ))}
       </div>

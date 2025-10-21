@@ -10,19 +10,20 @@ import EducationTitle from "../../../../shared/Components/Education/EducationsTy
 import { useGetQuiz } from "../../../QuizPage/service/useGetQuiz";
 import Loading from "../../../../shared/Components/Loading/Loading";
 import { baseURLforImages } from "../../../../shared/plugin/axios";
+import { quizMock } from "../../../QuizPage/misc/quizMock";
 
 const QuizSlide = () => {
-  const { data, isLoading } = useGetQuiz();
+  // const { data, isLoading } = useGetQuiz();
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  // if (isLoading) {
+  //   return <Loading />;
+  // }
 
   const [showIntro, setShowIntro] = useState(true);
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const { uuid } = useParams<{ uuid: string }>();
-  const selectedQuiz = data.find((quiz: any) => quiz.uuid === uuid);
+  const selectedQuiz = quizMock.find((quiz: any) => quiz.uuid === uuid);
   if (!selectedQuiz) {
     return <Error />;
   }

@@ -1,21 +1,22 @@
 import { useState } from "react";
 import Stories from "react-insta-stories";
 
-import { useGetStories } from "../../service/useGetStories";
-import Loading from "../../../../shared/Components/Loading/Loading";
+//todo: import { useGetStories } from "../../service/useGetStories";
+//todo: import Loading from "../../../../shared/Components/Loading/Loading";
 import { baseURLforImages } from "../../../../shared/plugin/axios";
+import { storiesMock } from "../../misc/stories/storiesMock";
 
 const News = () => {
-  const { data, isLoading, isError } = useGetStories();
+  //todo: const { data, isLoading, isError } = useGetStories();
 
   const [isOpen, setIsOpen] = useState(false);
   const [currentStory, setCurrentStory] = useState<number | null>(null);
 
-  if (isLoading) return <Loading />;
-  if (isError) {
-    console.log("Ошибка при получении сторисов");
-    return null;
-  }
+  // if (isLoading) return <Loading />;
+  // if (isError) {
+  //   console.log("Ошибка при получении сторисов");
+  //   return null;
+  // }
 
   return (
     <div className="max-w-[630px] m-auto">
@@ -26,7 +27,7 @@ const News = () => {
 
         <div className="mt-[11px] overflow-x-auto scrollbar-none">
           <ul className="flex gap-3.5 w-max px-1">
-            {data?.map((story: any, i: any) => (
+            {storiesMock?.map((story: any, i: any) => (
               <li key={story.uuid}>
                 <button
                   onClick={() => {
@@ -50,10 +51,10 @@ const News = () => {
       {isOpen && currentStory !== null && (
         <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
           <Stories
-            stories={data[currentStory].story_parts.map((part: any) => ({
+            stories={storiesMock[currentStory].story_parts.map((part: any) => ({
               url: baseURLforImages + part.image_url,
               header: {
-                heading: data[currentStory].title,
+                heading: storiesMock[currentStory].title,
                 subheading: "", // например, сюда можно дату или описание
                 profileImage: "/icons/nordwibe/nordwibe.svg", // можно заменить на аватарку автора
               },

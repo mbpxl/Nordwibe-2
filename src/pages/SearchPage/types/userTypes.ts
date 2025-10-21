@@ -19,7 +19,7 @@ export type userTypes = {
   hometown_name: string;
   hashtags_list: string[];
   url: string;
-  onboarding_completed: Date;
-  full_registration_completed: Date;
+  onboarding_completed: string; //todo: backup to Date type
+  full_registration_completed: string; //todo: backup to Date type
   avatar_url: string;
 };

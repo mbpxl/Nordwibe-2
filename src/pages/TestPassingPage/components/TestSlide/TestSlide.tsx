@@ -8,19 +8,20 @@ import EducationImage from "../../../../shared/Components/Education/EducationsTy
 import EducationTitle from "../../../../shared/Components/Education/EducationsTypography/EducationTitle";
 import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
 import Error from "../../../../shared/Components/ErrorPage/ErrorPage";
-import { useGetTests } from "../../../TestPage/service/useGetTests";
-import Loading from "../../../../shared/Components/Loading/Loading";
+// import { useGetTests } from "../../../TestPage/service/useGetTests";
+// import Loading from "../../../../shared/Components/Loading/Loading";
 import type {
   Scale,
   ScaleMap,
   SelectedAnswer,
 } from "../../../TestResultPage/types/test";
 import { baseURLforImages } from "../../../../shared/plugin/axios";
+import { testMockData } from "../../../TestPage/misc/testData";
 
 const TestSlide = () => {
-  const { data, isLoading, isError } = useGetTests();
-  if (isLoading) return <Loading />;
-  if (isError) return <Error />;
+  // const { data, isLoading, isError } = useGetTests();
+  // if (isLoading) return <Loading />;
+  // if (isError) return <Error />;
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
@@ -30,7 +31,7 @@ const TestSlide = () => {
   >({});
 
   const { uuid } = useParams<{ uuid: string }>();
-  const selectedTest = data.find((test: any) => test.uuid == uuid);
+  const selectedTest = testMockData.find((test: any) => test.uuid == uuid);
   if (!selectedTest || !selectedTest.questions) return <Error />;
 
   const questions = selectedTest.questions;

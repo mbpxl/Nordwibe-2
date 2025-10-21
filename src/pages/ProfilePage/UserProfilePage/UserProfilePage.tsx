@@ -1,36 +1,37 @@
 import AboutMyself from "../Components/AboutMyself/AboutMyself";
 import HashTagBar from "../Components/HashTagBar/HashTagBar";
 import Wrapper from "../../../shared/Components/Wrapper/Wrapper";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import TopicHeader from "../../../shared/Components/TopicHeader/TopicHeader";
 import { PhotoSlider } from "../Components/ProfilePhotosBar/ProfilePhotosBar";
 import StatusBar from "../Components/StatusBar/StatusBar";
-import { useGetUser } from "../../SearchPage/service/useGetUser";
-import Loading from "../../../shared/Components/Loading/Loading";
-import Error from "../../../shared/Components/ErrorPage/ErrorPage";
+// import { useGetUser } from "../../SearchPage/service/useGetUser";
+// import Loading from "../../../shared/Components/Loading/Loading";
+// import Error from "../../../shared/Components/ErrorPage/ErrorPage";
 import ActionBar from "../Components/ActionBar/ActionBar";
 import { GoBackButton } from "../../../shared/Components/GoBackButton/GoBackButton";
+import TestsBar from "../Components/TestsBar/TestsBar";
 
 const UserProfilePage = () => {
   const { state } = useLocation();
-  const { ids } = useParams<{ ids: string }>();
+  // const { ids } = useParams<{ ids: string }>();
   const userFromState = state?.user;
   const compatibility = state?.compatibility;
 
-  const shouldFetch = !userFromState && ids;
-  const { data, isLoading, isError } = shouldFetch
-    ? useGetUser([ids!])
-    : { data: null, isLoading: false, isError: false };
+  // const shouldFetch = !userFromState && ids;
+  // const { data, isLoading, isError } = shouldFetch
+  //   ? useGetUser([ids!])
+  //   : { data: null, isLoading: false, isError: false };
 
-  const user = userFromState || data?.[0];
+  const user = userFromState;
 
-  if (isLoading && !user) {
-    return <Loading />;
-  }
+  // if (isLoading && !user) {
+  //   return <Loading />;
+  // }
 
-  if (isError || !user) {
-    return <Error />;
-  }
+  // if (isError || !user) {
+  //   return <Error />;
+  // }
 
   return (
     <div className="">
@@ -50,6 +51,8 @@ const UserProfilePage = () => {
           <HashTagBar hashTags={user.hashtags_list} />
           {user && <StatusBar data={user} />}
         </div>
+
+        <TestsBar tests={user.tests} />
       </Wrapper>
       <ActionBar companiodId={user.id} compatibility={compatibility} />
     </div>

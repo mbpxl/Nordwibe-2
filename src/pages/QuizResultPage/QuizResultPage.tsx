@@ -39,7 +39,7 @@ const QuizResultPage = () => {
   return (
     <Wrapper>
       <div className="flex flex-col max-w-[21.5rem] m-auto relative min-h-screen pb-32">
-        <QuizSlideHeader heading={quizData.title} unit={"/quiz"} />
+        <QuizSlideHeader heading={"Результаты"} unit={"/quiz"} />
 
         <p className="mt-2 text-[1rem] font-medium leading-[1.25rem]">
           {resultMessage}

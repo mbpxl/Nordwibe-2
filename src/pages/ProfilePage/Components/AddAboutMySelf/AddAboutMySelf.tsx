@@ -6,7 +6,7 @@ const AddAboutMySelf = ({ data, handleChangeEditAboutMyself }: any) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [aboutMySelfValue, setAboutMySelfValue] = useState<string>("");
-  const { fillProfile, isSuccess } = useFillProfile();
+  // const { fillProfile, isSuccess } = useFillProfile();
 
   const handleChangeEditMode = () => {
     setIsEditMode((prev) => !prev);
@@ -18,13 +18,13 @@ const AddAboutMySelf = ({ data, handleChangeEditAboutMyself }: any) => {
     setAboutMySelfValue(e.target.value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (aboutMySelfValue.trim()) {
-      fillProfile({ ...data, about: aboutMySelfValue.trim() });
-    }
-    handleChangeEditAboutMyself();
-  };
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   if (aboutMySelfValue.trim()) {
+  //     fillProfile({ ...data, about: aboutMySelfValue.trim() });
+  //   }
+  //   handleChangeEditAboutMyself();
+  // };
 
   const handleCancel = () => {
     setAboutMySelfValue("");
@@ -34,12 +34,12 @@ const AddAboutMySelf = ({ data, handleChangeEditAboutMyself }: any) => {
     }
   };
 
-  useEffect(() => {
-    if (isSuccess) {
-      setIsEditMode(false);
-      setAboutMySelfValue("");
-    }
-  }, [isSuccess]);
+  // useEffect(() => {
+  //   if (isSuccess) {
+  //     setIsEditMode(false);
+  //     setAboutMySelfValue("");
+  //   }
+  // }, [isSuccess]);
 
   useEffect(() => {
     if (isEditMode && textareaRef.current) {
@@ -57,7 +57,7 @@ const AddAboutMySelf = ({ data, handleChangeEditAboutMyself }: any) => {
       <div className="">
         {isEditMode ? (
           <div className="">
-            <form onSubmit={handleSubmit}>
+            <form>
               <textarea
                 ref={textareaRef}
                 value={aboutMySelfValue}

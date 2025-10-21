@@ -2,68 +2,72 @@
 
 import { Link } from "react-router-dom";
 import type { MainPageCartsTypes } from "../../../types/MainPageCartsTypes";
-import { useQuizProgress } from "../../../hooks/useQuizProgress";
-import Loading from "../../../../../shared/Components/Loading/Loading";
-import Error from "../../../../../shared/Components/ErrorPage/ErrorPage";
-import { useGetCountCompletedTests } from "../../../hooks/useGetCountCompletedTests";
-import { useRanking } from "../../../../SearchPage/service/useRanking";
-import { useProfileCompletion } from "../../../hooks/useProfileCompletion";
+//todo import { useQuizProgress } from "../../../hooks/useQuizProgress";
+//todo import Loading from "../../../../../shared/Components/Loading/Loading";
+//todo import Error from "../../../../../shared/Components/ErrorPage/ErrorPage";
+//todo import { useGetCountCompletedTests } from "../../../hooks/useGetCountCompletedTests";
+//todo import { useRanking } from "../../../../SearchPage/service/useRanking";
+//todo import { useProfileCompletion } from "../../../hooks/useProfileCompletion";
 
 const Carts = () => {
-  const { completionPercentage, isLoading: isProfileCompletionLoading } =
-    useProfileCompletion();
+  //todo const { completionPercentage, isLoading: isProfileCompletionLoading } =
+  //   useProfileCompletion();
 
-  const {
-    data: rankingData,
-    isLoading: isRankingLoading,
-    isError: isRankingError,
-  } = useRanking();
+  // const {
+  //   data: rankingData,
+  //   isLoading: isRankingLoading,
+  //   isError: isRankingError,
+  // } = useRanking();
 
-  const { isLoading, isError, completedQuizzesCount, totalQuizzes } =
-    useQuizProgress();
+  // const { isLoading, isError, completedQuizzesCount, totalQuizzes } =
+  //   useQuizProgress();
 
-  const {
-    isLoading: isTestsLoading,
-    isError: isTestsError,
-    completedTestsCount,
-    totalTests,
-  } = useGetCountCompletedTests();
+  // const {
+  //   isLoading: isTestsLoading,
+  //   isError: isTestsError,
+  //   completedTestsCount,
+  //   totalTests,
+  // } = useGetCountCompletedTests();
 
-  if (
-    isLoading ||
-    isTestsLoading ||
-    isRankingLoading ||
-    isProfileCompletionLoading
-  )
-    return <Loading />;
-  if (isError || isTestsError || isRankingError) return <Error />;
+  // if (
+  //   isLoading ||
+  //   isTestsLoading ||
+  //   isRankingLoading ||
+  //   isProfileCompletionLoading
+  // )
+  //   return <Loading />;
+  //todo if (isError || isTestsError || isRankingError) return <Error />;
 
   const carts: MainPageCartsTypes[] = [
     {
       id: "1",
       headind: "Поиск людей",
-      message: `${rankingData?.length} человек`,
+      //todo: message: `${rankingData?.length} человек`,
+      message: `13 человек`,
       bg_image: "/icons/TapBar_MainPage/TapBar-search.svg",
       to: "/search",
     },
     {
       id: "2",
       headind: "Тесты",
-      message: `${completedTestsCount}/${totalTests} пройденных`,
+      //todo message: `${completedTestsCount}/${totalTests} пройденных`,
+      message: `0 пройденных`,
       bg_image: "/icons/TapBar_MainPage/TapBar-tests.svg",
       to: "/test",
     },
     {
       id: "3",
       headind: "Квизы",
-      message: `${completedQuizzesCount}/${totalQuizzes} пройденных`,
+      //todo message: `${completedQuizzesCount}/${totalQuizzes} пройденных`,
+      message: `0/3 пройденных`,
       bg_image: "/icons/TapBar_MainPage/TapBar-quiz.svg",
       to: "/quiz",
     },
     {
       id: "4",
       headind: "Профиль",
-      message: `Заполнен на ${completionPercentage} %`,
+      //todo message: `Заполнен на ${completionPercentage} %`,
+      message: `Заполнен на 100%`,
       bg_image: "/icons/TapBar_MainPage/TapBar-profile.svg",
       to: "/profile",
     },

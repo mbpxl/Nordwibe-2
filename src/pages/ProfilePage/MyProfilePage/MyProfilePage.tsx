@@ -1,30 +1,32 @@
-import Error from "../../../shared/Components/ErrorPage/ErrorPage";
-import Loading from "../../../shared/Components/Loading/Loading";
+//todo import Error from "../../../shared/Components/ErrorPage/ErrorPage";
+//todo import Loading from "../../../shared/Components/Loading/Loading";
 import Wrapper from "../../../shared/Components/Wrapper/Wrapper";
 import AboutMyself from "../Components/AboutMyself/AboutMyself";
 import HashTagBar from "../Components/HashTagBar/HashTagBar";
 import EditButton from "../Components/OptionsButton/OptionButton";
 import { PhotoSlider } from "../Components/ProfilePhotosBar/ProfilePhotosBar";
-import { useGetMe } from "../service/useGetMe";
+//todo import { useGetMe } from "../service/useGetMe";
 import TopicHeader from "../../../shared/Components/TopicHeader/TopicHeader";
 import StatusBar from "../Components/StatusBar/StatusBar";
 import AddAboutMySelf from "../Components/AddAboutMySelf/AddAboutMySelf";
 import { useState } from "react";
 import ToolTip from "../Components/ToolTip/ToolTip";
-import { useGetCompletedTest } from "../../TestPage/service/useGetCompletedTests";
+//todo import { useGetCompletedTest } from "../../TestPage/service/useGetCompletedTests";
 import TestsBar from "../Components/TestsBar/TestsBar";
-import { useCompletedTests } from "../hooks/useCompletedTests";
+//todo import { useCompletedTests } from "../hooks/useCompletedTests";
+import { myProfileMisc } from "./misc/myProfileMock";
+import { myCompletedTestsMock } from "./misc/completedTestsMock";
 
 const ProfilePage = () => {
-  const { data, isLoading, isError } = useGetMe();
-  const {
-    data: testsData,
-    isLoading: isTestsLoading,
-    isError: isTestsError,
-  } = useGetCompletedTest();
+  //todo const { data, isLoading, isError } = useGetMe();
+  // const {
+  //   data: testsData,
+  //   isLoading: isTestsLoading,
+  //   isError: isTestsError,
+  //todo } = useGetCompletedTest();
 
-  const { data: completedTests, isLoading: isCompletedTestLoading } =
-    useCompletedTests();
+  //todo const { data: completedTests, isLoading: isCompletedTestLoading } =
+  //   useCompletedTests();
 
   const [showTooltip, setShowTooltip] = useState(
     !!!localStorage.getItem("showToolTip")
@@ -40,14 +42,22 @@ const ProfilePage = () => {
     setIsEditAboutMyself((prev) => !prev);
   };
 
-  if (isLoading || isTestsLoading) {
-    return <Loading />;
-  }
+  //todo if (isLoading || isTestsLoading) {
+  //   return <Loading />;
+  // }
 
-  if (isError || isTestsError) return <Error />;
+  // if (isError || isTestsError) return <Error />;
 
-  const isTestCompleted = testsData.length > 0;
-  const isFilledProfile = data.username && data.age;
+  const isTestCompleted = true;
+  //todo testsData.length > 0;
+  const isFilledProfile = true;
+  //todo data.username && data.age;
+
+  const myProfileAvatars = [
+    "/imgs/misc/my_profile/1.png",
+    "/imgs/misc/my_profile/2.jpg",
+    "/imgs/misc/my_profile/3.jpg",
+  ];
 
   return (
     <Wrapper
@@ -56,9 +66,16 @@ const ProfilePage = () => {
       }
     >
       <TopicHeader>
-        <h1>{(data.username || data.name || "") + " " + (data.age || "")}</h1>
+        <h1>
+          {(myProfileMisc.username || myProfileMisc.name || "") +
+            ", " +
+            (myProfileMisc.age || "")}
+        </h1>
       </TopicHeader>
-      <PhotoSlider photos={[data.avatar_url]} username={data.username} />
+      <PhotoSlider
+        photos={myProfileAvatars}
+        username={myProfileMisc.username}
+      />
 
       <div className="relative">
         <EditButton
@@ -77,23 +94,23 @@ const ProfilePage = () => {
       )}
 
       <div>
-        {data.about && !isEditAbouMyself ? (
+        {myProfileMisc.about && !isEditAbouMyself ? (
           <AboutMyself
-            about={data.about}
+            about={myProfileMisc.about}
             handleChange={handleChangeEditAboutMyself}
             isMyProfile
           />
         ) : (
           <AddAboutMySelf
-            data={data}
+            data={myProfileMisc}
             handleChangeEditAboutMyself={handleChangeEditAboutMyself}
           />
         )}
-        <HashTagBar hashTags={data.hashtags_list} />
-        {data && <StatusBar data={data} />}
+        <HashTagBar hashTags={myProfileMisc.hashtags_list} />
+        {myProfileMisc && <StatusBar data={myProfileMisc} />}
       </div>
 
-      {!isCompletedTestLoading && <TestsBar tests={completedTests} />}
+      <TestsBar tests={myCompletedTestsMock} />
     </Wrapper>
   );
 };

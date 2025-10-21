@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useLocation, useParams, Link } from "react-router-dom";
-import { usePostTest } from "../TestPassingPage/service/usePostTest";
+// import { usePostTest } from "../TestPassingPage/service/usePostTest";
 import type { SelectedAnswer, ScaleMap } from "./types/test";
 import { calculateResult } from "./utils/calculateResult";
 
@@ -12,7 +12,7 @@ type LocationState = {
 const ResultPage = () => {
   const { state } = useLocation();
   const { uuid } = useParams<{ uuid: string }>();
-  const { mutate, isSuccess, isError } = usePostTest();
+  // const { mutate, isSuccess, isError } = usePostTest();
 
   const answers = (state as LocationState)?.answers;
   const scaleMap = (state as LocationState)?.scaleMap;
@@ -35,13 +35,13 @@ const ResultPage = () => {
     if (postedRef.current) return;
     postedRef.current = true;
 
-    const payload = answers.map((a) => ({
-      question_id: a.questionId,
-      answer_id: a.answerId,
-    }));
+    // const payload = answers.map((a) => ({
+    //   question_id: a.questionId,
+    //   answer_id: a.answerId,
+    // }));
 
-    mutate(payload);
-  }, [answers, mutate]);
+    // mutate(payload);
+  }, [answers]);
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center p-6">
@@ -49,15 +49,6 @@ const ResultPage = () => {
         {result.title}
       </h1>
       <p className="text-lg">{result.description}</p>
-
-      <div className="mt-6">
-        {isSuccess && (
-          <p className="text-green-600">Результат успешно сохранён 🎉</p>
-        )}
-        {isError && (
-          <p className="text-red-600">Ошибка при сохранении результата</p>
-        )}
-      </div>
 
       <div className="mt-6 text-white">
         <Link to={"/"} className="bg-purple-main px-4 py-2 rounded-[30px]">
