@@ -1,17 +1,16 @@
 import { useEffect, useRef, useMemo } from "react";
-import { useGetMe } from "../../../ProfilePage/service/useGetMe";
-import { useGetChats } from "../../../ChatPage/service/useGetChats";
 import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
 import ChatBubble from "../ChatBubble/ChatBubble";
-import Loading from "../../../../shared/Components/Loading/Loading";
+import { chatsMock } from "../../../ChatPage/misc/chatsMock";
+import { myProfileMisc } from "../../../ProfilePage/MyProfilePage/misc/myProfileMock";
 
 interface ChatContentProps {
   companionId: string;
 }
 
 const ChatContent: React.FC<ChatContentProps> = ({ companionId }) => {
-  const { data: currentUser, isLoading: isUserLoading } = useGetMe();
-  const { data: allMessages, isLoading: isMessagesLoading } = useGetChats();
+  const currentUser = myProfileMisc;
+  const allMessages = chatsMock;
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const filteredMessages = useMemo(() => {
@@ -34,7 +33,6 @@ const ChatContent: React.FC<ChatContentProps> = ({ companionId }) => {
     scrollToBottom();
   }, [filteredMessages]);
 
-  if (isUserLoading || isMessagesLoading) return <Loading />;
 
   // Если currentUser не загружен, но сообщения есть, показываем сообщения без определения fromMe
   if (!currentUser) {

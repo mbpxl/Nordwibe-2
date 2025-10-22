@@ -1,29 +1,29 @@
 import { Link, useParams } from "react-router-dom";
-import { useGetUser } from "../SearchPage/service/useGetUser";
 import TopicHeader from "../../shared/Components/TopicHeader/TopicHeader";
 import { GoBackButton } from "../../shared/Components/GoBackButton/GoBackButton";
-import Loading from "../../shared/Components/Loading/Loading";
-import Error from "../../shared/Components/ErrorPage/ErrorPage";
 import ChatContent from "./components/ChatContent/ChatContent";
 import InputMessage from "./components/InputMessage/InputMessage";
 import { baseURLforImages } from "../../shared/plugin/axios";
+import { usersMock } from "../SearchPage/misc/usersMock";
 
 const ChatDialogPage = () => {
   const { companionId } = useParams<{ companionId: string }>();
 
-  const {
-    data: user,
-    isLoading: isUserLoading,
-    isError: isUserError,
-  } = useGetUser([companionId!]);
+  // const {
+  //   data: user,
+  //   isLoading: isUserLoading,
+  //   isError: isUserError,
+  // } = useGetUser([companionId!]);
 
-  if (isUserLoading) {
-    return <Loading />;
-  }
+  // if (isUserLoading) {
+  //   return <Loading />;
+  // }
 
-  if (isUserError || !user) {
-    return <Error />;
-  }
+  // if (isUserError || !user) {
+  //   return <Error />;
+  // }
+
+  const user = usersMock.filter((user: any) => user.id == companionId)
 
   return (
     <div className="h-screen">
@@ -56,7 +56,7 @@ const ChatDialogPage = () => {
       </TopicHeader>
 
       <ChatContent companionId={companionId!} />
-      <InputMessage toUserId={companionId!} />
+      <InputMessage/>
     </div>
   );
 };

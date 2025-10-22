@@ -1,12 +1,10 @@
 import { useMemo } from "react";
-import Error from "../../../../../shared/Components/ErrorPage/ErrorPage";
-import Loading from "../../../../../shared/Components/Loading/Loading";
 import Wrapper from "../../../../../shared/Components/Wrapper/Wrapper";
-import { useGetUser } from "../../../../SearchPage/service/useGetUser";
-import { useGetChats } from "../../../service/useGetChats";
 import SupportChat from "../SupportChat/SupportChat";
 import ChatItem from "../ChatItem/ChatItem";
-import { useGetMe } from "../../../../ProfilePage/service/useGetMe";
+import { myProfileMisc } from "../../../../ProfilePage/MyProfilePage/misc/myProfileMock";
+import { chatsMock } from "../../../misc/chatsMock";
+import { usersMock } from "../../../../SearchPage/misc/usersMock";
 
 type ChatMsg = {
   id: string;
@@ -19,22 +17,15 @@ type ChatMsg = {
 };
 
 const ChatList = () => {
-  const { data: meData, isLoading: isMeLoading } = useGetMe();
-  const currentUserId = meData?.id;
-
-  const {
-    data: chatsData,
-    isLoading: isChatsLoading,
-    isError: isChatsError,
-  } = useGetChats();
+  const currentUserId = myProfileMisc?.id;
 
   const threads = useMemo(() => {
-    if (!chatsData?.length || !currentUserId)
+    if (!chatsMock?.length || !currentUserId)
       return [] as (ChatMsg & { companionId: string })[];
 
     const map = new Map<string, ChatMsg & { companionId: string }>();
 
-    for (const m of chatsData as ChatMsg[]) {
+    for (const m of chatsMock as ChatMsg[]) {
       const companionId =
         m.from_user_id === currentUserId ? m.to_user_id : m.from_user_id;
 
@@ -47,29 +38,14 @@ const ChatList = () => {
     return Array.from(map.values()).sort((a, b) =>
       b.created_at > a.created_at ? 1 : -1
     );
-  }, [chatsData, currentUserId]);
+  }, [chatsMock, currentUserId]);
 
   const ids = useMemo(
-    () => (threads.length ? threads.map((t) => t.companionId).join(",") : ""),
-    [threads]
-  );
+  () => (threads.length ? threads.map((t) => t.companionId) : []),
+  [threads]
+);
 
-  const {
-    data: usersData,
-    isLoading: isUsersLoading,
-    isError: isUsersError,
-  } = useGetUser([ids]);
-
-  const isLoading = isMeLoading || isChatsLoading || isUsersLoading;
-  const isError = isChatsError || isUsersError;
-
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (isError) {
-    return <Error />;
-  }
+const usersData = usersMock.filter((user: any) => ids.includes(user.id));
 
   const userMap: Record<string, any> = {};
   usersData?.forEach((u: any) => {
