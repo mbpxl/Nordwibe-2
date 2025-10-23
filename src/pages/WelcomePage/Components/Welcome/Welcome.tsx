@@ -1,5 +1,9 @@
 import { Link } from "react-router-dom";
-import { SIGN_IN_ROUTE, SIGN_UP_ROUTE } from "../../../../shared/utils/consts";
+import {
+  MAIN_ROUTE,
+  // SIGN_IN_ROUTE,
+  // SIGN_UP_ROUTE,
+} from "../../../../shared/utils/consts";
 
 const Welcome = () => {
   return (
@@ -22,16 +26,13 @@ const Welcome = () => {
         </section>
         <section className="w-[18rem] flex flex-col gap-[1rem] mt-[40vh] font-bold text-[1.125rem] leading-[1.25rem] text-white">
           <Link
-            to={SIGN_UP_ROUTE}
+            onClick={() => {
+              localStorage.setItem("first-seen", "ok");
+            }}
+            to={MAIN_ROUTE}
             className={`px-[1.25rem] py-[0.75rem] bg-purple-main rounded-[30px]`}
           >
-            Зарегестрироваться
-          </Link>
-          <Link
-            to={SIGN_IN_ROUTE}
-            className="px-[1.25rem] py-[0.75rem] bg-purple-main rounded-[30px]"
-          >
-            Войти
+            Перейти в Nordwibe
           </Link>
         </section>
       </div>

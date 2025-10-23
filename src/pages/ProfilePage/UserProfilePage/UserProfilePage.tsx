@@ -1,7 +1,7 @@
 import AboutMyself from "../Components/AboutMyself/AboutMyself";
 import HashTagBar from "../Components/HashTagBar/HashTagBar";
 import Wrapper from "../../../shared/Components/Wrapper/Wrapper";
-import { useLocation } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import TopicHeader from "../../../shared/Components/TopicHeader/TopicHeader";
 import { PhotoSlider } from "../Components/ProfilePhotosBar/ProfilePhotosBar";
 import StatusBar from "../Components/StatusBar/StatusBar";
@@ -11,19 +11,18 @@ import StatusBar from "../Components/StatusBar/StatusBar";
 import ActionBar from "../Components/ActionBar/ActionBar";
 import { GoBackButton } from "../../../shared/Components/GoBackButton/GoBackButton";
 import TestsBar from "../Components/TestsBar/TestsBar";
+import { usersMock } from "../../SearchPage/misc/usersMock";
 
 const UserProfilePage = () => {
   const { state } = useLocation();
-  // const { ids } = useParams<{ ids: string }>();
+  const { ids } = useParams<{ ids: string }>();
   const userFromState = state?.user;
   const compatibility = state?.compatibility;
 
-  // const shouldFetch = !userFromState && ids;
-  // const { data, isLoading, isError } = shouldFetch
-  //   ? useGetUser([ids!])
-  //   : { data: null, isLoading: false, isError: false };
+  const shouldFetch = !userFromState && ids;
+  const data = shouldFetch ? usersMock.filter((user) => user.id == ids) : null;
 
-  const user = userFromState;
+  const user = userFromState || data?.[0];
 
   // if (isLoading && !user) {
   //   return <Loading />;
