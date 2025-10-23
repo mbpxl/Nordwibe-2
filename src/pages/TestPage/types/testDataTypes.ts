@@ -18,6 +18,7 @@ export type TestType = {
   description: string;
   image_url: string;
   is_important: boolean;
+  logic_type?: "score" | "letter";
   time?: number;
   questions: QuestionType[];
 };

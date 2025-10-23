@@ -46,11 +46,7 @@ const TestList = () => {
   return (
     <Wrapper className="min-h-screen pt-1 pb-12 bg-purple-background-wrap flex flex-col items-center">
       <div className="max-w-[600px]">
-        <ProgressBar
-          progress={0}
-          totalProgress={testMockData.length}
-          title={"тест"}
-        />
+        <ProgressBar progress={2} totalProgress={3} title={"тест"} />
 
         <div className="">
           {testMockData.map((item: any, index: number) => (
