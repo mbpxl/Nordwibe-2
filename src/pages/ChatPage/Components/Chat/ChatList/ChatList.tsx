@@ -41,11 +41,11 @@ const ChatList = () => {
   }, [chatsMock, currentUserId]);
 
   const ids = useMemo(
-  () => (threads.length ? threads.map((t) => t.companionId) : []),
-  [threads]
-);
+    () => (threads.length ? threads.map((t) => t.companionId) : []),
+    [threads]
+  );
 
-const usersData = usersMock.filter((user: any) => ids.includes(user.id));
+  const usersData = usersMock.filter((user: any) => ids.includes(user.id));
 
   const userMap: Record<string, any> = {};
   usersData?.forEach((u: any) => {
@@ -70,6 +70,7 @@ const usersData = usersMock.filter((user: any) => ids.includes(user.id));
                 }
                 avatar={user?.avatar_url}
                 companionId={chat.companionId}
+                time={chat.created_at}
               />
             );
           })}

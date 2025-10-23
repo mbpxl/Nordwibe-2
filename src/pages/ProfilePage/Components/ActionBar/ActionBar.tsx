@@ -2,6 +2,7 @@ import { useState } from "react";
 import MessageUserButton from "./MessageUserButton";
 import Сompatibility from "./Сompatibility";
 import Modal from "../../../../shared/Components/Modal/Modal";
+import { rankingMock } from "../../../SearchPage/misc/rankingMock";
 
 const ActionBar: React.FC<{ companiodId: string; compatibility: number }> = ({
   companiodId,
@@ -14,6 +15,10 @@ const ActionBar: React.FC<{ companiodId: string; compatibility: number }> = ({
     setIsСompatibilityActive((prev) => !prev);
   };
 
+  const compatibility2 = rankingMock.find(
+    (user) => user.user_id == companiodId
+  );
+
   return (
     <nav className="fixed bottom-0 w-full z-30">
       <div className="bg-white px-4 max-w-[475px] m-auto">
@@ -21,7 +26,7 @@ const ActionBar: React.FC<{ companiodId: string; compatibility: number }> = ({
           <MessageUserButton companionId={companiodId} />
           <Сompatibility
             onChange={handleChange}
-            compatibility={compatibility}
+            compatibility={compatibility || compatibility2?.score!}
           />
 
           <Modal closeModal={handleChange} isOpen={isСompatibilityActive}>

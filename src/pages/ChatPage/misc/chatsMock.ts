@@ -6,7 +6,7 @@ export const chatsMock = [
     updated_at: "2025-10-22T08:38:29.152Z",
     readed_at: "2025-10-22T08:38:29.152Z",
     from_user_id: "24eab778-70e9-4265-a33f-846aef78763f",
-    to_user_id: "9999999"
+    to_user_id: "9999999",
   },
   {
     id: "3fa85f64-5717-4562-b3fc-2c963f66atta24",
@@ -15,7 +15,7 @@ export const chatsMock = [
     updated_at: "2025-10-22T09:22:29.152Z",
     readed_at: "2025-10-22T08:38:29.152Z",
     from_user_id: "9999999",
-    to_user_id: "24eab778-70e9-4265-a33f-846aef78763f"
+    to_user_id: "24eab778-70e9-4265-a33f-846aef78763f",
   },
   {
     id: "3fa85f64-5717-4562-b3fc-2c963f66wjahsd7",
@@ -24,7 +24,7 @@ export const chatsMock = [
     updated_at: "2025-10-22T09:30:29.152Z",
     readed_at: "2025-10-22T08:38:29.152Z",
     from_user_id: "24eab778-70e9-4265-a33f-846aef78763f",
-    to_user_id: "9999999"
+    to_user_id: "9999999",
   },
   {
     id: "3fa85f64-5717-4562-b3fc-2c96273dndd",
@@ -33,7 +33,7 @@ export const chatsMock = [
     updated_at: "2025-10-22T09:43:43.152Z",
     readed_at: "2025-10-22T08:38:29.152Z",
     from_user_id: "9999999",
-    to_user_id: "24eab778-70e9-4265-a33f-846aef78763f"
+    to_user_id: "24eab778-70e9-4265-a33f-846aef78763f",
   },
   //next chats
   {
@@ -43,7 +43,7 @@ export const chatsMock = [
     updated_at: "2025-10-22T10:12:43.152Z",
     readed_at: "2025-10-22T08:38:29.152Z",
     from_user_id: "24eab778-70e9-4265-a33f-846aef78763f",
-    to_user_id: "0100000"
+    to_user_id: "0100000",
   },
   {
     id: "3fa85f64-5717-4562-b3fc-2c9sssdnjfsd77",
@@ -52,7 +52,7 @@ export const chatsMock = [
     updated_at: "2025-10-22T10:33:43.152Z",
     readed_at: "2025-10-22T08:38:29.152Z",
     from_user_id: "0100000",
-    to_user_id: "24eab778-70e9-4265-a33f-846aef78763f"
+    to_user_id: "24eab778-70e9-4265-a33f-846aef78763f",
   },
   {
     id: "3fa85f64-5717-4562-b3fc-123fghgasldm",
@@ -61,6 +61,15 @@ export const chatsMock = [
     updated_at: "2025-10-22T10:34:43.152Z",
     readed_at: "2025-10-22T08:38:29.152Z",
     from_user_id: "0100000",
-    to_user_id: "24eab778-70e9-4265-a33f-846aef78763f"
+    to_user_id: "24eab778-70e9-4265-a33f-846aef78763f",
   },
-]
+  {
+    id: "3fa85f64-5717-4562-b3fc-2asd8a6sd6a78sd786a",
+    text: "Отлично, я не против, давай перейдем в тг, напиши мне @lexa",
+    created_at: "2025-10-22T10:55:55.152Z",
+    updated_at: "2025-10-22T10:55:55.152Z",
+    readed_at: "2025-10-22T08:38:29.152Z",
+    from_user_id: "24eab778-70e9-4265-a33f-846aef78763f",
+    to_user_id: "0100000",
+  },
+];
