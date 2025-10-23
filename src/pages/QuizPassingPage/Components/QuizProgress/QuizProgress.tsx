@@ -1,13 +1,16 @@
 import ProgressBar from "../../../../shared/Components/ProgressBar/ProgressBar";
-import type { LessonsType } from "../../types/quizDataTypes";
 import GotoTest from "../GotoTest/GotoTest";
 import QuizButton from "./QuizButton/QuizButton";
 
 interface QuizProgressProps {
   currentSlide: number;
   setCurrentSlide: React.Dispatch<React.SetStateAction<number>>;
-  quizData: LessonsType[];
+  quizData: any;
+  isTest?: boolean;
   uuid?: string;
+  answers?: any;
+  scaleMap?: any;
+  disabled?: boolean;
 }
 
 const QuizProgress: React.FC<QuizProgressProps> = ({
@@ -15,10 +18,20 @@ const QuizProgress: React.FC<QuizProgressProps> = ({
   setCurrentSlide,
   currentSlide,
   uuid,
+  answers,
+  scaleMap,
+  isTest,
+  disabled,
 }) => {
   const middleContent =
     quizData.length == currentSlide + 1 ? (
-      <GotoTest uuid={uuid} />
+      <GotoTest
+        uuid={uuid}
+        isTest={isTest}
+        answers={answers}
+        scaleMap={scaleMap}
+        disabled={disabled}
+      />
     ) : (
       <ProgressBar
         progress={String(currentSlide + 1)}
@@ -47,6 +60,7 @@ const QuizProgress: React.FC<QuizProgressProps> = ({
           quizData={quizData}
           currentSlide={currentSlide}
           isLastQuizStep={quizData.length == currentSlide + 1}
+          disabled={disabled}
         />
       </div>
     </div>

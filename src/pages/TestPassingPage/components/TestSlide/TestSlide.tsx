@@ -1,15 +1,11 @@
-// TestSlide.tsx
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import TestAnswersList from "../TestAnswersList/TestAnswersList";
-import TestNext from "../TestNext/TestNext";
 import EducationSlideHeader from "../../../../shared/Components/Education/EducationsSlideHeader/EducationSlideHeader";
 import EducationImage from "../../../../shared/Components/Education/EducationsTypography/EducationImage";
 import EducationTitle from "../../../../shared/Components/Education/EducationsTypography/EducationTitle";
 import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
 import Error from "../../../../shared/Components/ErrorPage/ErrorPage";
-// import { useGetTests } from "../../../TestPage/service/useGetTests";
-// import Loading from "../../../../shared/Components/Loading/Loading";
 import type {
   Scale,
   ScaleMap,
@@ -17,15 +13,11 @@ import type {
 } from "../../../TestResultPage/types/test";
 import { baseURLforImages } from "../../../../shared/plugin/axios";
 import { testMockData } from "../../../TestPage/misc/testData";
+import QuizProgress from "../../../QuizPassingPage/Components/QuizProgress/QuizProgress";
 
 const TestSlide = () => {
-  // const { data, isLoading, isError } = useGetTests();
-  // if (isLoading) return <Loading />;
-  // if (isError) return <Error />;
-
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Теперь храним: key=questionUuid => { questionId, answerId, value }
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<string, SelectedAnswer>
   >({});
@@ -83,12 +75,15 @@ const TestSlide = () => {
             onSelect={handleSelectAnswer}
           />
 
-          <TestNext
+          <QuizProgress
+            currentSlide={currentSlide}
             setCurrentSlide={setCurrentSlide}
-            isLast={currentSlide === questions.length - 1}
-            disabled={!isAnswerSelected}
+            quizData={questions}
+            uuid={uuid!}
             answers={Object.values(selectedAnswers)}
             scaleMap={scaleMap}
+            isTest
+            disabled={!isAnswerSelected}
           />
         </div>
       </div>

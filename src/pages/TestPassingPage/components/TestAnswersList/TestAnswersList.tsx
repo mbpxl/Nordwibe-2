@@ -1,5 +1,3 @@
-// TestAnswersList.tsx
-
 import type { AnswerType } from "../../../TestPage/types/testDataTypes";
 import TestAnsersItem from "../TestAnswersItem/TestAnsersItem";
 
