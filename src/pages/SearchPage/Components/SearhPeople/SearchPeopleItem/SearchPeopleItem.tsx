@@ -44,7 +44,7 @@ const SearchPeopleItem = ({
             {compatibility ? compatibility + " %" : "???"}
           </div>
         </div>
-        <div className="text-[0.75rem] leading-4 break-all">
+        <div className="text-[0.75rem] leading-4 text-wrap">
           {user.about ? user.about.slice(0, 56) + "..." : ""}
         </div>
         <div className="flex flex-col gap-1 mt-1">

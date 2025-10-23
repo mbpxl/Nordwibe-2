@@ -26,7 +26,7 @@ const AboutMyself = ({
         </h1>
       )}
 
-      <ShowMore maxHeight={72}>{about}</ShowMore>
+      <ShowMore maxHeight={65}>{about}</ShowMore>
     </div>
   );
 };
