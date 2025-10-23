@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { useFillProfile } from "../../../../shared/service/useFillProfileInfo";
 
 const AddAboutMySelf = ({ data, handleChangeEditAboutMyself }: any) => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);

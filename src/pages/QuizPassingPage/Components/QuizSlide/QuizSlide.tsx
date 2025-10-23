@@ -7,8 +7,6 @@ import Error from "../../../../shared/Components/ErrorPage/ErrorPage";
 import EducationSlideHeader from "../../../../shared/Components/Education/EducationsSlideHeader/EducationSlideHeader";
 import EducationImage from "../../../../shared/Components/Education/EducationsTypography/EducationImage";
 import EducationTitle from "../../../../shared/Components/Education/EducationsTypography/EducationTitle";
-import { useGetQuiz } from "../../../QuizPage/service/useGetQuiz";
-import Loading from "../../../../shared/Components/Loading/Loading";
 import { baseURLforImages } from "../../../../shared/plugin/axios";
 import { quizMock } from "../../../QuizPage/misc/quizMock";
 

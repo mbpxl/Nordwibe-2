@@ -1,5 +1,4 @@
 import { useEffect, useRef, useMemo } from "react";
-import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
 import ChatBubble from "../ChatBubble/ChatBubble";
 import { chatsMock } from "../../../ChatPage/misc/chatsMock";
 import { myProfileMisc } from "../../../ProfilePage/MyProfilePage/misc/myProfileMock";
