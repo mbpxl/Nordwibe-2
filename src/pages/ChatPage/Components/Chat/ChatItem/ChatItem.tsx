@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { baseURLforImages } from "../../../../../shared/plugin/axios";
 
 type ChatItemProps = {
   name: string;
@@ -34,11 +33,7 @@ const ChatItem = ({
         }`}
       >
         {avatar ? (
-          <img
-            src={baseURLforImages + avatar}
-            alt={name}
-            className="w-full h-full object-cover"
-          />
+          <img src={avatar} alt={name} className="w-full h-full object-cover" />
         ) : (
           <div className="text-white font-semibold text-4xl">
             {name[0].toUpperCase()}

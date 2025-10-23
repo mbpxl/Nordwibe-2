@@ -7,7 +7,6 @@ import Error from "../../../../shared/Components/ErrorPage/ErrorPage";
 import EducationSlideHeader from "../../../../shared/Components/Education/EducationsSlideHeader/EducationSlideHeader";
 import EducationImage from "../../../../shared/Components/Education/EducationsTypography/EducationImage";
 import EducationTitle from "../../../../shared/Components/Education/EducationsTypography/EducationTitle";
-import { baseURLforImages } from "../../../../shared/plugin/axios";
 import { quizMock } from "../../../QuizPage/misc/quizMock";
 
 const QuizSlide = () => {
@@ -48,7 +47,7 @@ const QuizSlide = () => {
 
         {selectedQuiz.image_url && (
           <img
-            src={baseURLforImages + selectedQuiz.image_url}
+            src={selectedQuiz.image_url}
             alt={selectedQuiz.title}
             className="w-full max-w-3xs rounded-2xl shadow-lg mb-8"
           />
@@ -70,7 +69,7 @@ const QuizSlide = () => {
         <div className="flex flex-col">
           <EducationSlideHeader heading={selectedQuiz.title} unit={"/quiz"} />
 
-          <EducationImage image_url={baseURLforImages + slide.image_url} />
+          <EducationImage image_url={slide.image_url} />
 
           <EducationTitle title={slide.title} />
           <QuizParagraphs

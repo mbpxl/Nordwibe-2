@@ -51,7 +51,7 @@ const Carts = () => {
       id: "2",
       headind: "Тесты",
       //todo message: `${completedTestsCount}/${totalTests} пройденных`,
-      message: `0 пройденных`,
+      message: `2 пройденных`,
       bg_image: "/icons/TapBar_MainPage/TapBar-tests.svg",
       to: "/test",
     },

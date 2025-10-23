@@ -2,7 +2,6 @@
 // import Loading from "../../../../shared/Components/Loading/Loading";
 import ProgressBar from "../../../../shared/Components/ProgressBar/ProgressBar";
 import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
-import { baseURLforImages } from "../../../../shared/plugin/axios";
 // import AllQuizCompleted from "../../../QuizPage/Components/AllQuizCompleted/AllQuizCompleted";
 import { testMockData } from "../../misc/testData";
 // import { useGetCompletedTest } from "../../service/useGetCompletedTests";
@@ -56,7 +55,7 @@ const TestList = () => {
                 time={5}
                 title={item.title}
                 description={item.description}
-                image_url={baseURLforImages + item.image_url}
+                image_url={item.image_url}
                 is_important={false}
                 questions={item.questions}
               />

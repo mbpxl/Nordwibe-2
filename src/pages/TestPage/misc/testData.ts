@@ -15,7 +15,7 @@ export const testMockData: TestsResponse = [
         question: "№1 Я люблю гостей, пусть приходят в любое время.",
         description:
           "Этот тест поможет оценить твой стиль жизни и привычки с точки зрения соседского сосуществования.",
-        image_url: "/imgs/quiz/quiz-img_1.jpg",
+        image_url: "/imgs/passMock/1.jpg",
         answers: [
           { uuid: "aaaa-aaa-22-2", answer: "Полностью согласен", value: 5 },
           {
@@ -38,7 +38,7 @@ export const testMockData: TestsResponse = [
           "№2 Мне важно, чтобы дома был порядок. Без уборки – день впустую.",
         description:
           "Проверьте свои знания об основных шагах и подводных камнях при аренде жилья - от выбора до оформления документов",
-        image_url: "/imgs/quiz/quiz-img_1.jpg",
+        image_url: "/imgs/passMock/1.jpg",
         answers: [
           { uuid: "aaaa-aaa-22-2", answer: "Полностью согласен", value: 5 },
           {
@@ -61,7 +61,7 @@ export const testMockData: TestsResponse = [
           "№3 Шум меня не напрягает, нравятся музыка, разговоры, вечеринки.",
         description:
           "Проверьте свои знания об основных шагах и подводных камнях при аренде жилья - от выбора до оформления документов",
-        image_url: "/imgs/quiz/quiz-img_1.jpg",
+        image_url: "/imgs/passMock/1.jpg",
         answers: [
           { uuid: "aaaa-aaa-22-2", answer: "Полностью согласен", value: 5 },
           {
@@ -83,7 +83,7 @@ export const testMockData: TestsResponse = [
         question: "№4 Еда общая — бери, что хочешь.",
         description:
           "Проверьте свои знания об основных шагах и подводных камнях при аренде жилья - от выбора до оформления документов",
-        image_url: "/imgs/quiz/quiz-img_1.jpg",
+        image_url: "/imgs/passMock/1.jpg",
         answers: [
           { uuid: "aaaa-aaa-22-2", answer: "Полностью согласен", value: 5 },
           {
@@ -105,7 +105,7 @@ export const testMockData: TestsResponse = [
         question: "№5 Ночью жизнь только начинается, засыпаю под утро.",
         description:
           "Проверьте свои знания об основных шагах и подводных камнях при аренде жилья - от выбора до оформления документов",
-        image_url: "/imgs/quiz/quiz-img_1.jpg",
+        image_url: "/imgs/passMock/1.jpg",
         answers: [
           { uuid: "aaaa-aaa-22-2", answer: "Полностью согласен", value: 5 },
           {
@@ -128,7 +128,7 @@ export const testMockData: TestsResponse = [
           "№6 Готов обсуждать любую бытовуху, главное, поделить обязанности.",
         description:
           "Проверьте свои знания об основных шагах и подводных камнях при аренде жилья - от выбора до оформления документов",
-        image_url: "/imgs/quiz/quiz-img_1.jpg",
+        image_url: "/imgs/passMock/1.jpg",
         answers: [
           { uuid: "aaaa-aaa-22-2", answer: "Полностью согласен", value: 5 },
           {
@@ -150,7 +150,7 @@ export const testMockData: TestsResponse = [
         question: "№7 Каждому своё пространство, границы это святое.",
         description:
           "Проверьте свои знания об основных шагах и подводных камнях при аренде жилья - от выбора до оформления документов",
-        image_url: "/imgs/quiz/quiz-img_1.jpg",
+        image_url: "/imgs/passMock/1.jpg",
         answers: [
           { uuid: "aaaa-aaa-22-2", answer: "Полностью согласен", value: 5 },
           {
@@ -173,7 +173,7 @@ export const testMockData: TestsResponse = [
           "№8 Проблемы соседа - мои проблемы! Всегда готов поддержать морально!",
         description:
           "Проверьте свои знания об основных шагах и подводных камнях при аренде жилья - от выбора до оформления документов",
-        image_url: "/imgs/quiz/quiz-img_1.jpg",
+        image_url: "/imgs/passMock/1.jpg",
         answers: [
           { uuid: "aaaa-aaa-22-2", answer: "Полностью согласен", value: 5 },
           {
@@ -196,7 +196,7 @@ export const testMockData: TestsResponse = [
           "№9 Совпадение графиков? Да какая разница, пусть каждый живёт своей жизнью!",
         description:
           "Проверьте свои знания об основных шагах и подводных камнях при аренде жилья - от выбора до оформления документов",
-        image_url: "/imgs/quiz/quiz-img_1.jpg",
+        image_url: "/imgs/passMock/1.jpg",
         answers: [
           { uuid: "aaaa-aaa-22-2", answer: "Полностью согласен", value: 5 },
           {
@@ -218,7 +218,7 @@ export const testMockData: TestsResponse = [
         question: "№10 Я легко подстраиваюсь под привычки других людей.",
         description:
           "Проверьте свои знания об основных шагах и подводных камнях при аренде жилья - от выбора до оформления документов",
-        image_url: "/imgs/quiz/quiz-img_1.jpg",
+        image_url: "/imgs/passMock/1.jpg",
         answers: [
           { uuid: "aaaa-aaa-22-2", answer: "Полностью согласен", value: 5 },
           {

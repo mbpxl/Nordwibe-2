@@ -1,22 +1,11 @@
 import { useState } from "react";
 import Stories from "react-insta-stories";
 
-//todo: import { useGetStories } from "../../service/useGetStories";
-//todo: import Loading from "../../../../shared/Components/Loading/Loading";
-import { baseURLforImages } from "../../../../shared/plugin/axios";
 import { storiesMock } from "../../misc/stories/storiesMock";
 
 const News = () => {
-  //todo: const { data, isLoading, isError } = useGetStories();
-
   const [isOpen, setIsOpen] = useState(false);
   const [currentStory, setCurrentStory] = useState<number | null>(null);
-
-  // if (isLoading) return <Loading />;
-  // if (isError) {
-  //   console.log("Ошибка при получении сторисов");
-  //   return null;
-  // }
 
   return (
     <div className="max-w-[630px] m-auto">
@@ -37,7 +26,7 @@ const News = () => {
                   className="w-[50px] h-[50px] rounded-full overflow-hidden focus:outline-none"
                 >
                   <img
-                    src={"/icons/nordwibe/nordwibe.svg"}
+                    src={story.cover}
                     alt={story.title}
                     className="object-cover w-full h-full"
                   />
@@ -52,10 +41,10 @@ const News = () => {
         <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
           <Stories
             stories={storiesMock[currentStory].story_parts.map((part: any) => ({
-              url: baseURLforImages + part.image_url,
+              url: part.image_url,
               header: {
                 heading: storiesMock[currentStory].title,
-                subheading: "", // например, сюда можно дату или описание
+                subheading: "",
                 profileImage: "/icons/nordwibe/nordwibe.svg", // можно заменить на аватарку автора
               },
               seeMore: ({ close }: any) => (

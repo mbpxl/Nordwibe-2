@@ -3,7 +3,6 @@ import TopicHeader from "../../shared/Components/TopicHeader/TopicHeader";
 import { GoBackButton } from "../../shared/Components/GoBackButton/GoBackButton";
 import ChatContent from "./components/ChatContent/ChatContent";
 import InputMessage from "./components/InputMessage/InputMessage";
-import { baseURLforImages } from "../../shared/plugin/axios";
 import { usersMock } from "../SearchPage/misc/usersMock";
 
 const ChatDialogPage = () => {
@@ -21,7 +20,7 @@ const ChatDialogPage = () => {
               {user[0].avatar_url ? (
                 <img
                   className="w-10 h-10 rounded-[50%] shrink-0"
-                  src={baseURLforImages + user[0].avatar_url}
+                  src={user[0].avatar_url}
                   alt="avatar"
                 />
               ) : (
