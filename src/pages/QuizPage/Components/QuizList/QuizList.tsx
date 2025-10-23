@@ -1,6 +1,5 @@
 import ProgressBar from "../../../../shared/Components/ProgressBar/ProgressBar";
 import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
-import { baseURLforImages } from "../../../../shared/plugin/axios";
 import { quizMock } from "../../misc/quizMock";
 import QuizItem from "../QuizItem/QuizItem";
 
@@ -25,7 +24,7 @@ const QuizList = () => {
                 time={item.duration}
                 title={item.title}
                 description={item.description}
-                image_url={baseURLforImages + item.image_url}
+                image_url={item.image_url}
               />
             </div>
           ))}

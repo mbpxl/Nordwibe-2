@@ -14,13 +14,13 @@ const TestsItem: React.FC<TestsItemProps> = ({ test }) => {
   return (
     <div
       onClick={() => setIsDescriptionOpened(!isDescriptionOpened)}
-      className="w-[150px] h-[150px] rounded-xl bg-purple-background-gender flex gap-y-2.5 flex-col items-center justify-center overflow-hidden shadow-sm"
+      className="w-[150px] h-[150px] rounded-xl bg-purple-background-gender flex gap-y-2.5 flex-col items-center text-center justify-center overflow-hidden shrink-0 shadow-sm"
     >
-      {/* <img
-        src={baseURLforImages + test.image_url}
+      <img
+        src={test.image_url}
         alt={test.title}
         className="w-1/2 h-1/2 object-cover rounded-xl"
-      /> */}
+      />
       <span className="text-[0.895rem] font-medium">{test.title}</span>
 
       <Modal

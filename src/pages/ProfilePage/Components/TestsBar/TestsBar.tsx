@@ -10,7 +10,7 @@ const TestsBar: React.FC<TestsBarProps> = ({ tests }) => {
       <h2 className="text-[0.875rem] font-semibold text-black-heading leading-3 mb-2">
         Тесты
       </h2>
-      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
+      <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide shrink-0 grow-1">
         {tests.map((test: any) => (
           <TestsItem key={test.uuid} test={test} />
         ))}

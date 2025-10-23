@@ -11,7 +11,6 @@ import type {
   ScaleMap,
   SelectedAnswer,
 } from "../../../TestResultPage/types/test";
-import { baseURLforImages } from "../../../../shared/plugin/axios";
 import { testMockData } from "../../../TestPage/misc/testData";
 import QuizProgress from "../../../QuizPassingPage/Components/QuizProgress/QuizProgress";
 
@@ -65,7 +64,7 @@ const TestSlide = () => {
         <div className="flex flex-col">
           <EducationSlideHeader heading={selectedTest.title} unit={"/test"} />
 
-          <EducationImage image_url={baseURLforImages + slide.image_url} />
+          <EducationImage image_url={slide.image_url} />
 
           <EducationTitle title={slide.question} />
           <TestAnswersList

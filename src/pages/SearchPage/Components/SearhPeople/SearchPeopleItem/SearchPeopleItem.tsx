@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import HashTag from "../../../../../shared/Components/HashTag/HashTag";
-import { baseURLforImages } from "../../../../../shared/plugin/axios";
 import type { userTypes } from "../../../types/userTypes";
 import { setCompatibilityStyle } from "../../../utils/setCompatibilityStyle";
 
@@ -26,8 +25,8 @@ const SearchPeopleItem = ({
           </div>
         ) : (
           <img
-            className="w-[100px] h-[100px]"
-            src={baseURLforImages + user.avatar_url}
+            className="w-[100px] h-[110px]"
+            src={user.avatar_url}
             alt="avatar"
           />
         )}
