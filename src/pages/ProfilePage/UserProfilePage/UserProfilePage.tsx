@@ -47,7 +47,7 @@ const UserProfilePage = () => {
         </TopicHeader>
         <PhotoSlider photos={[user.avatar_url]} username={user.username} />
         <div>
-          <AboutMyself about={user.about} />
+          <AboutMyself about={user.about} isMyProfile={false} />
 
           <HashTagBar hashTags={user.hashtags_list} />
           {user && <StatusBar data={user} />}

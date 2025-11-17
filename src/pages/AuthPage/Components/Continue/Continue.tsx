@@ -7,6 +7,7 @@ interface ContinueProps {
   title: string;
   to?: string;
   isPending?: boolean;
+  isQuizButton?: boolean;
 }
 
 const Continue: React.FC<ContinueProps> = ({
@@ -15,9 +16,10 @@ const Continue: React.FC<ContinueProps> = ({
   title,
   to,
   isPending,
+  isQuizButton,
 }) => {
   const linkClasses =
-    "w-full py-[0.25rem] rounded-[30px] font-bold text-white transition bg-purple-main cursor-pointer";
+    "w-full block text-center py-[0.25rem] rounded-[30px] font-bold text-white transition bg-purple-main cursor-pointer";
   const baseClasses =
     "w-full py-[0.75rem] rounded-[30px] font-bold text-white transition";
 
@@ -29,14 +31,23 @@ const Continue: React.FC<ContinueProps> = ({
 
   if (to) {
     return (
-      <button type="submit" onClick={handleNext} className={linkClasses}>
-        <Link to={to}>{title}</Link>
-      </button>
+      <Link
+        to={to}
+        onClick={handleNext}
+        className={linkClasses}
+        style={{ pointerEvents: isValid ? "auto" : "none" }}
+      >
+        {title}
+      </Link>
     );
   }
 
   return (
-    <button onClick={handleNext} disabled={!isValid} className={classes}>
+    <button
+      onClick={handleNext}
+      disabled={!isValid}
+      className={isQuizButton ? linkClasses : classes}
+    >
       {isPending ? (
         <div className="flex justify-center items-center">
           <img

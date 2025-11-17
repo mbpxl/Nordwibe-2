@@ -15,6 +15,7 @@ import { WELCOME_ROUTE } from "../../../../shared/utils/consts";
 import React from "react";
 import ContinueWrapper from "../ContinueWrapper/ContinueWrapper";
 import WrongData from "../PhoneErrorMsg/PhoneErrorMsg";
+import { clearAuthUserData } from "../../../../shared/plugin/clearUserData";
 
 type Props = StepPropsTypes<"phone">;
 
@@ -59,8 +60,8 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
   } = usePhoneRequest(handleSuccess);
 
   const handleNext = useCallback(() => {
+    clearAuthUserData();
     const fullPhoneNumber = `+7${phone}`;
-    if (!captchaToken) return;
 
     sendPhoneRequest({
       phone: fullPhoneNumber,
@@ -68,7 +69,8 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
     });
   }, [phone, captchaToken, sendPhoneRequest]);
 
-  const isPhoneValid = phone.length === 10 || !!captchaToken || !isPending;
+  const isPhoneValid =
+    phone.length === 10 && Boolean(captchaToken) && !isPending;
 
   return (
     <main className="pt-[1rem]">
@@ -114,14 +116,14 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
 
       <WrongData
         isError={isPhoneError}
-        message={"Неправильный номер телефона!"}
+        message={"Неправильный формат номера телефона!"}
       />
 
       <ContinueWrapper>
         <Continue
           handleNext={handleNext}
           isPending={isPending}
-          isValid={isPhoneValid && !!captchaToken}
+          isValid={isPhoneValid}
           title="Получить код"
         />
         <UserAgreement />

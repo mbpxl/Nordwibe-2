@@ -1,7 +1,7 @@
 import React from "react";
 import Continue from "../../../AuthPage/Components/Continue/Continue";
 import type { QuizCardType } from "../../../QuizPassingPage/types/quizDataTypes";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const QuizItem: React.FC<QuizCardType> = ({
   uuid,
@@ -10,6 +10,8 @@ const QuizItem: React.FC<QuizCardType> = ({
   description,
   image_url,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <Link
       className="flex p-3 gap-x-3 bg-white rounded-[12px]"
@@ -28,7 +30,13 @@ const QuizItem: React.FC<QuizCardType> = ({
         <p className="h-[65px] text-black-heading text-[0.75rem] font-normal leading-[0.75rem] max-[334px]:text-[0.635rem] max-[334px]:mb-[0.625rem]">
           {description}
         </p>
-        <Continue title={"Перейти"} to={`/quiz/${uuid}`} />
+        <div className="text-white">
+          <Continue
+            title={"Перейти"}
+            handleNext={() => navigate(`/quiz/${uuid}`)}
+            isQuizButton
+          />
+        </div>
       </div>
     </Link>
   );

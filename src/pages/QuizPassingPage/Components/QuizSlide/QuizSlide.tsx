@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import QuizProgress from "../QuizProgress/QuizProgress";
 import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
 import QuizParagraphs from "../QuizTypography/QuizParagraph";
@@ -18,6 +18,8 @@ const QuizSlide = () => {
     return <Loading />;
   }
 
+  const [showIntro, setShowIntro] = useState(true);
+
   const [currentSlide, setCurrentSlide] = useState(0);
   const { uuid } = useParams<{ uuid: string }>();
   const selectedQuiz = data.find((quiz: any) => quiz.uuid === uuid);
@@ -25,9 +27,43 @@ const QuizSlide = () => {
     return <Error />;
   }
 
+  useEffect(() => {
+    if (!showIntro || !selectedQuiz) return;
+
+    const timer = setTimeout(() => {
+      setShowIntro(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [showIntro, selectedQuiz?.uuid]);
+
   const lessons = selectedQuiz.lessons;
 
   const slide = lessons[currentSlide];
+
+  if (showIntro) {
+    return (
+      <Wrapper className="min-h-screen flex flex-col items-center justify-center p-6 text-center">
+        <h1 className="text-3xl font-bold mb-4">{selectedQuiz.title}</h1>
+        <p className="mb-6 max-w-md">{selectedQuiz.description}</p>
+
+        {selectedQuiz.image_url && (
+          <img
+            src={baseURLforImages + selectedQuiz.image_url}
+            alt={selectedQuiz.title}
+            className="w-full max-w-3xs rounded-2xl shadow-lg mb-8"
+          />
+        )}
+
+        <button
+          className="px-10 bg-purple-main text-white py-4 text-xl rounded-2xl"
+          onClick={() => setShowIntro(false)}
+        >
+          Начать квиз
+        </button>
+      </Wrapper>
+    );
+  }
 
   return (
     <Wrapper className="min-h-screen flex flex-col justify-between pb-[30px] items-center">
