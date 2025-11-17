@@ -42,7 +42,7 @@ const ProfilePage = () => {
   if (isError || isTestsError) return <Error />;
 
   const isTestCompleted = testsData.length > 0;
-  const isFilledProfile = data.username && data.age;
+  const isFilledProfile = data.username;
 
   return (
     <Wrapper
