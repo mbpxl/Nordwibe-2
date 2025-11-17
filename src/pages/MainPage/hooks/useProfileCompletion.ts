@@ -29,38 +29,16 @@ interface UserProfile {
 
 const REQUIRED_FIELDS: (keyof UserProfile)[] = [
   "username",
-  "name",
-  "usage_goal",
   "desired_length",
-  "chronotype",
   "max_budget",
   "occupation",
   "smoking_status",
-  "gender",
   "pets",
-  "religion",
   "about",
   "age",
-  "city_name",
   "hometown_name",
   "hashtags_list",
   "avatar_url",
-];
-
-const NON_EMPTY_FIELDS: (keyof UserProfile)[] = [
-  "username",
-  "name",
-  "usage_goal",
-  "desired_length",
-  "chronotype",
-  "occupation",
-  "smoking_status",
-  "gender",
-  "pets",
-  "religion",
-  "about",
-  "city_name",
-  "hometown_name",
 ];
 
 export const useProfileCompletion = () => {
@@ -72,31 +50,51 @@ export const useProfileCompletion = () => {
     }
 
     let filledFields = 0;
-    const totalFields = REQUIRED_FIELDS.length;
 
     REQUIRED_FIELDS.forEach((field) => {
       const value = user[field];
 
-      if (NON_EMPTY_FIELDS.includes(field)) {
-        if (typeof value === "string" && value.trim().length > 0) {
-          filledFields++;
-        } else if (
-          field === "hashtags_list" &&
-          Array.isArray(value) &&
-          value.length > 0
-        ) {
-          filledFields++;
-        } else if (typeof value === "number" && value > 0) {
-          filledFields++;
-        }
-      } else {
-        if (value !== null && value !== undefined) {
-          filledFields++;
-        }
+      switch (field) {
+        case "username":
+        case "desired_length":
+        case "occupation":
+        case "smoking_status":
+        case "pets":
+        case "about":
+        case "hometown_name":
+          if (typeof value === "string" && value.trim().length > 0) {
+            filledFields++;
+          }
+          break;
+
+        case "max_budget":
+        case "age":
+          if (typeof value === "number" && value > 0) {
+            filledFields++;
+          }
+          break;
+
+        case "hashtags_list":
+          if (Array.isArray(value) && value.length > 0) {
+            filledFields++;
+          }
+          break;
+
+        case "avatar_url":
+          if (typeof value === "string" && value.trim().length > 0) {
+            filledFields++;
+          }
+          break;
+
+        default:
+          break;
       }
     });
 
-    return Math.round((filledFields / totalFields) * 100);
+    const percentage = Math.round(
+      (filledFields / REQUIRED_FIELDS.length) * 100
+    );
+    return percentage;
   }, [user, isLoading, isError]);
 
   return {
