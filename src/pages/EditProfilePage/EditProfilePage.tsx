@@ -72,9 +72,11 @@ const EditProfilePage = () => {
     hometown_id: cityValue?.id || null,
     max_budget: +budget.max || myProfileData.max_budget || null,
     desired_length: durationOption || myProfileData.desired_length || null,
-    hashtags_ids: hashtagsList.filter((t) => t.id).map((t) => t.id) || myProfileData.hashtags_ids || [],
+    hashtags_ids:
+      hashtagsList.filter((t) => t.id).map((t) => t.id) ||
+      myProfileData.hashtags_ids ||
+      [],
   };
-
 
   const handleUpdateProfileData = () => {
     fillProfile({ ...myProfileData, ...updatedUserData });

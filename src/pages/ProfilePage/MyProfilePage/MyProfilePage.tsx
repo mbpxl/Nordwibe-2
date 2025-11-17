@@ -14,6 +14,7 @@ import ToolTip from "../Components/ToolTip/ToolTip";
 import { useGetCompletedTest } from "../../TestPage/service/useGetCompletedTests";
 import TestsBar from "../Components/TestsBar/TestsBar";
 import { useCompletedTests } from "../hooks/useCompletedTests";
+import AddInfoText from "../Components/AddInfoText/AddInfoText";
 
 const ProfilePage = () => {
   const { data, isLoading, isError } = useGetMe();
@@ -51,7 +52,7 @@ const ProfilePage = () => {
       }
     >
       <TopicHeader>
-        <h1>{(data.username || data.name || "") + " " + (data.age || "")}</h1>
+        <h1>{(data.username || data.name || "") + ", " + (data.age || "")}</h1>
       </TopicHeader>
       <PhotoSlider photos={[data.avatar_url]} username={data.username} />
 
@@ -77,7 +78,11 @@ const ProfilePage = () => {
         ) : (
           <AddAboutMySelf data={data} />
         )}
-        <HashTagBar hashTags={data.hashtags_list} />
+        {data.hashtags_list ? (
+          <HashTagBar hashTags={data.hashtags_list} />
+        ) : (
+          <AddInfoText text={"интересы"} title={"Интересы"} />
+        )}
         {data && <StatusBar data={data} />}
       </div>
 
