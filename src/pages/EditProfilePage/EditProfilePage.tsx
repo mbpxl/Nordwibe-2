@@ -114,19 +114,40 @@ const EditProfilePage = () => {
     : "";
 
   const updatedUserData = {
-    username: nameValue || myProfileData.userName || null,
-    pets: petOption || myProfileData.pets || null,
-    birth_date: birthDate || myProfileData.bith_date || null,
-    smoking_status: smokingOption || myProfileData.smoking_status || null,
-    religion: religionOption || myProfileData.religion || null,
-    hometown_id: cityValue?.id || null,
-    max_budget: +budget.max || myProfileData.max_budget || null,
-    desired_length: durationOption || myProfileData.desired_length || null,
-    hashtags_ids:
-      hashtagsList.filter((t) => t.id).map((t) => t.id) ||
-      myProfileData.hashtags_ids ||
-      [],
+    ...(nameValue !== myProfileData?.username && { username: nameValue }),
+    ...(isBirthDateValid && { birth_date: birthDate }),
+    ...(petOption !== myProfileData?.pets && { pets: petOption }),
+    ...(animalType !== myProfileData?.animal_type && {
+      animal_type: animalType,
+    }),
+    ...(smokingOption !== myProfileData?.smoking_status && {
+      smoking_status: smokingOption,
+    }),
+    ...(religionOption !== myProfileData?.religion && {
+      religion: religionOption,
+    }),
+    ...(cityValue?.id !== myProfileData?.hometown_id && {
+      hometown_id: cityValue?.id,
+    }),
+    ...(budget.max !== String(myProfileData?.max_budget || "") && {
+      max_budget: +budget.max,
+    }),
+    ...(durationOption !== myProfileData?.desired_length && {
+      desired_length: durationOption,
+    }),
+    ...{
+      hashtags_ids: hashtagsList.filter((t) => t.id).map((t) => t.id) || [],
+    },
   };
+
+  const filteredUserData = Object.fromEntries(
+    Object.entries(updatedUserData).filter(([_, value]) => {
+      if (value === null || value === undefined) return false;
+      if (Array.isArray(value)) return value.length > 0;
+      if (typeof value === "string") return value.trim() !== "";
+      return true;
+    })
+  );
 
   const handleUpdateProfileData = () => {
     if (!isBirthDateValid) {
