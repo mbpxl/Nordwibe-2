@@ -1,6 +1,7 @@
 import type { QuestionsType } from "../../../QuizPassingPage/types/quizDataTypes";
 
 type Props = {
+  index: number;
   question: QuestionsType;
   userAnswers: Record<string, string[]>;
   setUserAnswers: React.Dispatch<
@@ -9,6 +10,7 @@ type Props = {
 };
 
 const QuizTestItem: React.FC<Props> = ({
+  index,
   question,
   userAnswers,
   setUserAnswers,
@@ -27,7 +29,10 @@ const QuizTestItem: React.FC<Props> = ({
 
   return (
     <div className="text-[1rem] font-medium leading-[1.25rem] text-black-heading">
-      <h3 className="font-semibold">{question.question}</h3>
+      <h3 className="font-semibold">
+        {index + 1 + ". "}
+        {question.question}
+      </h3>
       <div className="mt-2 flex flex-col gap-2">
         {question.answers.map((ans) => (
           <label

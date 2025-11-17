@@ -51,7 +51,7 @@ const QuizSlide = () => {
           <img
             src={baseURLforImages + selectedQuiz.image_url}
             alt={selectedQuiz.title}
-            className="w-full max-w-3xs rounded-2xl shadow-lg mb-8"
+            className="w-full max-w-44 rounded-2xl shadow-lg mb-8"
           />
         )}
 
