@@ -5,7 +5,7 @@ const HashTagBar = ({ hashTags }: { hashTags: string[] }) => {
   return (
     <div>
       <h1 className="text-black-heading text-[0.875rem] font-semibold leading-[0.75rem] mt-3 mb-2">
-        Хештеги
+        Интересы
       </h1>
       <ShowMore maxHeight={50}>
         <div className="flex flex-wrap gap-x-2 gap-y-2">
