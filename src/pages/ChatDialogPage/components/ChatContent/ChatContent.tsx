@@ -1,9 +1,9 @@
 import { useEffect, useRef, useMemo } from "react";
 import { useGetMe } from "../../../ProfilePage/service/useGetMe";
 import { useGetChats } from "../../../ChatPage/service/useGetChats";
-import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
 import ChatBubble from "../ChatBubble/ChatBubble";
 import Loading from "../../../../shared/Components/Loading/Loading";
+import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
 
 interface ChatContentProps {
   companionId: string;
@@ -36,32 +36,18 @@ const ChatContent: React.FC<ChatContentProps> = ({ companionId }) => {
 
   if (isUserLoading || isMessagesLoading) return <Loading />;
 
-  // Если currentUser не загружен, но сообщения есть, показываем сообщения без определения fromMe
-  if (!currentUser) {
-    return (
-      <Wrapper className="bg-purple-main-disabled overflow-x-scroll pt-3">
-        <div style={{ height: "calc(100vh - 181px)" }}>
-          {filteredMessages.map((message: any) => (
-            <ChatBubble
-              key={message.id}
-              message={message.text}
-              fromMe={false}
-            />
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-      </Wrapper>
-    );
-  }
-
   return (
-    <Wrapper className="bg-purple-main-disabled overflow-scroll pt-3">
-      <div style={{ height: "calc(100vh - 181px)" }}>
+    <Wrapper className="h-full overflow-y-auto bg-purple-main-disabled">
+      <div className="pt-3 pb-15">
+        {" "}
         {filteredMessages.map((message: any) => (
           <ChatBubble
             key={message.id}
             message={message.text}
-            fromMe={message.from_user_id === currentUser.id}
+            fromMe={
+              currentUser ? message.from_user_id === currentUser.id : false
+            }
+            time={message.created_at}
           />
         ))}
         <div ref={messagesEndRef} />
