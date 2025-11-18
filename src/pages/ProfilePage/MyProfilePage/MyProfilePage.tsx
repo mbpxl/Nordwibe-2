@@ -84,7 +84,10 @@ const ProfilePage = () => {
           ref={shareMenuRef}
           className="absolute top-16 right-4 bg-white shadow-lg rounded-lg z-50 min-w-[200px] border border-gray-200"
         >
-          <ShareProfile onShare={() => setShowShareMenu(false)} />
+          <ShareProfile
+            myProfileId={data.id}
+            onShare={() => setShowShareMenu(false)}
+          />
         </div>
       )}
 
