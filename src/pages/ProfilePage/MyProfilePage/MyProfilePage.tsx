@@ -46,7 +46,6 @@ const ProfilePage = () => {
   const [showShareMenu, setShowShareMenu] = useState(false);
   const shareMenuRef = useRef<HTMLDivElement>(null);
 
-  // Закрываем меню при клике вне его области
   useClickOutside(shareMenuRef, () => {
     setShowShareMenu(false);
   });
