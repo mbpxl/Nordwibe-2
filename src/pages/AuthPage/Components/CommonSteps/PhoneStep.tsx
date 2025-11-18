@@ -16,6 +16,7 @@ import React from "react";
 import ContinueWrapper from "../ContinueWrapper/ContinueWrapper";
 import WrongData from "../PhoneErrorMsg/PhoneErrorMsg";
 import { clearAuthUserData } from "../../../../shared/plugin/clearUserData";
+import OAuthButtons from "../OAuth2/OAuthButtons";
 
 type Props = StepPropsTypes<"phone">;
 
@@ -32,7 +33,7 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
     []
   );
 
-  // Получаем публичный токен капчиdasdsa
+  // Получаем публичный токен капчи
   const {
     data: captchaPublicToken,
     isError: isCaptchaError, //todo:  добавить toast для ошибки
@@ -113,6 +114,8 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
           onSuccess={setCaptchaToken}
         />
       </section>
+
+      <OAuthButtons />
 
       <WrongData
         isError={isPhoneError}
