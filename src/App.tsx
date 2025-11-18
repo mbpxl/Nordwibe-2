@@ -3,6 +3,7 @@ import AppRouter from "./shared/Components/AppRouter";
 import NavBar from "./shared/Components/NavBar/NavBar";
 import { hideNavBarRoutes } from "./shared/utils/consts";
 import CookieConsent from "react-cookie-consent";
+import { Toaster } from "react-hot-toast";
 
 function AppContent() {
   const location = useLocation();
@@ -50,6 +51,7 @@ function App() {
         </Link>{" "}
         для получения дополнительной информации.
       </CookieConsent>
+      <Toaster />
     </BrowserRouter>
   );
 }

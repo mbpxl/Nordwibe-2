@@ -9,12 +9,14 @@ import { useGetMe } from "../service/useGetMe";
 import TopicHeader from "../../../shared/Components/TopicHeader/TopicHeader";
 import StatusBar from "../Components/StatusBar/StatusBar";
 import AddAboutMySelf from "../Components/AddAboutMySelf/AddAboutMySelf";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ToolTip from "../Components/ToolTip/ToolTip";
 import { useGetCompletedTest } from "../../TestPage/service/useGetCompletedTests";
 import TestsBar from "../Components/TestsBar/TestsBar";
 import { useCompletedTests } from "../hooks/useCompletedTests";
 import AddInfoText from "../Components/AddInfoText/AddInfoText";
+import ShareProfile from "../Components/ShareProfile/ShareProfile";
+import { useClickOutside } from "../hooks/useClickOutside";
 
 const ProfilePage = () => {
   const { data, isLoading, isError } = useGetMe();
@@ -41,6 +43,18 @@ const ProfilePage = () => {
     setIsEditAboutMyself((prev) => !prev);
   };
 
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const shareMenuRef = useRef<HTMLDivElement>(null);
+
+  // Закрываем меню при клике вне его области
+  useClickOutside(shareMenuRef, () => {
+    setShowShareMenu(false);
+  });
+
+  const handleShowMoreClick = () => {
+    setShowShareMenu((prev) => !prev);
+  };
+
   if (isLoading || isTestsLoading) {
     return <Loading />;
   }
@@ -57,8 +71,24 @@ const ProfilePage = () => {
       }
     >
       <TopicHeader>
-        <h1>{(data.username || data.name || "") + ", " + (data.age || "")}</h1>
+        <h1>
+          {data.username || data.name || ""}
+          {data.age ? ", " : ""} {data.age}
+        </h1>
+        <button onClick={handleShowMoreClick}>
+          <img src="/icons/show_more.svg" alt="Показать меню" />
+        </button>
       </TopicHeader>
+
+      {showShareMenu && (
+        <div
+          ref={shareMenuRef}
+          className="absolute top-16 right-4 bg-white shadow-lg rounded-lg z-50 min-w-[200px] border border-gray-200"
+        >
+          <ShareProfile onShare={() => setShowShareMenu(false)} />
+        </div>
+      )}
+
       <PhotoSlider photos={[data.avatar_url]} username={data.username} />
 
       <div className="relative">

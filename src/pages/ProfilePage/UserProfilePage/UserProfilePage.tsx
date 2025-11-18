@@ -1,7 +1,12 @@
 import AboutMyself from "../Components/AboutMyself/AboutMyself";
 import HashTagBar from "../Components/HashTagBar/HashTagBar";
 import Wrapper from "../../../shared/Components/Wrapper/Wrapper";
-import { useLocation, useParams } from "react-router-dom";
+import {
+  redirect,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import TopicHeader from "../../../shared/Components/TopicHeader/TopicHeader";
 import { PhotoSlider } from "../Components/ProfilePhotosBar/ProfilePhotosBar";
 import StatusBar from "../Components/StatusBar/StatusBar";
@@ -10,12 +15,25 @@ import Loading from "../../../shared/Components/Loading/Loading";
 import Error from "../../../shared/Components/ErrorPage/ErrorPage";
 import ActionBar from "../Components/ActionBar/ActionBar";
 import { GoBackButton } from "../../../shared/Components/GoBackButton/GoBackButton";
+import { useGetMe } from "../service/useGetMe";
 
 const UserProfilePage = () => {
   const { state } = useLocation();
+  const navigate = useNavigate();
   const { ids } = useParams<{ ids: string }>();
   const userFromState = state?.user;
   const compatibility = state?.compatibility;
+
+  // получаем свои данные для того, чтобы сравнивать айди и в случае, если перешли из ссылки на свой профиль, то редиректить /profile
+  const {
+    data: myData,
+    isLoading: isMyProfileLoading,
+    isError: isMyProfileError,
+  } = useGetMe();
+
+  if (ids == myData?.id) {
+    navigate("/profile");
+  }
 
   const shouldFetch = !userFromState && ids;
   const { data, isLoading, isError } = shouldFetch
@@ -24,11 +42,11 @@ const UserProfilePage = () => {
 
   const user = userFromState || data?.[0];
 
-  if (isLoading && !user) {
+  if ((isLoading && !user) || isMyProfileLoading) {
     return <Loading />;
   }
 
-  if (isError || !user) {
+  if (isError || !user || isMyProfileError) {
     return <Error />;
   }
 
