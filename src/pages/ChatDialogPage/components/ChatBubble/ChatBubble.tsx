@@ -4,9 +4,15 @@ type ChatBubbleTypes = {
   fromMe: boolean;
   message: string;
   time: string;
+  isRead: boolean;
 };
 
-const ChatBubble: React.FC<ChatBubbleTypes> = ({ fromMe, message, time }) => {
+const ChatBubble: React.FC<ChatBubbleTypes> = ({
+  fromMe,
+  message,
+  time,
+  isRead,
+}) => {
   const [isPhotoOpened, setIsPhotoOpened] = useState<boolean>(false);
 
   const isPhoto = message.startsWith("/") || message.startsWith("http");
@@ -23,7 +29,7 @@ const ChatBubble: React.FC<ChatBubbleTypes> = ({ fromMe, message, time }) => {
     <>
       <div className={`flex ${fromMe ? "justify-end" : "justify-start"} mb-2`}>
         <div
-          className={`max-w-[200px] mt-1 py-2 pb-4 px-3 ${
+          className={`min-w-[80px] max-w-[200px] mt-1 py-2 px-3 ${
             fromMe ? "bg-white" : "bg-[#E1E1F3] text-[#35339B]"
           } relative rounded-xl`}
         >
@@ -35,14 +41,45 @@ const ChatBubble: React.FC<ChatBubbleTypes> = ({ fromMe, message, time }) => {
               onClick={handleOpenPhoto}
             />
           ) : (
-            <h1 className="whitespace-pre-wrap break-words">{message}</h1>
-          )}
-          <h2 className="absolute right-1 bottom-1 text-[#35339B] text-[0.625rem]">
-            <div className="flex items-center gap-[0.5px]">
-              {fromMe ? <img src="/icons/chat/readed.svg" alt="" /> : ""}
-              <p>{messageDate}</p>
+            <div className="flex flex-col">
+              <h1 className="whitespace-pre-wrap break-words">{message}</h1>
+              <div className="flex justify-end items-center gap-1 mt-1">
+                <span className="text-[#35339B] text-[0.625rem]">
+                  {messageDate}
+                </span>
+                {fromMe && (
+                  <img
+                    src={
+                      isRead
+                        ? "/icons/chat/readed-double.svg"
+                        : "/icons/chat/unread.svg"
+                    }
+                    alt={isRead ? "прочитано" : "доставлено"}
+                    className="w-3 h-3"
+                  />
+                )}
+              </div>
             </div>
-          </h2>
+          )}
+
+          {isPhoto && (
+            <h2 className="absolute flex items-center gap-1 right-1 bottom-1 text-[#35339B] text-[0.625rem]">
+              <div className="flex items-center gap-[0.5px]">
+                <p>{messageDate}</p>
+                {fromMe && (
+                  <img
+                    src={
+                      isRead
+                        ? "/icons/chat/readed-double.svg"
+                        : "/icons/chat/unread.svg"
+                    }
+                    alt={isRead ? "прочитано" : "доставлено"}
+                    className="w-3 h-3"
+                  />
+                )}
+              </div>
+            </h2>
+          )}
         </div>
       </div>
 

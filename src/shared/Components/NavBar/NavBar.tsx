@@ -10,10 +10,11 @@ import quizIcon from "/icons/navbar/quiz.svg";
 import quizIconActive from "/icons/navbar/quiz-active.svg";
 import profileIcon from "/icons/navbar/profile.svg";
 import profileIconActive from "/icons/navbar/profile-active.svg";
+import { useHasUnreadMessages } from "../../../pages/ChatPage/hooks/useHasUnreadMessages";
 
 const NavBar = () => {
   const location = useLocation();
-
+  const hasUnreadMessages = useHasUnreadMessages();
   const menuItems = [
     {
       path: "/search",
@@ -26,6 +27,7 @@ const NavBar = () => {
       icon: chatIcon,
       activeIcon: chatIconActive,
       label: "Чат",
+      hasNotification: hasUnreadMessages,
     },
     {
       path: "/",
@@ -66,14 +68,19 @@ const NavBar = () => {
                 className="flex flex-col items-center justify-center gap-0.5"
               >
                 <Link
-                  className="flex flex-col items-center justify-center gap-0.5"
+                  className="flex flex-col items-center justify-center gap-0.5 relative"
                   to={item.path}
                 >
-                  <img
-                    src={active ? item.activeIcon : item.icon}
-                    alt={item.label}
-                    className="min-w-6 min-h-6 shrink-0"
-                  />
+                  <div className="relative">
+                    <img
+                      src={active ? item.activeIcon : item.icon}
+                      alt={item.label}
+                      className="min-w-6 min-h-6 shrink-0"
+                    />
+                    {item.hasNotification && (
+                      <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></div>
+                    )}
+                  </div>
                   <p
                     className={`transition delay-50 text-[0.5rem] leading-2 font-bold ${
                       active ? "text-purple-main" : "text-[#A0A0A0]"
