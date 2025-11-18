@@ -17,6 +17,7 @@ import { useCompletedTests } from "../hooks/useCompletedTests";
 import AddInfoText from "../Components/AddInfoText/AddInfoText";
 import ShareProfile from "../Components/ShareProfile/ShareProfile";
 import { useClickOutside } from "../hooks/useClickOutside";
+import { GoBackButton } from "../../../shared/Components/GoBackButton/GoBackButton";
 
 const ProfilePage = () => {
   const { data, isLoading, isError } = useGetMe();
@@ -70,6 +71,7 @@ const ProfilePage = () => {
       }
     >
       <TopicHeader>
+        <GoBackButton />
         <h1>
           {data.username || data.name || ""}
           {data.age ? ", " : ""} {data.age}
