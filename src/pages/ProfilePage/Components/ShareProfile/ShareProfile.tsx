@@ -1,28 +1,31 @@
 import toast from "react-hot-toast";
 
 import { useState } from "react";
-import Error from "../../../../shared/Components/ErrorPage/ErrorPage";
-import Loading from "../../../../shared/Components/Loading/Loading";
-import { useGetMe } from "../../service/useGetMe";
+import { useParams } from "react-router-dom";
 
 interface ShareProfileProps {
   onShare?: () => void;
+  myProfileId?: string;
 }
 
-const ShareProfile = ({ onShare }: ShareProfileProps) => {
-  const { data, isLoading, isError } = useGetMe();
+const ShareProfile = ({ onShare, myProfileId }: ShareProfileProps) => {
+  const { ids } = useParams();
+
   const [isCopied, setIsCopied] = useState(false);
 
   const handleShareClick = async () => {
-    if (!data?.id) return;
+    var profileUrl = "";
 
-    const profileUrl = `${window.location.origin}/profile/${data.id}`;
+    if (ids) {
+      profileUrl = `${window.location.origin}/profile/${ids}`;
+    } else {
+      profileUrl = `${window.location.origin}/profile/${myProfileId}`;
+    }
 
     try {
       await navigator.clipboard.writeText(profileUrl);
       setIsCopied(true);
 
-      // Показываем сообщение
       toast.success("Скопировано в буфер обмена");
 
       if (onShare) {
@@ -32,7 +35,6 @@ const ShareProfile = ({ onShare }: ShareProfileProps) => {
       setTimeout(() => setIsCopied(false), 2000);
     } catch (err) {
       console.error("Ошибка при копировании:", err);
-      // Fallback для старых браузеров
       const textArea = document.createElement("textarea");
       textArea.value = profileUrl;
       document.body.appendChild(textArea);
@@ -44,18 +46,6 @@ const ShareProfile = ({ onShare }: ShareProfileProps) => {
       if (onShare) onShare();
     }
   };
-
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (isError) {
-    return <Error />;
-  }
-
-  if (!data?.id) {
-    return <div className="text-red-500">Ошибка: ID профиля не найден</div>;
-  }
 
   return (
     <button

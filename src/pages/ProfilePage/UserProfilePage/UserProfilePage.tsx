@@ -16,6 +16,9 @@ import Error from "../../../shared/Components/ErrorPage/ErrorPage";
 import ActionBar from "../Components/ActionBar/ActionBar";
 import { GoBackButton } from "../../../shared/Components/GoBackButton/GoBackButton";
 import { useGetMe } from "../service/useGetMe";
+import ShareProfile from "../Components/ShareProfile/ShareProfile";
+import { useState, useRef } from "react";
+import { useClickOutside } from "../hooks/useClickOutside";
 
 const UserProfilePage = () => {
   const { state } = useLocation();
@@ -42,6 +45,17 @@ const UserProfilePage = () => {
 
   const user = userFromState || data?.[0];
 
+  const [showShareMenu, setShowShareMenu] = useState(false);
+  const shareMenuRef = useRef<HTMLDivElement>(null);
+
+  useClickOutside(shareMenuRef, () => {
+    setShowShareMenu(false);
+  });
+
+  const handleShowMoreClick = () => {
+    setShowShareMenu((prev) => !prev);
+  };
+
   if ((isLoading && !user) || isMyProfileLoading) {
     return <Loading />;
   }
@@ -58,12 +72,23 @@ const UserProfilePage = () => {
         }
       >
         <TopicHeader>
-          <GoBackButton />
           <h1>
             {user.username || user.name || ""}
             {user.age ? ", " : ""} {user.age}
           </h1>
+          <button onClick={handleShowMoreClick}>
+            <img src="/icons/show_more.svg" alt="Показать меню" />
+          </button>
         </TopicHeader>
+
+        {showShareMenu && (
+          <div
+            ref={shareMenuRef}
+            className="absolute top-16 right-4 bg-white shadow-lg rounded-lg z-50 min-w-[200px] border border-gray-200"
+          >
+            <ShareProfile onShare={() => setShowShareMenu(false)} />
+          </div>
+        )}
         <PhotoSlider photos={[user.avatar_url]} username={user.username} />
         <div>
           <AboutMyself about={user.about} isMyProfile={false} />
