@@ -60,7 +60,8 @@ const UserProfilePage = () => {
         <TopicHeader>
           <GoBackButton />
           <h1>
-            {(user.username || user.name || "") + ", " + (user.age || "")}
+            {user.username || user.name || ""}
+            {user.age ? ", " : ""} {user.age}
           </h1>
         </TopicHeader>
         <PhotoSlider photos={[user.avatar_url]} username={user.username} />
