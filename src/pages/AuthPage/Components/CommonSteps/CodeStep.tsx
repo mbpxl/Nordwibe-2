@@ -6,11 +6,11 @@ import Heading from "../SignUp/Heading";
 import useFormatUnformatCode from "../../hooks/useFormatCode";
 import React from "react";
 import { useConfirmPhone } from "../../service/useConfirmPhone";
-import { useLocation, useNavigate } from "react-router-dom";
-import { MAIN_ROUTE } from "../../../../shared/utils/consts";
+import { useLocation } from "react-router-dom";
 import { useAccessToken } from "../../../../shared/service/useAuthToken";
 import ContinueWrapper from "../ContinueWrapper/ContinueWrapper";
 import WrongData from "../PhoneErrorMsg/PhoneErrorMsg";
+import { useRedirectAfterLogin } from "../../../../shared/hooks/useRedirectAfterLogin";
 
 type Props = StepPropsTypes<"code">;
 
@@ -29,10 +29,10 @@ const CodeStep: React.FC<Props> = ({
 
   const [code, setCode] = useState(formData.code || "");
 
-  const navigate = useNavigate();
   const location = useLocation();
 
   const { mutate: getToken } = useAccessToken();
+  const { performRedirect } = useRedirectAfterLogin();
 
   const handleSuccess = () => {
     updateForm({ code });
@@ -41,12 +41,12 @@ const CodeStep: React.FC<Props> = ({
       onSuccess: () => {
         onNext();
         if (location.pathname === "/sign-in") {
-          navigate(MAIN_ROUTE);
+          performRedirect();
           localStorage.removeItem("signin-form");
         }
       },
       onError: () => {
-        alert("Ошибка получения access токена"); // todo: Исправить данный функционал
+        alert("Ошибка получения access токена");
       },
     });
   };
