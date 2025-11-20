@@ -22,9 +22,11 @@ type Props = StepPropsTypes<"phone">;
 
 const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
   const [phone, setPhone] = useState(formData.phone);
-  const [captchaToken, setCaptchaToken] = useState(() => {
-    return localStorage.getItem("captcha_token") || "";
-  });
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaError, setCaptchaError] = useState(false);
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false);
+  const [captchaKey, setCaptchaKey] = useState(0);
+  const [initialPhone] = useState(formData.phone);
 
   const inputRef = useRef<HTMLInputElement>(null);
   const { formatPhone, handleInputChange } = usePhoneFormatter();
@@ -33,16 +35,22 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
     []
   );
 
-  // Получаем публичный токен капчи
-  const {
-    data: captchaPublicToken,
-    isError: isCaptchaError, //todo:  добавить toast для ошибки
-  } = useGetCaptchaToken();
+  const { data: captchaPublicToken, isError: isCaptchaError } =
+    useGetCaptchaToken();
 
-  // Сохраняем капчy токен в localStorage
+  useEffect(() => {
+    const savedToken = localStorage.getItem("captcha_token");
+    if (savedToken) {
+      setCaptchaToken(savedToken);
+      setIsCaptchaVerified(true);
+    }
+  }, []);
+
   useEffect(() => {
     if (captchaToken) {
       localStorage.setItem("captcha_token", captchaToken);
+      setIsCaptchaVerified(true);
+      setCaptchaError(false);
     }
   }, [captchaToken]);
 
@@ -54,6 +62,7 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
   if (isCaptchaError) {
     console.error("Ошибка получения токена капчи");
   }
+
   const {
     sendPhoneRequest,
     isPending,
@@ -61,17 +70,47 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
   } = usePhoneRequest(handleSuccess);
 
   const handleNext = useCallback(() => {
+    const currentToken = localStorage.getItem("captcha_token");
+
+    if (!currentToken) {
+      setCaptchaError(true);
+      setIsCaptchaVerified(false);
+      resetCaptcha();
+      return;
+    }
+
+    // Обновляем состояние токена
+    setCaptchaToken(currentToken);
+
     clearAuthUserData();
     const fullPhoneNumber = `+7${phone}`;
 
     sendPhoneRequest({
       phone: fullPhoneNumber,
-      captcha_token: captchaToken,
+      captcha_token: currentToken,
     });
-  }, [phone, captchaToken, sendPhoneRequest]);
+  }, [phone, sendPhoneRequest]);
 
-  const isPhoneValid =
-    phone.length === 10 && Boolean(captchaToken) && !isPending;
+  const handleCaptchaSuccess = useCallback((token: string) => {
+    setCaptchaToken(token);
+    setIsCaptchaVerified(true);
+    setCaptchaError(false);
+  }, []);
+
+  const resetCaptcha = useCallback(() => {
+    setCaptchaToken("");
+    setIsCaptchaVerified(false);
+    localStorage.removeItem("captcha_token");
+    setCaptchaKey((prev) => prev + 1);
+  }, []);
+
+  useEffect(() => {
+    if (phone.length === 0 && initialPhone.length > 0) {
+      resetCaptcha();
+    }
+  }, [phone, initialPhone, resetCaptcha]);
+
+  const isPhoneValid = phone.length === 10 && isCaptchaVerified && !isPending;
 
   return (
     <main className="pt-[1rem]">
@@ -108,11 +147,15 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
           </div>
         </form>
 
-        <SmartCaptcha
-          sitekey={captchaPublicToken}
-          language="ru"
-          onSuccess={setCaptchaToken}
-        />
+        <div className="flex flex-col items-center gap-2">
+          <div key={captchaKey}>
+            <SmartCaptcha
+              sitekey={captchaPublicToken}
+              language="ru"
+              onSuccess={handleCaptchaSuccess}
+            />
+          </div>
+        </div>
       </section>
 
       <OAuthButtons />
@@ -121,6 +164,15 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
         isError={isPhoneError}
         message={"Неправильный формат номера телефона!"}
       />
+
+      {captchaError && (
+        <div className="flex flex-col items-center gap-2">
+          <WrongData
+            isError={true}
+            message={"Пожалуйста, пройдите проверку капчи"}
+          />
+        </div>
+      )}
 
       <ContinueWrapper>
         <Continue
