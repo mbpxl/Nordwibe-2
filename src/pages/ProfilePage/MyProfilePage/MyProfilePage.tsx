@@ -71,7 +71,7 @@ const ProfilePage = () => {
       }
     >
       <TopicHeader>
-        <GoBackButton />
+        <GoBackButton fromProfile />
         <h1>
           {data.username || data.name || ""}
           {data.age ? ", " : ""} {data.age}
