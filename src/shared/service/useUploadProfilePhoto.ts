@@ -1,7 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "../plugin/axios";
 
 export const useUploadAvatar = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (file: File) => {
       const formData = new FormData();
@@ -14,6 +16,9 @@ export const useUploadAvatar = () => {
       });
 
       return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["get-me"] });
     },
   });
 };

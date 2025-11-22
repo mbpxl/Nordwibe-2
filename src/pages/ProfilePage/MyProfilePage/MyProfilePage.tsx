@@ -4,7 +4,7 @@ import Wrapper from "../../../shared/Components/Wrapper/Wrapper";
 import AboutMyself from "../Components/AboutMyself/AboutMyself";
 import HashTagBar from "../Components/HashTagBar/HashTagBar";
 import EditButton from "../Components/OptionsButton/OptionButton";
-import { PhotoSlider } from "../Components/ProfilePhotosBar/ProfilePhotosBar";
+import { PhotoSlider } from "../Components/Photo/ProfilePhotosBar/ProfilePhotosBar";
 import { useGetMe } from "../service/useGetMe";
 import TopicHeader from "../../../shared/Components/TopicHeader/TopicHeader";
 import StatusBar from "../Components/StatusBar/StatusBar";
