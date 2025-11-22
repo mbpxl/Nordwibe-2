@@ -3,7 +3,7 @@ import HashTagBar from "../Components/HashTagBar/HashTagBar";
 import Wrapper from "../../../shared/Components/Wrapper/Wrapper";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import TopicHeader from "../../../shared/Components/TopicHeader/TopicHeader";
-import { PhotoSlider } from "../Components/ProfilePhotosBar/ProfilePhotosBar";
+import { PhotoSlider } from "../Components/Photo/ProfilePhotosBar/ProfilePhotosBar";
 import StatusBar from "../Components/StatusBar/StatusBar";
 import { useGetUser } from "../../SearchPage/service/useGetUser";
 import Loading from "../../../shared/Components/Loading/Loading";

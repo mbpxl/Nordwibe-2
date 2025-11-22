@@ -6,38 +6,10 @@ import addPhotoImg from "/imgs/AddPhoto.png";
 import removePhoto from "/icons/removePhoto.svg";
 import Continue from "../../Continue/Continue";
 import { useUploadAvatar } from "../../../../../shared/service/useUploadProfilePhoto";
+import { validateImageFile } from "../../../../../shared/utils/validateImageFile";
 
 type Props = StepPropsTypes<"photos">;
 type PhotoEntry = File | string;
-
-const validateImageFile = (file: File): Promise<boolean> => {
-  return new Promise((resolve) => {
-    if (!file.type.startsWith('image/')) {
-      resolve(false);
-      return;
-    }
-
-    const img = new Image();
-    const objectUrl = URL.createObjectURL(file);
-    
-    img.onload = () => {
-      URL.revokeObjectURL(objectUrl);
-      resolve(true);
-    };
-    
-    img.onerror = () => {
-      URL.revokeObjectURL(objectUrl);
-      resolve(false);
-    };
-    
-    img.src = objectUrl;
-    
-    setTimeout(() => {
-      URL.revokeObjectURL(objectUrl);
-      resolve(false);
-    }, 2000);
-  });
-};
 
 const PhotoStep: React.FC<Props> = ({
   onBack,
