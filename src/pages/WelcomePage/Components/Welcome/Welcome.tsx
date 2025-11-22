@@ -25,7 +25,7 @@ const Welcome = () => {
             to={SIGN_UP_ROUTE}
             className={`px-[1.25rem] py-[0.75rem] bg-purple-main rounded-[30px]`}
           >
-            Зарегестрироваться
+            Зарегистрироваться
           </Link>
           <Link
             to={SIGN_IN_ROUTE}
