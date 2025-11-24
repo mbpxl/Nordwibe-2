@@ -15,7 +15,6 @@ export const PhotoActionsMenu: React.FC<PhotoActionsMenuProps> = ({
   onClose,
   onOpen,
   onEdit,
-  onDelete,
   hasPhoto,
 }) => {
   if (!isOpen) return null;
@@ -63,7 +62,6 @@ export const PhotoActionsMenu: React.FC<PhotoActionsMenuProps> = ({
               <div className="h-px bg-gray-200 mx-4" />
               <button
                 onClick={() => {
-                  onDelete();
                   onClose();
                 }}
                 className="w-full text-left p-4 hover:bg-gray-50 rounded-lg transition-colors text-red-600"
