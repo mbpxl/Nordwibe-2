@@ -1,21 +1,36 @@
 import { useEffect, useRef, useState } from "react";
 import { useFillProfile } from "../../../../shared/service/useFillProfileInfo";
 
-const AddAboutMySelf = ({ data, handleChangeEditAboutMyself }: any) => {
-  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+interface AddAboutMySelfProps {
+  data: any;
+  isEditing: boolean;
+  onCancel: () => void;
+  onSave: () => void;
+}
+
+const AddAboutMySelf = ({
+  data,
+  isEditing,
+  onCancel,
+  onSave,
+}: AddAboutMySelfProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const [aboutMySelfValue, setAboutMySelfValue] = useState<string>(
+    data.about || ""
+  );
+  const { fillProfile, isPending, isSuccess } = useFillProfile();
 
-  const [aboutMySelfValue, setAboutMySelfValue] = useState<string>("");
-  const { fillProfile, isSuccess } = useFillProfile();
-
-  const handleChangeEditMode = () => {
-    setIsEditMode((prev) => !prev);
-  };
+  const MAX_LENGTH = 100;
+  const currentLength = aboutMySelfValue.length;
+  const isMaxLengthReached = currentLength >= MAX_LENGTH;
+  const hasExistingText = data.about && data.about.trim().length > 0;
 
   const handleChangeAboutMySelf = (
     e: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
-    setAboutMySelfValue(e.target.value);
+    if (e.target.value.length <= MAX_LENGTH) {
+      setAboutMySelfValue(e.target.value);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -23,31 +38,83 @@ const AddAboutMySelf = ({ data, handleChangeEditAboutMyself }: any) => {
     if (aboutMySelfValue.trim()) {
       fillProfile({ ...data, about: aboutMySelfValue.trim() });
     }
-    handleChangeEditAboutMyself();
   };
 
   const handleCancel = () => {
-    setAboutMySelfValue("");
-    setIsEditMode(false);
-    if (data.about) {
-      handleChangeEditAboutMyself();
-    }
+    setAboutMySelfValue(data.about || "");
+    onCancel();
   };
 
   useEffect(() => {
     if (isSuccess) {
-      setIsEditMode(false);
-      setAboutMySelfValue("");
+      onSave();
     }
-  }, [isSuccess]);
+  }, [isSuccess, onSave]);
 
   useEffect(() => {
-    if (isEditMode && textareaRef.current) {
+    if (isEditing && textareaRef.current) {
       textareaRef.current.focus();
       const length = textareaRef.current.value.length;
       textareaRef.current.setSelectionRange(length, length);
     }
-  }, [isEditMode]);
+  }, [isEditing]);
+
+  if (isEditing) {
+    return (
+      <div className="">
+        <h1 className="text-black-heading text-[0.875rem] font-semibold leading-[0.75rem] mb-2">
+          О себе
+        </h1>
+        <form onSubmit={handleSubmit}>
+          <textarea
+            ref={textareaRef}
+            value={aboutMySelfValue}
+            onChange={handleChangeAboutMySelf}
+            className={`w-full h-25 py-1.5 px-3 border-2 rounded-[10px] outline-none resize-none ${
+              isMaxLengthReached
+                ? "border-red-500 bg-red-50"
+                : "border-purple-sub-button"
+            }`}
+            placeholder="Расскажите о себе"
+            maxLength={MAX_LENGTH}
+          />
+          <div
+            className={`text-right text-sm mt-1 ${
+              isMaxLengthReached ? "text-red-500 font-medium" : "text-gray-500"
+            }`}
+          >
+            {currentLength}/{MAX_LENGTH}
+            {isMaxLengthReached && (
+              <span className="ml-2">Лимит символов достигнут</span>
+            )}
+          </div>
+          <div className="flex gap-2 mt-2">
+            <button
+              type="submit"
+              disabled={
+                !aboutMySelfValue.trim() || isMaxLengthReached || isPending
+              }
+              className="bg-purple-main text-white px-4 py-2 rounded-[12px] disabled:opacity-50 hover:bg-purple-600 transition-colors"
+            >
+              {isPending
+                ? "Сохранение..."
+                : hasExistingText
+                ? "Сохранить"
+                : "Добавить"}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="bg-gray-300 text-gray-700 px-4 py-2 rounded-[12px] hover:bg-gray-400 transition-colors"
+              disabled={isPending}
+            >
+              Отмена
+            </button>
+          </div>
+        </form>
+      </div>
+    );
+  }
 
   return (
     <div className="">
@@ -55,39 +122,21 @@ const AddAboutMySelf = ({ data, handleChangeEditAboutMyself }: any) => {
         О себе
       </h1>
       <div className="">
-        {isEditMode ? (
-          <div className="">
-            <form onSubmit={handleSubmit}>
-              <textarea
-                ref={textareaRef}
-                value={aboutMySelfValue}
-                onChange={handleChangeAboutMySelf}
-                className="w-full h-17 py-1.5 px-1 border-2 border-purple-sub-button rounded-[10px] outline-none"
-                placeholder="Расскажите о себе"
-              />
-              <div className="flex gap-2 mt-2">
-                <button
-                  type="submit"
-                  disabled={!aboutMySelfValue.trim()}
-                  className="bg-purple-main text-white p-2 rounded-[12px] disabled:opacity-50"
-                >
-                  Добавить
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCancel}
-                  className="bg-gray-300 text-gray-700 p-2 rounded-[12px] disabled:opacity-50"
-                >
-                  Отмена
-                </button>
-              </div>
-            </form>
+        {hasExistingText ? (
+          <div className="border-2 border-transparent rounded-lg p-2">
+            <p className="text-gray-700 whitespace-pre-wrap">{data.about}</p>
+            <div className="text-right text-sm text-gray-500 mt-1">
+              {data.about.length}/{MAX_LENGTH}
+            </div>
           </div>
         ) : (
-          <div onClick={handleChangeEditMode} className="cursor-pointer">
+          <div className="cursor-pointer">
             <h2 className="text-purple-main-disabled text-[1rem] font-medium leading-4">
-              Хотите <span className="border-b-2">добавить</span> информацию о
-              себе?
+              Хотите{" "}
+              <span className="border-b-2 border-purple-main-disabled">
+                добавить
+              </span>{" "}
+              информацию о себе?
             </h2>
           </div>
         )}
