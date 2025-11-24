@@ -58,6 +58,14 @@ const EditProfilePage = () => {
   const birthFieldRef = useRef<HTMLDivElement>(null);
 
   const [isFormTouched, setIsFormTouched] = useState(false);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  const [hashtagInput, setHashtagInput] = useState<string>("");
+  const [isAddHashTagClick, setIsAddHashTagClick] = useState<boolean>(false);
+  const [newHashTagValue, setNewHashTagValue] = useState<string>("");
+  const [pendingCreatedTag, setPendingCreatedTag] = useState<string | null>(
+    null
+  );
 
   const isUserOver18 = (birthDate: string): boolean => {
     if (!birthDate || birthDate.length !== 10) return false;
@@ -91,43 +99,89 @@ const EditProfilePage = () => {
     });
   };
 
+  const normalizeHashtags = (hashtags: any): { id: string; name: string }[] => {
+    if (!hashtags) return [];
+
+    if (
+      Array.isArray(hashtags) &&
+      hashtags.length > 0 &&
+      typeof hashtags[0] === "object" &&
+      hashtags[0].id !== undefined
+    ) {
+      return hashtags.map((tag) => ({
+        id: String(tag.id),
+        name: tag.name || tag.title || String(tag),
+      }));
+    }
+
+    if (
+      Array.isArray(hashtags) &&
+      hashtags.length > 0 &&
+      typeof hashtags[0] === "string"
+    ) {
+      return hashtags.map((tag) => ({ id: "", name: tag }));
+    }
+
+    if (hashtags && typeof hashtags === "object" && hashtags.id !== undefined) {
+      return [
+        {
+          id: String(hashtags.id),
+          name: hashtags.name || hashtags.title || String(hashtags),
+        },
+      ];
+    }
+
+    if (typeof hashtags === "string") {
+      return [{ id: "", name: hashtags }];
+    }
+
+    return [];
+  };
+
   useEffect(() => {
-    if (myProfileData && !isFormTouched) {
+    if (myProfileData && !isInitialized) {
+      console.log("Initializing form with profile data:", myProfileData);
+
       setNameValue(myProfileData.username || "");
+
+      // Выборы
       setPetOption(myProfileData.pets || null);
+      setAnimalType(myProfileData.animal_type || null);
       setSmokingOption(myProfileData.smoking_status || null);
       setReligionOption(myProfileData.religion || null);
       setDurationOption(myProfileData.desired_length || null);
 
-      if (myProfileData.hometown_id && myProfileData.hometown_name) {
+      if (myProfileData.hometown_id || myProfileData.hometown_name) {
         setCityValue({
-          id: myProfileData.hometown_id,
-          name: myProfileData.hometown_name,
+          id: myProfileData.hometown_id || "",
+          name: myProfileData.hometown_name || "",
         });
       }
 
-      if (myProfileData.max_budget) {
-        setBudget((prev) => ({
-          ...prev,
-          max: String(myProfileData.max_budget),
-        }));
+      setBudget({
+        min: myProfileData.min_budget ? String(myProfileData.min_budget) : "",
+        max: myProfileData.max_budget ? String(myProfileData.max_budget) : "",
+      });
+
+      console.log("Raw hashtags from API:", myProfileData.hashtags_list);
+
+      if (myProfileData.hashtags_list) {
+        const normalizedHashtags = normalizeHashtags(
+          myProfileData.hashtags_list
+        );
+        console.log("Normalized hashtags:", normalizedHashtags);
+        setHashtagsList(normalizedHashtags);
+      } else {
+        console.log("No hashtags found in profile data");
+        setHashtagsList([]);
       }
 
-      if (myProfileData.min_budget) {
-        setBudget((prev) => ({
-          ...prev,
-          min: String(myProfileData.min_budget),
-        }));
-      }
-
-      if (myProfileData.hashtags) {
-        setHashtagsList(myProfileData.hashtags);
-      }
+      setIsInitialized(true);
     }
-  }, [myProfileData, isFormTouched]);
+  }, [myProfileData, isInitialized]);
 
   useEffect(() => {
-    if (!isFormTouched) {
+    if (!isFormTouched && isInitialized) {
       setIsFormTouched(true);
     }
   }, [
@@ -140,6 +194,7 @@ const EditProfilePage = () => {
     budget,
     durationOption,
     hashtagsList,
+    isInitialized,
   ]);
 
   const isBirthDateValid = date && date.length === 10;
@@ -165,6 +220,12 @@ const EditProfilePage = () => {
     ...(cityValue?.id !== myProfileData?.hometown_id && {
       hometown_id: cityValue?.id,
     }),
+    ...(cityValue?.name !== myProfileData?.hometown_name && {
+      hometown_name: cityValue?.name,
+    }),
+    ...(budget.min !== String(myProfileData?.min_budget || "") && {
+      min_budget: +budget.min,
+    }),
     ...(budget.max !== String(myProfileData?.max_budget || "") && {
       max_budget: +budget.max,
     }),
@@ -181,6 +242,7 @@ const EditProfilePage = () => {
       if (value === null || value === undefined) return false;
       if (Array.isArray(value)) return value.length > 0;
       if (typeof value === "string") return value.trim() !== "";
+      if (typeof value === "number") return true;
       return true;
     })
   );
@@ -203,9 +265,10 @@ const EditProfilePage = () => {
 
     const dataToSend = {
       ...filteredUserData,
-      birth_date: birthDate,
+      ...(isBirthDateValid && { birth_date: birthDate }),
     };
 
+    console.log("Sending data:", dataToSend);
     fillProfile({ ...myProfileData, ...dataToSend });
   };
 
@@ -226,13 +289,6 @@ const EditProfilePage = () => {
     isLoading,
     isError: isCitiesError,
   } = useGetCities(cityValue?.name || "");
-
-  const [hashtagInput, setHashtagInput] = useState<string>("");
-  const [isAddHashTagClick, setIsAddHashTagClick] = useState<boolean>(false);
-  const [newHashTagValue, setNewHashTagValue] = useState<string>("");
-  const [pendingCreatedTag, setPendingCreatedTag] = useState<string | null>(
-    null
-  );
 
   const {
     data: hashtagSuggestions = [],
@@ -284,8 +340,7 @@ const EditProfilePage = () => {
     }
   }, [isCreateSuccess, pendingCreatedTag]);
 
-  const hasChanges =
-    Object.keys(filteredUserData).length > 0 || !isBirthDateValid;
+  const hasChanges = Object.keys(filteredUserData).length > 0;
 
   return (
     <>
