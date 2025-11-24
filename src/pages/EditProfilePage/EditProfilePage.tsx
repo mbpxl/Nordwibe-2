@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GoBackButton } from "../../shared/Components/GoBackButton/GoBackButton";
 import TopicHeader from "../../shared/Components/TopicHeader/TopicHeader";
 import Wrapper from "../../shared/Components/Wrapper/Wrapper";
@@ -29,6 +29,7 @@ const EditProfilePage = () => {
 
   const [nameValue, setNameValue] = useState<string>("");
   const { date, inputRef, handleChange } = useFormatBirthDate("");
+  const [ageError, setAgeError] = useState<boolean>(false);
   const [petOption, setPetOption] = useState<string | null>(null);
   const [animalType, setAnimalType] = useState<string | null>(null);
   const [smokingOption, setSmokingOption] = useState<string | null>(null);
@@ -54,7 +55,41 @@ const EditProfilePage = () => {
     { id: string; name: string }[]
   >([]);
 
+  const birthFieldRef = useRef<HTMLDivElement>(null);
+
   const [isFormTouched, setIsFormTouched] = useState(false);
+
+  const isUserOver18 = (birthDate: string): boolean => {
+    if (!birthDate || birthDate.length !== 10) return false;
+
+    try {
+      const [day, month, year] = birthDate.split("/").map(Number);
+      const birthDateObj = new Date(year, month - 1, day);
+      const today = new Date();
+
+      let age = today.getFullYear() - birthDateObj.getFullYear();
+      const monthDiff = today.getMonth() - birthDateObj.getMonth();
+
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < birthDateObj.getDate())
+      ) {
+        age--;
+      }
+
+      return age >= 18;
+    } catch (error) {
+      console.error("Error calculating age:", error);
+      return false;
+    }
+  };
+
+  const scrollToBirthField = () => {
+    birthFieldRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  };
 
   useEffect(() => {
     if (myProfileData && !isFormTouched) {
@@ -108,6 +143,7 @@ const EditProfilePage = () => {
   ]);
 
   const isBirthDateValid = date && date.length === 10;
+  const isAgeValid = isBirthDateValid && isUserOver18(date);
 
   const birthDate = isBirthDateValid
     ? new Date(date.split("/").reverse().join("-")).toISOString()
@@ -151,9 +187,19 @@ const EditProfilePage = () => {
 
   const handleUpdateProfileData = () => {
     if (!isBirthDateValid) {
-      alert("Пожалуйста, заполните поле даты рождения!");
+      scrollToBirthField();
       return;
     }
+
+    if (!isAgeValid) {
+      setAgeError(true);
+      setTimeout(() => {
+        scrollToBirthField();
+      }, 100);
+      return;
+    }
+
+    setAgeError(false);
 
     const dataToSend = {
       ...filteredUserData,
@@ -162,6 +208,12 @@ const EditProfilePage = () => {
 
     fillProfile({ ...myProfileData, ...dataToSend });
   };
+
+  useEffect(() => {
+    if (ageError && isBirthDateValid) {
+      setAgeError(!isUserOver18(date));
+    }
+  }, [date, ageError, isBirthDateValid]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -232,7 +284,6 @@ const EditProfilePage = () => {
     }
   }, [isCreateSuccess, pendingCreatedTag]);
 
-  // Проверяем, есть ли изменения для сохранения
   const hasChanges =
     Object.keys(filteredUserData).length > 0 || !isBirthDateValid;
 
@@ -250,17 +301,20 @@ const EditProfilePage = () => {
             onChange={setNameValue}
           />
 
-          <BirthField
-            title={"Дата рождения *"}
-            value={date}
-            onChange={handleChange}
-            ref={inputRef}
-            error={
-              !isBirthDateValid && isFormTouched
-                ? "Обязательное поле"
-                : undefined
-            }
-          />
+          <div ref={birthFieldRef}>
+            <BirthField
+              title={"Дата рождения *"}
+              value={date}
+              onChange={handleChange}
+              ref={inputRef}
+              error={
+                !isBirthDateValid && isFormTouched
+                  ? "Обязательное поле"
+                  : undefined
+              }
+              ageError={ageError}
+            />
+          </div>
 
           <InlineSelect
             title="Домашние животные"
@@ -367,7 +421,8 @@ const EditProfilePage = () => {
               isProfileDataError ||
               isProfileDataLoading ||
               !isBirthDateValid ||
-              !hasChanges
+              !hasChanges ||
+              ageError
             }
             isPending={isPending}
             onSubmit={handleUpdateProfileData}
