@@ -42,7 +42,17 @@ const TestList = () => {
       !(test.questions || []).some((q: any) => completedQuestionIds.has(q.uuid))
   );
 
-  console.log("Availables tests: ", allTests);
+  // тест на совместимость всегда первый
+  const sortedAvailableTests = [...availableTests].sort((a, b) => {
+    const isACompatibility = a.title === "Тест на совместимость";
+    const isBCompatibility = b.title === "Тест на совместимость";
+
+    if (isACompatibility && !isBCompatibility) return -1;
+    if (!isACompatibility && isBCompatibility) return 1;
+    return 0;
+  });
+
+  console.log("Available tests: ", sortedAvailableTests);
 
   return (
     <Wrapper className="min-h-screen pt-1 pb-12 bg-purple-background-wrap flex flex-col items-center">
@@ -54,10 +64,10 @@ const TestList = () => {
         />
 
         <div className="">
-          {availableTests.length === 0 ? (
+          {sortedAvailableTests.length === 0 ? (
             <AllQuizCompleted title={"тесты"} />
           ) : (
-            availableTests.map((item: any, index: number) => (
+            sortedAvailableTests.map((item: any, index: number) => (
               <div key={item.uuid ?? index} className="mb-4">
                 <TestItem
                   uuid={item.uuid}

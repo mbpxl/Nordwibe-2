@@ -6,6 +6,7 @@ interface AddAboutMySelfProps {
   isEditing: boolean;
   onCancel: () => void;
   onSave: () => void;
+  onStartEditing: () => void;
 }
 
 const AddAboutMySelf = ({
@@ -13,6 +14,7 @@ const AddAboutMySelf = ({
   isEditing,
   onCancel,
   onSave,
+  onStartEditing,
 }: AddAboutMySelfProps) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [aboutMySelfValue, setAboutMySelfValue] = useState<string>(
@@ -45,6 +47,10 @@ const AddAboutMySelf = ({
     onCancel();
   };
 
+  const handleAddClick = () => {
+    onStartEditing();
+  };
+
   useEffect(() => {
     if (isSuccess) {
       onSave();
@@ -70,7 +76,7 @@ const AddAboutMySelf = ({
             ref={textareaRef}
             value={aboutMySelfValue}
             onChange={handleChangeAboutMySelf}
-            className={`w-full h-25 py-1.5 px-3 border-2 rounded-[10px] outline-none resize-none ${
+            className={`w-full h-32 py-1.5 px-3 border-2 rounded-[10px] outline-none resize-none ${
               isMaxLengthReached
                 ? "border-red-500 bg-red-50"
                 : "border-purple-sub-button"
@@ -78,6 +84,7 @@ const AddAboutMySelf = ({
             placeholder="Расскажите о себе"
             maxLength={MAX_LENGTH}
           />
+          {/* Счётчик символов */}
           <div
             className={`text-right text-sm mt-1 ${
               isMaxLengthReached ? "text-red-500 font-medium" : "text-gray-500"
@@ -130,7 +137,7 @@ const AddAboutMySelf = ({
             </div>
           </div>
         ) : (
-          <div className="cursor-pointer">
+          <div className="cursor-pointer" onClick={handleAddClick}>
             <h2 className="text-purple-main-disabled text-[1rem] font-medium leading-4">
               Хотите{" "}
               <span className="border-b-2 border-purple-main-disabled">

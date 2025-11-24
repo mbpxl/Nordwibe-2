@@ -18,6 +18,7 @@ import AddInfoText from "../Components/AddInfoText/AddInfoText";
 import ShareProfile from "../Components/ShareProfile/ShareProfile";
 import { useClickOutside } from "../hooks/useClickOutside";
 import { GoBackButton } from "../../../shared/Components/GoBackButton/GoBackButton";
+import { useGetTests } from "../../TestPage/service/useGetTests";
 
 const ProfilePage = () => {
   const { data, isLoading, isError } = useGetMe();
@@ -29,6 +30,12 @@ const ProfilePage = () => {
 
   const { data: completedTests, isLoading: isCompletedTestLoading } =
     useCompletedTests();
+
+  const {
+    data: allTests,
+    isLoading: isAllTestsLoading,
+    isError: isAllTestsError,
+  } = useGetTests();
 
   const [showTooltip, setShowTooltip] = useState(
     !!!localStorage.getItem("showToolTip")
@@ -63,11 +70,15 @@ const ProfilePage = () => {
     setShowShareMenu((prev) => !prev);
   };
 
-  if (isLoading || isTestsLoading) {
+  const compatibilityTest = allTests?.find(
+    (test: any) => test.title === "Тест на совместимость"
+  );
+
+  if (isLoading || isTestsLoading || isAllTestsLoading) {
     return <Loading />;
   }
 
-  if (isError || isTestsError) return <Error />;
+  if (isError || isTestsError || isAllTestsError) return <Error />;
 
   const isTestCompleted = testsData.length > 0;
   const isFilledProfile = data.username;
@@ -115,8 +126,11 @@ const ProfilePage = () => {
         />
       </div>
 
-      {!isTestCompleted && (
-        <EditButton title={"Пройти тест на совместимость"} />
+      {!isTestCompleted && compatibilityTest && (
+        <EditButton
+          title={"Пройти тест на совместимость"}
+          testId={compatibilityTest.uuid}
+        />
       )}
 
       <div>
@@ -132,6 +146,7 @@ const ProfilePage = () => {
             isEditing={isEditAbouMyself}
             onCancel={handleCancelEditing}
             onSave={handleSaveEditing}
+            onStartEditing={handleStartEditing}
           />
         )}
         {data.hashtags_list ? (

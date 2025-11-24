@@ -1,13 +1,28 @@
 import { Link } from "react-router-dom";
 
-const EditButton = ({ title }: { title: string }) => {
+interface EditButtonProps {
+  title: string;
+  testId?: string;
+}
+
+const EditButton = ({ title, testId }: EditButtonProps) => {
+  const getLinkTo = () => {
+    if (title === "Редактировать" || title === "Заполнить") {
+      return "/edit";
+    }
+
+    if (title === "Пройти тест на совместимость" && testId) {
+      return `/test/${testId}`;
+    }
+
+    return "/test";
+  };
+
   return (
     <div className="w-full text-white my-3 self-center">
       <Link
-        to={`${
-          title === "Редактировать" || title === "Заполнить" ? "/edit" : "/test"
-        }`}
-        className="block bg-purple-main py-2 rounded-[1.875rem] text-center text-[1rem] font-bold leading-4"
+        to={getLinkTo()}
+        className="block bg-purple-main py-2 rounded-[1.875rem] text-center text-[1rem] font-bold leading-4 hover:bg-purple-600 transition-colors"
       >
         {title}
       </Link>
