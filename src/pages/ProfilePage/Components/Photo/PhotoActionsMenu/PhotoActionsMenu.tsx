@@ -21,12 +21,16 @@ export const PhotoActionsMenu: React.FC<PhotoActionsMenuProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+      onClick={onClose}
+    >
       <motion.div
         className="bg-white rounded-2xl shadow-xl w-full max-w-xs mx-4"
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.9, opacity: 0 }}
+        onClick={(e) => e.stopPropagation()}
       >
         <div className="p-2">
           {hasPhoto && (
@@ -43,7 +47,7 @@ export const PhotoActionsMenu: React.FC<PhotoActionsMenuProps> = ({
               <div className="h-px bg-gray-200 mx-4" />
             </>
           )}
-          
+
           <button
             onClick={() => {
               onEdit();
@@ -69,7 +73,7 @@ export const PhotoActionsMenu: React.FC<PhotoActionsMenuProps> = ({
             </>
           )}
         </div>
-        
+
         <div className="h-px bg-gray-200" />
         <button
           onClick={onClose}

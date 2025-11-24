@@ -4,31 +4,38 @@ import SwiperCore from "swiper";
 import { baseURLforImages } from "../../../../../shared/plugin/axios";
 import { PhotoActionsMenu } from "../PhotoActionsMenu/PhotoActionsMenu";
 import { EditPhotoModal } from "../EditPhotoModal/EditPhotoModal";
+import { PhotoViewModal } from "../PhotoViewModal/PhotoViewModal";
 
 interface PhotoSliderProps {
   photos: string[];
   username?: string;
   onPhotosUpdate?: (newPhotos: string[]) => void;
+  isMyAccount?: boolean;
 }
 
 export const PhotoSlider: React.FC<PhotoSliderProps> = ({
   photos,
   username,
   onPhotosUpdate,
+  isMyAccount = true,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false); // Новое состояние для просмотра
 
   const currentPhoto = photos[activeIndex];
 
   const handlePhotoClick = () => {
+    if (!isMyAccount) {
+      setIsViewModalOpen(true);
+      return;
+    }
     setIsMenuOpen(true);
   };
 
   const handleOpenPhoto = () => {
-    // TODO: Реализовать открытие фото в полноэкранном режиме
-    console.log("Открыть фото:", currentPhoto);
+    setIsViewModalOpen(true);
   };
 
   const handleEditPhoto = () => {
@@ -38,7 +45,6 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
   const handleDeletePhoto = () => {
     // TODO: Реализовать удаление фото
     console.log("Удалить фото:", currentPhoto);
-    // Заглушка - пока просто выводим в консоль
     alert("Функционал удаления будет реализован позже");
   };
 
@@ -70,20 +76,31 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
           </button>
         </div>
 
-        <PhotoActionsMenu
-          isOpen={isMenuOpen}
-          onClose={() => setIsMenuOpen(false)}
-          onOpen={handleOpenPhoto}
-          onEdit={handleEditPhoto}
-          onDelete={handleDeletePhoto}
-          hasPhoto={!!photos[0]}
-        />
+        {isMyAccount && (
+          <>
+            <PhotoActionsMenu
+              isOpen={isMenuOpen}
+              onClose={() => setIsMenuOpen(false)}
+              onOpen={handleOpenPhoto}
+              onEdit={handleEditPhoto}
+              onDelete={handleDeletePhoto}
+              hasPhoto={!!photos[0]}
+            />
 
-        <EditPhotoModal
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          onPhotoUpdate={handlePhotoUpdate}
-          currentPhoto={photos[0]}
+            <EditPhotoModal
+              isOpen={isEditModalOpen}
+              onClose={() => setIsEditModalOpen(false)}
+              onPhotoUpdate={handlePhotoUpdate}
+              currentPhoto={photos[0]}
+            />
+          </>
+        )}
+
+        <PhotoViewModal
+          isOpen={isViewModalOpen}
+          onClose={() => setIsViewModalOpen(false)}
+          photos={photos}
+          initialSlide={0}
         />
       </>
     );
@@ -123,7 +140,7 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
                 <button
                   onClick={handlePhotoClick}
                   className={`rounded-full overflow-hidden aspect-square w-full h-full transition-transform duration-500 focus:outline-none focus:ring-2 focus:ring-purple-main ${
-                    isActive ? 'ring-2 ring-purple-main' : ''
+                    isActive ? "ring-2 ring-purple-main" : ""
                   }`}
                   style={{
                     transform: `scale(${isActive ? 1 : 0.68})`,
@@ -147,20 +164,33 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
         </Swiper>
       </div>
 
-      <PhotoActionsMenu
-        isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen(false)}
-        onOpen={handleOpenPhoto}
-        onEdit={handleEditPhoto}
-        onDelete={handleDeletePhoto}
-        hasPhoto={!!currentPhoto}
-      />
+      {/* Меню действий и модальное окно редактирования показываем только для своего аккаунта */}
+      {isMyAccount && (
+        <>
+          <PhotoActionsMenu
+            isOpen={isMenuOpen}
+            onClose={() => setIsMenuOpen(false)}
+            onOpen={handleOpenPhoto}
+            onEdit={handleEditPhoto}
+            onDelete={handleDeletePhoto}
+            hasPhoto={!!currentPhoto}
+          />
 
-      <EditPhotoModal
-        isOpen={isEditModalOpen}
-        onClose={() => setIsEditModalOpen(false)}
-        onPhotoUpdate={handlePhotoUpdate}
-        currentPhoto={currentPhoto}
+          <EditPhotoModal
+            isOpen={isEditModalOpen}
+            onClose={() => setIsEditModalOpen(false)}
+            onPhotoUpdate={handlePhotoUpdate}
+            currentPhoto={currentPhoto}
+          />
+        </>
+      )}
+
+      {/* Модальное окно просмотра фото - для всех аккаунтов */}
+      <PhotoViewModal
+        isOpen={isViewModalOpen}
+        onClose={() => setIsViewModalOpen(false)}
+        photos={photos}
+        initialSlide={activeIndex}
       />
     </>
   );
