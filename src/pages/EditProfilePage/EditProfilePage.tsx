@@ -28,8 +28,10 @@ const EditProfilePage = () => {
   const { fillProfile, isPending, isSuccess } = useFillProfile();
 
   const [nameValue, setNameValue] = useState<string>("");
+  const [loginValue, setLoginValue] = useState<string>("");
   const { date, inputRef, handleChange } = useFormatBirthDate("");
   const [ageError, setAgeError] = useState<boolean>(false);
+  const [usageGoalOption, setUsageGoalOption] = useState<string | null>(null);
   const [petOption, setPetOption] = useState<string | null>(null);
   const [animalType, setAnimalType] = useState<string | null>(null);
   const [smokingOption, setSmokingOption] = useState<string | null>(null);
@@ -143,8 +145,9 @@ const EditProfilePage = () => {
       console.log("Initializing form with profile data:", myProfileData);
 
       setNameValue(myProfileData.username || "");
+      setLoginValue(myProfileData.name || "");
+      setUsageGoalOption(myProfileData.usage_goal || null);
 
-      // Выборы
       setPetOption(myProfileData.pets || null);
       setAnimalType(myProfileData.animal_type || null);
       setSmokingOption(myProfileData.smoking_status || null);
@@ -186,7 +189,9 @@ const EditProfilePage = () => {
     }
   }, [
     nameValue,
+    loginValue,
     date,
+    usageGoalOption,
     petOption,
     smokingOption,
     religionOption,
@@ -206,7 +211,11 @@ const EditProfilePage = () => {
 
   const updatedUserData = {
     ...(nameValue !== myProfileData?.username && { username: nameValue }),
+    ...(loginValue !== myProfileData?.name && { name: loginValue }),
     ...(isBirthDateValid && { birth_date: birthDate }),
+    ...(usageGoalOption !== myProfileData?.usage_goal && {
+      usage_goal: usageGoalOption,
+    }),
     ...(petOption !== myProfileData?.pets && { pets: petOption }),
     ...(animalType !== myProfileData?.animal_type && {
       animal_type: animalType,
@@ -354,7 +363,17 @@ const EditProfilePage = () => {
             title={"Как вас зовут?"}
             value={nameValue}
             onChange={setNameValue}
+            placeholder={"Имя"}
           />
+
+          <div className="mt-4">
+            <TextField
+              title={"Придумайте себе логин"}
+              value={loginValue}
+              onChange={setLoginValue}
+              placeholder={"Логин"}
+            />
+          </div>
 
           <div ref={birthFieldRef}>
             <BirthField
@@ -370,6 +389,18 @@ const EditProfilePage = () => {
               ageError={ageError}
             />
           </div>
+
+          <InlineSelect
+            title="Цель"
+            options={[
+              "Поиск соседа",
+              "Поиск жилья",
+              "Сдать жильё",
+              "Поиск комнаты",
+            ]}
+            value={usageGoalOption}
+            onChange={setUsageGoalOption}
+          />
 
           <InlineSelect
             title="Домашние животные"
