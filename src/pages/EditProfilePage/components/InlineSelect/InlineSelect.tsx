@@ -3,7 +3,7 @@ import React from "react";
 interface InlineSelectProps {
   title: string;
   options: string[];
-  value: string | null;
+  value: string | null | undefined;
   onChange: (value: any) => void;
 }
 

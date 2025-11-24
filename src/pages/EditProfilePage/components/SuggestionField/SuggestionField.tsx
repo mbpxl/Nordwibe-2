@@ -5,9 +5,9 @@ type CityOption = { id: string; name: string };
 
 type Props = {
   title: string;
-  value: string | CityOption | null; // 🔹 теперь может быть строка или объект
+  value: string | CityOption | null;
   type?: string;
-  onChange: (v: any) => void; // 🔹 либо string, либо CityOption
+  onChange: (v: any) => void;
   suggestions: CityOption[];
   isLoading?: boolean;
   isError?: boolean;
@@ -40,7 +40,6 @@ const SuggestionField = ({
   const [isFocus, setFocus] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // 🔹 привели value к строке (для input)
   const inputValue = typeof value === "string" ? value : value?.name ?? "";
 
   const notFound =

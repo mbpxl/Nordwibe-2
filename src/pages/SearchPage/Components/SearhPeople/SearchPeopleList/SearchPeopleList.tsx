@@ -1,3 +1,4 @@
+// SearchPeopleList.tsx
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import Error from "../../../../../shared/Components/ErrorPage/ErrorPage";
@@ -6,14 +7,19 @@ import NoResults from "../../../../../shared/Components/NoResults/NoResults";
 import Wrapper from "../../../../../shared/Components/Wrapper/Wrapper";
 import { useGetUser } from "../../../service/useGetUser";
 import { useRanking } from "../../../service/useRanking";
+import type { FilterType } from "../../../types/filterTypes";
 import SearchPeopleItem from "../SearchPeopleItem/SearchPeopleItem";
 
-const SearchPeopleList = () => {
+interface SearchPeopleListProps {
+  filters: FilterType;
+}
+
+const SearchPeopleList = ({ filters }: SearchPeopleListProps) => {
   const {
     data: ranking,
     isLoading: rankingLoading,
     isError: rankingError,
-  } = useRanking();
+  } = useRanking(filters);
 
   // вытаскиваем все user_id
   const userIds = ranking?.map((r) => r.user_id) || [];
