@@ -1,4 +1,3 @@
-// TestSlide.tsx
 import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import TestAnswersList from "../TestAnswersList/TestAnswersList";
@@ -24,7 +23,6 @@ const TestSlide = () => {
 
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Теперь храним: key=questionUuid => { questionId, answerId, value }
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<string, SelectedAnswer>
   >({});
@@ -68,19 +66,22 @@ const TestSlide = () => {
 
   return (
     <Wrapper className="min-h-screen flex flex-col justify-between pb-[30px] items-center">
-      <div className="h-[320px] max-w-[344px] w-full">
-        <div className="flex flex-col">
+      <div className="max-w-[344px] w-full flex-grow flex flex-col">
+        <div className="flex flex-col flex-grow">
           <EducationSlideHeader heading={selectedTest.title} unit={"/test"} />
 
           <EducationImage image_url={baseURLforImages + slide.image_url} />
 
           <EducationTitle title={slide.question} />
-          <TestAnswersList
-            answers={slide.answers}
-            questionUuid={slide.uuid}
-            selectedAnswerUuid={selectedAnswers[slide.uuid]?.answerId}
-            onSelect={handleSelectAnswer}
-          />
+
+          <div className="flex-grow">
+            <TestAnswersList
+              answers={slide.answers}
+              questionUuid={slide.uuid}
+              selectedAnswerUuid={selectedAnswers[slide.uuid]?.answerId}
+              onSelect={handleSelectAnswer}
+            />
+          </div>
 
           <TestNext
             setCurrentSlide={setCurrentSlide}
@@ -88,6 +89,7 @@ const TestSlide = () => {
             disabled={!isAnswerSelected}
             answers={Object.values(selectedAnswers)}
             scaleMap={scaleMap}
+            title={selectedTest.title}
           />
         </div>
       </div>

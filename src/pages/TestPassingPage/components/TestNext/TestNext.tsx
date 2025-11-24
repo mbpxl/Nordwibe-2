@@ -11,10 +11,13 @@ interface Props {
   disabled: boolean;
   answers: SelectedAnswer[];
   scaleMap: ScaleMap;
+  title?: string;
 }
 
 const TestNext: React.FC<Props> = React.memo(
-  ({ setCurrentSlide, isLast, disabled, answers, scaleMap }) => {
+  ({ setCurrentSlide, isLast, disabled, answers, scaleMap, title }) => {
+    const isMainTest = title === "Тест на совместимость";
+
     const { uuid } = useParams<{ uuid: string }>();
 
     return (
@@ -22,7 +25,7 @@ const TestNext: React.FC<Props> = React.memo(
         {isLast ? (
           <Link
             to={`/test/${uuid}/result`}
-            state={{ answers, scaleMap }}
+            state={{ answers, scaleMap, isMainTest }}
             className={`bg-purple-main py-2 rounded-[30px] w-full flex gap-2 justify-center items-center ${
               disabled ? "opacity-50 pointer-events-none" : ""
             }`}
