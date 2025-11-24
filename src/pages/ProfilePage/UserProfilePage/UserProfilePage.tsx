@@ -85,7 +85,11 @@ const UserProfilePage = () => {
             <ShareProfile onShare={() => setShowShareMenu(false)} />
           </div>
         )}
-        <PhotoSlider photos={[user.avatar_url]} username={user.username} />
+        <PhotoSlider
+          isMyAccount={false}
+          photos={[user.avatar_url]}
+          username={user.username}
+        />
         <div>
           <AboutMyself about={user.about} isMyProfile={false} />
 

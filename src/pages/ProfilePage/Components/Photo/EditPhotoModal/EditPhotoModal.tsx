@@ -8,6 +8,7 @@ interface EditPhotoModalProps {
   onClose: () => void;
   onPhotoUpdate: (newPhotoUrl: string) => void;
   currentPhoto?: string;
+  isMyAccount?: boolean;
 }
 
 export const EditPhotoModal: React.FC<EditPhotoModalProps> = ({
@@ -17,33 +18,39 @@ export const EditPhotoModal: React.FC<EditPhotoModalProps> = ({
   currentPhoto,
 }) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { mutateAsync: uploadAvatar, isPending: isUploading } = useUploadAvatar();
+  const { mutateAsync: uploadAvatar, isPending: isUploading } =
+    useUploadAvatar();
   const [validationError, setValidationError] = useState<string | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const handleFileSelect = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const handleFileSelect = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
 
-    setValidationError(null);
+      setValidationError(null);
 
-    const isValid = await validateImageFile(file);
-    if (!isValid) {
-      setValidationError("Файл поврежден или не является валидным изображением");
-      event.target.value = "";
-      return;
-    }
+      const isValid = await validateImageFile(file);
+      if (!isValid) {
+        setValidationError(
+          "Файл поврежден или не является валидным изображением"
+        );
+        event.target.value = "";
+        return;
+      }
 
-    // Создаем preview
-    const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
-  }, []);
+      // Создаем preview
+      const url = URL.createObjectURL(file);
+      setPreviewUrl(url);
+    },
+    []
+  );
 
   const handleUpload = useCallback(async () => {
     if (!inputRef.current?.files?.[0]) return;
 
     const file = inputRef.current.files[0];
-    
+
     try {
       const response = await uploadAvatar(file);
       onPhotoUpdate(response.url);
@@ -65,7 +72,8 @@ export const EditPhotoModal: React.FC<EditPhotoModalProps> = ({
 
   if (!isOpen) return null;
 
-  const displayImage = previewUrl || (currentPhoto ? `${baseURLforImages}${currentPhoto}` : null);
+  const displayImage =
+    previewUrl || (currentPhoto ? `${baseURLforImages}${currentPhoto}` : null);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
@@ -92,7 +100,7 @@ export const EditPhotoModal: React.FC<EditPhotoModalProps> = ({
               />
             </div>
           )}
-          
+
           <input
             ref={inputRef}
             type="file"
@@ -100,7 +108,7 @@ export const EditPhotoModal: React.FC<EditPhotoModalProps> = ({
             onChange={handleFileSelect}
             className="hidden"
           />
-          
+
           <button
             onClick={() => inputRef.current?.click()}
             className="bg-purple-main text-white px-6 py-3 rounded-lg hover:bg-purple-600 transition-colors"
