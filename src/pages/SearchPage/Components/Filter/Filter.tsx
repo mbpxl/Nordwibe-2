@@ -1,236 +1,211 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { GoBackButton } from "../../../../shared/Components/GoBackButton/GoBackButton";
 import TopicHeader from "../../../../shared/Components/TopicHeader/TopicHeader";
-import arrowLeft from "/icons/arrow-left.svg";
 import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
+import Budget from "../../../EditProfilePage/components/Budget/Budget";
 import InlineSelect from "../../../EditProfilePage/components/InlineSelect/InlineSelect";
 import SuggestionField from "../../../EditProfilePage/components/SuggestionField/SuggestionField";
 import { useGetCities } from "../../../EditProfilePage/service/useGetCity";
-import Budget from "../../../EditProfilePage/components/Budget/Budget";
-import { useGetHashtag } from "../../../EditProfilePage/service/useHashtag";
-import SubmitFilter from "./SubmitFilter";
+import type { FilterType } from "../../types/filterTypes";
+import DoubleRangeSlider from "./DoubleRangeSlider";
 
-const LOCAL_STORAGE_KEY = "search_filter";
+interface FilterProps {
+  onCloseFilter: () => void;
+  onApplyFilters: (filters: FilterType) => void;
+  initialFilters?: FilterType;
+}
 
-type FilterState = {
-  smokingOption: string | null;
-  religionOption: string | null;
-  cityValue: {
-    id: string;
-    name: string;
-  };
-  budget: { min: string; max: string };
-  durationOption: string | null;
-  favoriteHashtagsList: { id: string; name: string }[];
-  notFavoriteHashtagsList: { id: string; name: string }[];
-};
-
-const defaultState: FilterState = {
-  smokingOption: null,
-  religionOption: null,
-  cityValue: {
-    id: "",
-    name: "",
-  },
-  budget: { min: "", max: "" },
-  durationOption: null,
-  favoriteHashtagsList: [],
-  notFavoriteHashtagsList: [],
-};
-
-const Filter: React.FC<{ onCloseFilter: () => void }> = ({ onCloseFilter }) => {
-  const [filterState, setFilterState] = useState<FilterState>(() => {
-    const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
-    return saved ? JSON.parse(saved) : defaultState;
+const Filter: React.FC<FilterProps> = ({
+  onCloseFilter,
+  onApplyFilters,
+  initialFilters = {},
+}) => {
+  const [filters, setFilters] = useState<FilterType>({
+    sex: null,
+    age_from: 18,
+    age_to: 100,
+    city_id: null,
+    city_name: null,
+    budget_from: null,
+    budget_to: null,
+    occupation: null,
+    smoking_status: null,
+    pets: null,
+    profession: null,
+    ...initialFilters,
   });
 
+  const [cityInputValue, setCityInputValue] = useState<string>("");
+  const [selectedCity, setSelectedCity] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+  const [budget, setBudget] = useState<{ min: string; max: string }>({
+    min: filters.budget_from?.toString() || "",
+    max: filters.budget_to?.toString() || "",
+  });
+
+  const { data: cities = [], isLoading: isCitiesLoading } =
+    useGetCities(cityInputValue);
+
   useEffect(() => {
-    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(filterState));
-  }, [filterState]);
+    if (initialFilters.city_id && initialFilters.city_name) {
+      setSelectedCity({
+        id: initialFilters.city_id,
+        name: initialFilters.city_name,
+      });
+      setCityInputValue(initialFilters.city_name);
+    }
+  }, [initialFilters.city_id, initialFilters.city_name]);
 
-  const {
-    smokingOption,
-    religionOption,
-    cityValue,
-    budget,
-    durationOption,
-    favoriteHashtagsList,
-    notFavoriteHashtagsList,
-  } = filterState;
-
-  const [favoriteHashtagInput, setFavoriteHashtagInput] = useState<string>("");
-  const [notFavoriteHashtagInput, setNotFavoriteHashtagInput] =
-    useState<string>("");
-
-  const {
-    data: cities = [],
-    isLoading,
-    isError: isCitiesError,
-  } = useGetCities(cityValue?.name || "");
-
-  console.log(filterState);
-
-  const {
-    data: hashtagSuggestions = [],
-    isLoading: isLoadingHashTags,
-    isError: isHashTagError,
-  } = useGetHashtag(favoriteHashtagInput || notFavoriteHashtagInput);
-
-  const updateState = (patch: Partial<FilterState>) => {
-    setFilterState((prev) => ({ ...prev, ...patch }));
+  const handleAgeChange = (values: { min: number; max: number }) => {
+    setFilters((prev) => ({
+      ...prev,
+      age_from: values.min,
+      age_to: values.max,
+    }));
   };
 
-  const safeFavoriteAddChip = (raw: string) => {
-    const text = raw.trim();
-    if (!text) return;
-
-    const existingTag = hashtagSuggestions.find(
-      (h: any) => h.name.toLowerCase() === text.toLowerCase()
-    );
-
-    updateState({
-      favoriteHashtagsList: existingTag
-        ? filterState.favoriteHashtagsList.some((t) => t.id === existingTag.id)
-          ? filterState.favoriteHashtagsList
-          : [...filterState.favoriteHashtagsList, existingTag]
-        : filterState.favoriteHashtagsList.some(
-            (t) => t.name.toLowerCase() === text.toLowerCase()
-          )
-        ? filterState.favoriteHashtagsList
-        : [...filterState.favoriteHashtagsList, { id: "", name: text }],
-    });
-
-    setFavoriteHashtagInput("");
+  const handleBudgetChange = (newBudget: { min: string; max: string }) => {
+    setBudget(newBudget);
+    setFilters((prev) => ({
+      ...prev,
+      budget_from: newBudget.min ? parseInt(newBudget.min) : null,
+      budget_to: newBudget.max ? parseInt(newBudget.max) : null,
+    }));
   };
 
-  const safeNotFavoriteAddChip = (raw: string) => {
-    const text = raw.trim();
-    if (!text) return;
-
-    const existingTag = hashtagSuggestions.find(
-      (h: any) => h.name.toLowerCase() === text.toLowerCase()
-    );
-
-    updateState({
-      notFavoriteHashtagsList: existingTag
-        ? filterState.notFavoriteHashtagsList.some(
-            (t) => t.id === existingTag.id
-          )
-          ? filterState.notFavoriteHashtagsList
-          : [...filterState.notFavoriteHashtagsList, existingTag]
-        : filterState.notFavoriteHashtagsList.some(
-            (t) => t.name.toLowerCase() === text.toLowerCase()
-          )
-        ? filterState.notFavoriteHashtagsList
-        : [...filterState.notFavoriteHashtagsList, { id: "", name: text }],
-    });
-
-    setNotFavoriteHashtagInput("");
+  const handleCitySelect = (city: { id: string; name: string } | null) => {
+    setSelectedCity(city);
+    if (city) {
+      setCityInputValue(city.name);
+      setFilters((prev) => ({
+        ...prev,
+        city_id: city.id,
+        city_name: city.name,
+      }));
+    } else {
+      setCityInputValue("");
+      setFilters((prev) => ({
+        ...prev,
+        city_id: null,
+        city_name: null,
+      }));
+    }
   };
 
-  const handleRemoveFavoriteHashTag = (tagName: string) => {
-    updateState({
-      favoriteHashtagsList: filterState.favoriteHashtagsList.filter(
-        (t) => t.name !== tagName
-      ),
-    });
+  const handleApply = () => {
+    onApplyFilters(filters);
+    onCloseFilter();
   };
 
-  const handleRemoveNotFavoriteHashTag = (tagName: string) => {
-    updateState({
-      notFavoriteHashtagsList: filterState.notFavoriteHashtagsList.filter(
-        (t) => t.name !== tagName
-      ),
-    });
+  const handleReset = () => {
+    const resetFilters: FilterType = {
+      sex: null,
+      age_from: 18,
+      age_to: 100,
+      city_id: null,
+      city_name: null,
+      budget_from: null,
+      budget_to: null,
+      occupation: null,
+      smoking_status: null,
+      pets: null,
+      profession: null,
+    };
+
+    setFilters(resetFilters);
+    setSelectedCity(null);
+    setCityInputValue("");
+    setBudget({ min: "", max: "" });
   };
 
   return (
-    <div className="pb-28">
-      <Wrapper>
-        <TopicHeader>
-          <button onClick={onCloseFilter}>
-            <img src={arrowLeft} alt="<" />
-          </button>
-          <h1>Фильтр</h1>
-        </TopicHeader>
+    <Wrapper className="min-h-screen pb-22">
+      <TopicHeader>
+        <GoBackButton fromFilter={true} />
+        <h1>Фильтры</h1>
+      </TopicHeader>
+
+      <div className="space-y-6">
+        <InlineSelect
+          title="Пол"
+          options={["Мужской", "Женский"]}
+          value={filters.sex}
+          onChange={(value) => setFilters((prev) => ({ ...prev, sex: value }))}
+        />
+
+        <div className="mt-4">
+          <h1 className="text-[0.875rem] font-semibold leading-[0.75rem] mb-2">
+            Возраст
+          </h1>
+          <DoubleRangeSlider
+            min={18}
+            max={100}
+            values={{ min: filters.age_from || 18, max: filters.age_to || 100 }}
+            onChange={handleAgeChange}
+          />
+        </div>
+
+        <InlineSelect
+          title="Род занятий"
+          options={["Учусь", "Работаю", "Работаю из дома", "Ищу работу"]}
+          value={filters.occupation}
+          onChange={(value) =>
+            setFilters((prev) => ({ ...prev, occupation: value }))
+          }
+        />
+
+        <InlineSelect
+          title="Домашние животные"
+          options={["Нет", "Аллергия", "Есть"]}
+          value={filters.pets}
+          onChange={(value) => setFilters((prev) => ({ ...prev, pets: value }))}
+        />
 
         <InlineSelect
           title="Курение"
-          options={["Редко", "Часто", "Вейп", "Нейтрально", "Аллергия"]}
-          value={smokingOption}
-          onChange={(val) => updateState({ smokingOption: val })}
-        />
-
-        <InlineSelect
-          title="Религиозное предпочтение"
           options={[
-            "Христианство",
-            "Ислам",
-            "Иудаизм",
-            "Буддизм",
-            "Атеизм",
-            "Другое",
+            "Не курю",
+            "Редко",
+            "Часто",
+            "Вейп",
+            "Нейтрально",
+            "Аллергия",
           ]}
-          value={religionOption}
-          onChange={(val) => updateState({ religionOption: val })}
+          value={filters.smoking_status}
+          onChange={(value) =>
+            setFilters((prev) => ({ ...prev, smoking_status: value }))
+          }
         />
 
         <SuggestionField
-          title={"Город"}
-          value={cityValue}
-          onChange={(val) => updateState({ cityValue: val })}
+          title="Родной город"
+          value={selectedCity}
+          onChange={handleCitySelect}
           suggestions={cities}
-          isLoading={isLoading}
-          isError={isCitiesError}
+          isLoading={isCitiesLoading}
+          isError={false}
         />
 
-        <Budget
-          budget={budget}
-          setBudget={(val) => updateState({ budget: val })}
-        />
+        <Budget budget={budget} setBudget={handleBudgetChange} />
 
-        <InlineSelect
-          title="Длительность проживания"
-          options={[
-            "Несколько дней",
-            "До 3 месяцев",
-            "До полугода",
-            "Год",
-            "Больше года",
-          ]}
-          value={durationOption}
-          onChange={(val) => updateState({ durationOption: val })}
-        />
-
-        <SuggestionField
-          title={"Меня интересует"}
-          value={favoriteHashtagInput}
-          onChange={setFavoriteHashtagInput}
-          suggestions={hashtagSuggestions}
-          multiple
-          chips={favoriteHashtagsList.map((t) => t.name)}
-          onAddChip={safeFavoriteAddChip}
-          onRemoveChip={handleRemoveFavoriteHashTag}
-          isLoading={isLoadingHashTags}
-          isError={isHashTagError}
-          favorite
-        />
-
-        <SuggestionField
-          title={"Меня не интересует"}
-          value={notFavoriteHashtagInput}
-          onChange={setNotFavoriteHashtagInput}
-          suggestions={hashtagSuggestions}
-          multiple
-          chips={notFavoriteHashtagsList.map((t) => t.name)}
-          onAddChip={safeNotFavoriteAddChip}
-          onRemoveChip={handleRemoveNotFavoriteHashTag}
-          isLoading={isLoadingHashTags}
-          isError={isHashTagError}
-          notFavorite
-        />
-        <SubmitFilter />
-      </Wrapper>
-    </div>
+        <div className="flex gap-3 pt-4">
+          <button
+            onClick={handleReset}
+            className="flex-1 bg-gray-300 text-gray-700 py-3 rounded-lg hover:bg-gray-400 transition-colors"
+          >
+            Сбросить
+          </button>
+          <button
+            onClick={handleApply}
+            className="flex-1 bg-purple-main text-white py-3 rounded-lg hover:bg-purple-600 transition-colors"
+          >
+            Применить
+          </button>
+        </div>
+      </div>
+    </Wrapper>
   );
 };
 
