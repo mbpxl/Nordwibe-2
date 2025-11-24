@@ -20,7 +20,7 @@ export const useRanking = (filters: FilterType = {}) => {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["ranking-users", filters],
     queryFn: () => fetchRankingData(filters),
-    staleTime: 20000,
+    staleTime: 60000,
   });
 
   return { data, isLoading, isError, refetch };

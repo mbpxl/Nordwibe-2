@@ -15,7 +15,7 @@ const SearchPeopleItem = ({
   return (
     <Link
       to={"/profile/" + user.id}
-      state={{ user, compatibility }}
+      state={{ user }}
       className="bg-white p-2 flex gap-3 max-w-[700px] rounded-[12px] mt-4"
     >
       <div className="w-[100px] h-[100px] bg-purple-sub-button rounded-xl shrink-0">
