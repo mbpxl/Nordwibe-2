@@ -40,8 +40,16 @@ const ProfilePage = () => {
   };
 
   const [isEditAbouMyself, setIsEditAboutMyself] = useState<boolean>(false);
-  const handleChangeEditAboutMyself = () => {
-    setIsEditAboutMyself((prev) => !prev);
+  const handleStartEditing = () => {
+    setIsEditAboutMyself(true);
+  };
+
+  const handleCancelEditing = () => {
+    setIsEditAboutMyself(false);
+  };
+
+  const handleSaveEditing = () => {
+    setIsEditAboutMyself(false);
   };
 
   const [showShareMenu, setShowShareMenu] = useState(false);
@@ -115,13 +123,15 @@ const ProfilePage = () => {
         {data.about && !isEditAbouMyself ? (
           <AboutMyself
             about={data.about}
-            handleChange={handleChangeEditAboutMyself}
+            handleChange={handleStartEditing}
             isMyProfile
           />
         ) : (
           <AddAboutMySelf
             data={data}
-            handleChangeEditAboutMyself={handleChangeEditAboutMyself}
+            isEditing={isEditAbouMyself}
+            onCancel={handleCancelEditing}
+            onSave={handleSaveEditing}
           />
         )}
         {data.hashtags_list ? (
