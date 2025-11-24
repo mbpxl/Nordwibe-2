@@ -1,10 +1,16 @@
 type TextFieldTypes = {
   title: string;
   value: string;
+  placeholder: string;
   onChange: (value: string) => void;
 };
 
-const TextField: React.FC<TextFieldTypes> = ({ title, value, onChange }) => {
+const TextField: React.FC<TextFieldTypes> = ({
+  title,
+  value,
+  onChange,
+  placeholder,
+}) => {
   return (
     <div className="text-[0.875rem] font-semibold leading-[0.75rem]">
       <h1>{title}</h1>
@@ -12,7 +18,7 @@ const TextField: React.FC<TextFieldTypes> = ({ title, value, onChange }) => {
         <input
           type="text"
           value={value}
-          placeholder={"Имя"}
+          placeholder={placeholder}
           className="min-w-[120px] flex-1 outline-none font-medium placeholder:font-normal"
           onChange={(e) => onChange(e.target.value)}
         />
