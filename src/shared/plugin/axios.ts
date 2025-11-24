@@ -72,6 +72,7 @@ api.interceptors.response.use(
         } catch (err) {
           console.log("Пизда ебаная с токеном");
           clearUserData();
+
           redirectToLogin();
           return Promise.reject(err);
         } finally {

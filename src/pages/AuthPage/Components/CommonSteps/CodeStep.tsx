@@ -11,6 +11,11 @@ import { useAccessToken } from "../../../../shared/service/useAuthToken";
 import ContinueWrapper from "../ContinueWrapper/ContinueWrapper";
 import WrongData from "../PhoneErrorMsg/PhoneErrorMsg";
 import { useRedirectAfterLogin } from "../../../../shared/hooks/useRedirectAfterLogin";
+import { AccountDeletionModal } from "../AccountDeletionModal/AccountDeletionModal";
+import {
+  clearRedirectTimeout,
+  forceRedirectToWelcome,
+} from "../../../../shared/plugin/redirectToLogin";
 
 type Props = StepPropsTypes<"code">;
 
@@ -20,6 +25,8 @@ const CodeStep: React.FC<Props> = ({
   onNext,
   onBack,
 }) => {
+  const [showDeletionModal, setShowDeletionModal] = useState(false);
+
   const fullPhoneNumber = `+7${formData.phone}`;
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -39,14 +46,19 @@ const CodeStep: React.FC<Props> = ({
 
     getToken(undefined, {
       onSuccess: () => {
+        clearRedirectTimeout();
+
         onNext();
         if (location.pathname === "/sign-in") {
           performRedirect();
           localStorage.removeItem("signin-form");
         }
       },
-      onError: () => {
-        alert("Ошибка получения access токена");
+      onError: (error: any) => {
+        console.log("Error details:", error);
+
+        console.log("Account recently deleted, showing modal");
+        setShowDeletionModal(true);
       },
     });
   };
@@ -66,6 +78,11 @@ const CodeStep: React.FC<Props> = ({
     },
     [captcha_token, code, fullPhoneNumber, mutate]
   );
+
+  const handleCloseDeletionModal = () => {
+    forceRedirectToWelcome();
+    setShowDeletionModal(false);
+  };
 
   const isCodeValid = code.length === 4 && !isPending && !!captcha_token;
 
@@ -120,6 +137,11 @@ const CodeStep: React.FC<Props> = ({
           />
         </ContinueWrapper>
       </div>
+
+      <AccountDeletionModal
+        isOpen={showDeletionModal}
+        onClose={handleCloseDeletionModal}
+      />
     </main>
   );
 };
