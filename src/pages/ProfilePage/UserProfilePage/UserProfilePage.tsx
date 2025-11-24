@@ -14,13 +14,18 @@ import { useGetMe } from "../service/useGetMe";
 import ShareProfile from "../Components/ShareProfile/ShareProfile";
 import { useState, useRef } from "react";
 import { useClickOutside } from "../hooks/useClickOutside";
+import { useRanking } from "../../SearchPage/service/useRanking";
 
 const UserProfilePage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { ids } = useParams<{ ids: string }>();
   const userFromState = state?.user;
-  const compatibility = state?.compatibility;
+
+  const { data: rankingData, isLoading: isRankingLoading } = useRanking();
+
+  const userCompatibility = rankingData?.find((item) => item.user_id === ids);
+  const compatibility = userCompatibility?.score;
 
   // получаем свои данные для того, чтобы сравнивать айди и в случае, если перешли из ссылки на свой профиль, то редиректить /profile
   const {
@@ -51,7 +56,7 @@ const UserProfilePage = () => {
     setShowShareMenu((prev) => !prev);
   };
 
-  if ((isLoading && !user) || isMyProfileLoading) {
+  if ((isLoading && !user) || isMyProfileLoading || isRankingLoading) {
     return <Loading />;
   }
 
@@ -97,7 +102,7 @@ const UserProfilePage = () => {
           {user && <StatusBar data={user} />}
         </div>
       </Wrapper>
-      <ActionBar companiodId={user.id} compatibility={compatibility} />
+      <ActionBar companiodId={user.id} compatibility={compatibility!} />
     </div>
   );
 };

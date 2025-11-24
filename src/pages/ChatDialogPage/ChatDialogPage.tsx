@@ -25,6 +25,8 @@ const ChatDialogPage = () => {
     return <Error />;
   }
 
+  const userData = user[0];
+
   return (
     <div className="h-screen flex flex-col">
       <div className="sticky top-0 z-40 bg-white">
@@ -32,27 +34,29 @@ const ChatDialogPage = () => {
           <GoBackButton />
           <h1>
             <div className="flex gap-x-3 items-center w-full">
-              {user[0].avatar_url ? (
+              {userData.avatar_url ? (
                 <img
                   className="w-10 h-10 rounded-[50%] shrink-0"
-                  src={baseURLforImages + user[0].avatar_url}
+                  src={baseURLforImages + userData.avatar_url}
                   alt="avatar"
                 />
               ) : (
                 <div className="w-10 h-10 bg-purple-sub-button text-white font-semibold text-3xl flex items-center justify-center rounded-[50%] shrink-0">
-                  {user[0].username
-                    ? user[0].username[0].toUpperCase()
-                    : user[0].name?.charAt(0) || "Н"}
+                  {userData.username
+                    ? userData.username[0].toUpperCase()
+                    : userData.name?.charAt(0) || "Н"}
                 </div>
               )}
 
-              <Link
-                className="text-[1.25rem] font-semibold leading-5"
-                to={"/profile/" + companionId}
-              >
-                {user[0].username || user[0].name || ""}
-                {user[0].age ? ", " : ""} {user[0].age}
-              </Link>
+              <div className="flex flex-col">
+                <Link
+                  className="text-[1.25rem] font-semibold leading-5"
+                  to={"/profile/" + companionId}
+                >
+                  {userData.username || userData.name || ""}
+                  {userData.age ? `, ${userData.age}` : ""}
+                </Link>
+              </div>
             </div>
           </h1>
         </TopicHeader>
@@ -63,7 +67,7 @@ const ChatDialogPage = () => {
         <ChatContent companionId={companionId!} />
       </div>
 
-      {/* Поле ввода - sticky чтобы всегда было видно */}
+      {/* Поле ввода */}
       <div className="sticky bottom-0 z-30 bg-white border-t border-gray-200">
         <InputMessage toUserId={companionId!} />
       </div>
