@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { PrivateSettingsTypes } from "../types/PrivateSettingsTypes";
-import { api } from "../../../shared/plugin/axios";
+import { api } from "../../../../../shared/plugin/axios";
 
 export const useChangePrivate = () => {
   const queryClient = useQueryClient();

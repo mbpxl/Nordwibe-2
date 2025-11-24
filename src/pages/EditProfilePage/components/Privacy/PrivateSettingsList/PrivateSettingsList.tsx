@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useChangePrivate } from "../../service/useChangePrivate";
-import type { PrivateSettingsTypes } from "../../types/PrivateSettingsTypes";
+import type { PrivateSettingsTypes } from "../types/PrivateSettingsTypes";
 import PrivateSettingsItem from "../PrivateSettingsItem/PrivateSettingsItem";
+import { useChangePrivate } from "../service/useChangePrivate";
 
 const SETTINGS_LABELS: Record<keyof PrivateSettingsTypes, string> = {
   show_username: "Имя пользователя",
