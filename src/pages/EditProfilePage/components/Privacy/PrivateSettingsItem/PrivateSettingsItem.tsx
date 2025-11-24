@@ -1,5 +1,5 @@
 import React from "react";
-import type { PrivateSettingsTypes } from "../../types/PrivateSettingsTypes";
+import type { PrivateSettingsTypes } from "../types/PrivateSettingsTypes";
 
 interface Props {
   label: string;

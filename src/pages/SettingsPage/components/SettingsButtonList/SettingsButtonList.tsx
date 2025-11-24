@@ -4,10 +4,6 @@ import SettingsTip from "../SettingsTip/SettingsTip";
 
 const buttonsData: SettingsButtonTypes[] = [
   {
-    title: "Настройки приватности",
-    to: "/private",
-  },
-  {
     title: "Выйти из аккаунта",
     isRed: true,
   },

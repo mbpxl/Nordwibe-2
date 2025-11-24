@@ -33,7 +33,6 @@ import ErrorPage from "./shared/Components/ErrorPage/ErrorPage";
 import PrivacyPage from "./pages/PrivacyPage/PrivacyPage";
 import QuizPage from "./pages/QuizPage/QuizPage";
 import TestPage from "./pages/TestPage/TestPage";
-import PrivateSettingsPage from "./pages/PrivateSettingsPage/PrivateSettingsPage";
 import OAuthCallback from "./pages/AuthPage/Components/OAuth2/OAuthCallback";
 
 // где lazy() - ленивая подгрузка. То есть компонента булет загружена в момент перехода, а не в момент запуска приложения
@@ -120,10 +119,6 @@ export const routes = [
   {
     path: CHAT_DIALOG,
     Component: lazy(() => import("./pages/ChatDialogPage/ChatDialogPage")),
-  },
-  {
-    path: PRIVATE_SETTINGS,
-    Component: PrivateSettingsPage,
   },
   {
     path: "*",

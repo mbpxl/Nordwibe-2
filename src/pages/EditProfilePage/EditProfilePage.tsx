@@ -16,6 +16,7 @@ import TextField from "./components/TextField/TextField";
 import BirthField from "./components/BirthField/BirthField";
 import useFormatBirthDate from "../AuthPage/hooks/useFormatBirthDate";
 import WrongData from "../AuthPage/Components/PhoneErrorMsg/PhoneErrorMsg";
+import PrivateSettingsList from "./components/Privacy/PrivateSettingsList/PrivateSettingsList";
 
 const EditProfilePage = () => {
   const {
@@ -61,6 +62,7 @@ const EditProfilePage = () => {
 
   const [isFormTouched, setIsFormTouched] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
+  const [activeTab, setActiveTab] = useState<"edit" | "privacy">("edit");
 
   const [hashtagInput, setHashtagInput] = useState<string>("");
   const [isAddHashTagClick, setIsAddHashTagClick] = useState<boolean>(false);
@@ -144,16 +146,19 @@ const EditProfilePage = () => {
     if (myProfileData && !isInitialized) {
       console.log("Initializing form with profile data:", myProfileData);
 
+      // Основные данные
       setNameValue(myProfileData.username || "");
-      setLoginValue(myProfileData.name || "");
-      setUsageGoalOption(myProfileData.usage_goal || null);
+      setLoginValue(myProfileData.name || ""); // Инициализация логина
+      setUsageGoalOption(myProfileData.usage_goal || null); // Инициализация цели использования
 
+      // Выборы
       setPetOption(myProfileData.pets || null);
       setAnimalType(myProfileData.animal_type || null);
       setSmokingOption(myProfileData.smoking_status || null);
       setReligionOption(myProfileData.religion || null);
       setDurationOption(myProfileData.desired_length || null);
 
+      // Родной город
       if (myProfileData.hometown_id || myProfileData.hometown_name) {
         setCityValue({
           id: myProfileData.hometown_id || "",
@@ -161,11 +166,13 @@ const EditProfilePage = () => {
         });
       }
 
+      // Бюджет
       setBudget({
         min: myProfileData.min_budget ? String(myProfileData.min_budget) : "",
         max: myProfileData.max_budget ? String(myProfileData.max_budget) : "",
       });
 
+      // Хештеги
       console.log("Raw hashtags from API:", myProfileData.hashtags_list);
 
       if (myProfileData.hashtags_list) {
@@ -358,166 +365,200 @@ const EditProfilePage = () => {
           <GoBackButton />
           <h1>Редактирование</h1>
         </TopicHeader>
-        <div className="">
-          <TextField
-            title={"Как вас зовут?"}
-            value={nameValue}
-            onChange={setNameValue}
-            placeholder={"Имя"}
-          />
 
-          <div className="mt-4">
-            <TextField
-              title={"Придумайте себе логин"}
-              value={loginValue}
-              onChange={setLoginValue}
-              placeholder={"Логин"}
-            />
+        {/* Вкладки */}
+        <div className="flex justify-center w-full max-w-md mb-6">
+          <div className="flex bg-gray-100 rounded-lg p-1 w-full">
+            <button
+              onClick={() => setActiveTab("edit")}
+              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                activeTab === "edit"
+                  ? "bg-white text-purple-main shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Редактирование
+            </button>
+            <button
+              onClick={() => setActiveTab("privacy")}
+              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                activeTab === "privacy"
+                  ? "bg-white text-purple-main shadow-sm"
+                  : "text-gray-600 hover:text-gray-900"
+              }`}
+            >
+              Приватность
+            </button>
           </div>
-
-          <div ref={birthFieldRef}>
-            <BirthField
-              title={"Дата рождения *"}
-              value={date}
-              onChange={handleChange}
-              ref={inputRef}
-              error={
-                !isBirthDateValid && isFormTouched
-                  ? "Обязательное поле"
-                  : undefined
-              }
-              ageError={ageError}
-            />
-          </div>
-
-          <InlineSelect
-            title="Цель"
-            options={[
-              "Поиск соседа",
-              "Поиск жилья",
-              "Сдать жильё",
-              "Поиск комнаты",
-            ]}
-            value={usageGoalOption}
-            onChange={setUsageGoalOption}
-          />
-
-          <InlineSelect
-            title="Домашние животные"
-            options={["Нет", "Аллергия", "Есть"]}
-            value={petOption}
-            onChange={setPetOption}
-          />
-
-          {petOption !== "Нет" &&
-            petOption !== "Аллергия" &&
-            petOption !== null && (
-              <InlineSelect
-                title="Какое у вас животное?"
-                options={[
-                  "🐱",
-                  "🐶",
-                  "🐹",
-                  "🐭",
-                  "🐰",
-                  "🐟",
-                  "🦜",
-                  "🦎",
-                  "🐢",
-                  "🐍",
-                  "🕷️",
-                ]}
-                value={animalType}
-                onChange={setAnimalType}
-              />
-            )}
-
-          <InlineSelect
-            title="Курение"
-            options={[
-              "Не курю",
-              "Редко",
-              "Часто",
-              "Вейп",
-              "Нейтрально",
-              "Аллергия",
-            ]}
-            value={smokingOption}
-            onChange={setSmokingOption}
-          />
-
-          <InlineSelect
-            title="Религиозное предпочтение"
-            options={[
-              "Христианство",
-              "Ислам",
-              "Иудаизм",
-              "Буддизм",
-              "Атеизм",
-              "Другое",
-            ]}
-            value={religionOption}
-            onChange={setReligionOption}
-          />
-
-          <SuggestionField
-            title={"Родной город"}
-            value={cityValue}
-            onChange={setCityValue}
-            suggestions={cities}
-            isLoading={isLoading}
-            isError={isCitiesError}
-          />
-
-          <Budget budget={budget} setBudget={setBudget} />
-
-          <InlineSelect
-            title="Длительность проживания"
-            options={[
-              "Несколько дней",
-              "До 3 месяцев",
-              "До полугода",
-              "Год",
-              "Больше года",
-            ]}
-            value={durationOption}
-            onChange={setDurationOption}
-          />
-
-          <SuggestionField
-            title="Интересы"
-            multiple
-            value={hashtagInput}
-            onChange={setHashtagInput}
-            chips={hashtagsList.map((t) => t.name)}
-            onAddChip={safeAddChip}
-            onRemoveChip={handleRemoveHashTag}
-            suggestions={hashtagSuggestions}
-            isLoading={isLoadingHashTags}
-            isError={isHashTagError}
-            notFoundLabel="Такого хэштега нет! Хотите добавить?"
-            onNotFoundClick={() => {
-              setNewHashTagValue(hashtagInput.trim());
-              setIsAddHashTagClick(true);
-            }}
-          />
-
-          <SaveButton
-            isDisabled={
-              isProfileDataError ||
-              isProfileDataLoading ||
-              !isBirthDateValid ||
-              !hasChanges ||
-              ageError
-            }
-            isPending={isPending}
-            onSubmit={handleUpdateProfileData}
-          />
-          <WrongData
-            isError={Boolean(!isBirthDateValid)}
-            message={"Заполните дату рождения"}
-          />
         </div>
+
+        {/* Контент вкладок */}
+        {activeTab === "edit" ? (
+          <div className="w-full">
+            <TextField
+              title={"Как вас зовут?"}
+              value={nameValue}
+              onChange={setNameValue}
+              placeholder={"Имя"}
+            />
+
+            <div className="mt-4">
+              <TextField
+                title={"Придумайте себе логин"}
+                value={loginValue}
+                onChange={setLoginValue}
+                placeholder={"Логин"}
+              />
+            </div>
+
+            <div ref={birthFieldRef}>
+              <BirthField
+                title={"Дата рождения *"}
+                value={date}
+                onChange={handleChange}
+                ref={inputRef}
+                error={
+                  !isBirthDateValid && isFormTouched
+                    ? "Обязательное поле"
+                    : undefined
+                }
+                ageError={ageError}
+              />
+            </div>
+
+            <InlineSelect
+              title="Цель"
+              options={[
+                "Поиск соседа",
+                "Поиск жилья",
+                "Сдать жильё",
+                "Поиск комнаты",
+              ]}
+              value={usageGoalOption}
+              onChange={setUsageGoalOption}
+            />
+
+            <InlineSelect
+              title="Домашние животные"
+              options={["Нет", "Аллергия", "Есть"]}
+              value={petOption}
+              onChange={setPetOption}
+            />
+
+            {petOption !== "Нет" &&
+              petOption !== "Аллергия" &&
+              petOption !== null && (
+                <InlineSelect
+                  title="Какое у вас животное?"
+                  options={[
+                    "🐱",
+                    "🐶",
+                    "🐹",
+                    "🐭",
+                    "🐰",
+                    "🐟",
+                    "🦜",
+                    "🦎",
+                    "🐢",
+                    "🐍",
+                    "🕷️",
+                  ]}
+                  value={animalType}
+                  onChange={setAnimalType}
+                />
+              )}
+
+            <InlineSelect
+              title="Курение"
+              options={[
+                "Не курю",
+                "Редко",
+                "Часто",
+                "Вейп",
+                "Нейтрально",
+                "Аллергия",
+              ]}
+              value={smokingOption}
+              onChange={setSmokingOption}
+            />
+
+            <InlineSelect
+              title="Религиозное предпочтение"
+              options={[
+                "Христианство",
+                "Ислам",
+                "Иудаизм",
+                "Буддизм",
+                "Атеизм",
+                "Другое",
+              ]}
+              value={religionOption}
+              onChange={setReligionOption}
+            />
+
+            <SuggestionField
+              title={"Родной город"}
+              value={cityValue}
+              onChange={setCityValue}
+              suggestions={cities}
+              isLoading={isLoading}
+              isError={isCitiesError}
+            />
+
+            <Budget budget={budget} setBudget={setBudget} />
+
+            <InlineSelect
+              title="Длительность проживания"
+              options={[
+                "Несколько дней",
+                "До 3 месяцев",
+                "До полугода",
+                "Год",
+                "Больше года",
+              ]}
+              value={durationOption}
+              onChange={setDurationOption}
+            />
+
+            <SuggestionField
+              title="Интересы"
+              multiple
+              value={hashtagInput}
+              onChange={setHashtagInput}
+              chips={hashtagsList.map((t) => t.name)}
+              onAddChip={safeAddChip}
+              onRemoveChip={handleRemoveHashTag}
+              suggestions={hashtagSuggestions}
+              isLoading={isLoadingHashTags}
+              isError={isHashTagError}
+              notFoundLabel="Такого хэштега нет! Хотите добавить?"
+              onNotFoundClick={() => {
+                setNewHashTagValue(hashtagInput.trim());
+                setIsAddHashTagClick(true);
+              }}
+            />
+
+            <SaveButton
+              isDisabled={
+                isProfileDataError ||
+                isProfileDataLoading ||
+                !isBirthDateValid ||
+                !hasChanges ||
+                ageError
+              }
+              isPending={isPending}
+              onSubmit={handleUpdateProfileData}
+            />
+            <WrongData
+              isError={Boolean(!isBirthDateValid)}
+              message={"Заполните дату рождения"}
+            />
+          </div>
+        ) : (
+          <div className="w-full">
+            <PrivateSettingsList />
+          </div>
+        )}
       </Wrapper>
 
       <Modal
