@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { api } from "../../../shared/plugin/axios";
 import { clearUserData } from "../../../shared/plugin/clearUserData";
 import { redirectToLogin } from "../../../shared/plugin/redirectToLogin";
+import { useRedirectAfterLogin } from "../../../shared/hooks/useRedirectAfterLogin";
 
 const logout = async () => {
   const response = await api.post("/auth/logout");
@@ -10,6 +11,8 @@ const logout = async () => {
 };
 
 export const useLogout = () => {
+  const { setManualLogout } = useRedirectAfterLogin();
+
   const { mutate, isPending, isError } = useMutation({
     mutationFn: logout,
     onSuccess: () => {
@@ -19,8 +22,7 @@ export const useLogout = () => {
         })
       );
       clearUserData();
-      console.log("Logout activated");
-      clearUserData();
+      setManualLogout();
       redirectToLogin();
     },
     onError: (error: any) => {
