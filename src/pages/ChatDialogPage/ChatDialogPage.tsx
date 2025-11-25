@@ -7,6 +7,14 @@ import Error from "../../shared/Components/ErrorPage/ErrorPage";
 import ChatContent from "./components/ChatContent/ChatContent";
 import InputMessage from "./components/InputMessage/InputMessage";
 import { baseURLforImages } from "../../shared/plugin/axios";
+import { useChatBlockStatus } from "./hooks/useChatBlockStatus";
+import { useState } from "react";
+import BottomSheetModal from "../../shared/Components/Modal/BottomSheetModal/BottomSheetModal";
+import ProfileActionsMenu from "../ProfilePage/Components/ProfileActionsMenu/ProfileActionsMenu";
+import toast from "react-hot-toast";
+import { useBlockUser } from "../ProfilePage/service/useBlockUser";
+import { useUnblockUser } from "../ProfilePage/service/useUnblockUser";
+import { useIsUserBlocked } from "../ProfilePage/hooks/useIsUserBlocked";
 
 const ChatDialogPage = () => {
   const { companionId } = useParams<{ companionId: string }>();
@@ -17,7 +25,80 @@ const ChatDialogPage = () => {
     isError: isUserError,
   } = useGetUser([companionId!]);
 
-  if (isUserLoading) {
+  const {
+    isChatBlocked,
+    isBlockedByMe,
+    isLoading: isBlockStatusLoading,
+  } = useChatBlockStatus(companionId);
+
+  const { mutate: blockUser, isPending: isBlockPending } = useBlockUser();
+  const { mutate: unblockUser, isPending: isUnblockPending } = useUnblockUser();
+
+  const { isBlocked } = useIsUserBlocked(companionId);
+
+  const handleShare = () => {};
+
+  const handleBlock = () => {
+    if (companionId) {
+      blockUser(
+        {
+          blocked_user_id: companionId,
+          reason: "Заблокировать",
+        },
+        {
+          onSuccess: () => {
+            toast("Пользователь заблокирован!", {
+              icon: "💔",
+              style: {
+                borderRadius: "10px",
+                background: "#333",
+                color: "#fff",
+              },
+            });
+            handleCloseMenu();
+          },
+          onError: (error) => {
+            console.error("Ошибка при блокировке:", error);
+            toast.error("Ошибка при блокировке");
+          },
+        }
+      );
+    }
+  };
+
+  const handleUnblock = () => {
+    if (companionId) {
+      unblockUser(companionId, {
+        onSuccess: () => {
+          toast("Пользователь разблокирован!", {
+            icon: "👌",
+            style: {
+              borderRadius: "10px",
+              background: "#333",
+              color: "#fff",
+            },
+          });
+          handleCloseMenu();
+        },
+        onError: (error) => {
+          console.error("Ошибка при разблокировке:", error);
+          toast.error("Ошибка при разблокировке");
+        },
+      });
+    }
+  };
+
+  const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
+
+  const handleShowMoreClick = () => {
+    setIsActionsMenuOpen(true);
+  };
+
+  const handleCloseMenu = () => {
+    setIsActionsMenuOpen(false);
+  };
+
+  if (isUserLoading || isBlockStatusLoading) {
     return <Loading />;
   }
 
@@ -56,21 +137,53 @@ const ChatDialogPage = () => {
                   {userData.username || userData.name || ""}
                   {userData.age ? `, ${userData.age}` : ""}
                 </Link>
+
+                {/* Статус блокировки в заголовке */}
+                {isChatBlocked && (
+                  <span className="text-xs text-red-600 font-medium">
+                    {isBlockedByMe
+                      ? "Вы заблокировали этого пользователя"
+                      : "Пользователь заблокировал вас"}
+                  </span>
+                )}
               </div>
             </div>
           </h1>
+          <button onClick={handleShowMoreClick}>
+            <img src="/icons/show_more.svg" alt="Показать меню" />
+          </button>
         </TopicHeader>
       </div>
 
       {/* Контент чата */}
       <div className="flex-1 min-h-0">
-        <ChatContent companionId={companionId!} />
+        <ChatContent
+          companionId={companionId!}
+          isChatBlocked={isChatBlocked}
+          blockReason={isBlockedByMe ? "blocked_by_me" : "blocked_by_them"}
+        />
       </div>
 
       {/* Поле ввода */}
       <div className="sticky bottom-0 z-30 bg-white border-t border-gray-200">
-        <InputMessage toUserId={companionId!} />
+        <InputMessage
+          toUserId={companionId!}
+          isChatBlocked={isChatBlocked}
+          blockReason={isBlockedByMe ? "blocked_by_me" : "blocked_by_them"}
+        />
       </div>
+
+      <BottomSheetModal isOpen={isActionsMenuOpen} onClose={handleCloseMenu}>
+        <ProfileActionsMenu
+          onShare={handleShare}
+          onBlock={handleBlock}
+          onUnblock={handleUnblock}
+          isBlocking={isBlockPending}
+          isUnblocking={isUnblockPending}
+          isBlocked={isBlocked}
+          userId={companionId!}
+        />
+      </BottomSheetModal>
     </div>
   );
 };
