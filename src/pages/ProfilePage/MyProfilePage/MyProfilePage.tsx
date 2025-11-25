@@ -11,7 +11,6 @@ import StatusBar from "../Components/StatusBar/StatusBar";
 import AddAboutMySelf from "../Components/AddAboutMySelf/AddAboutMySelf";
 import { useState } from "react";
 import ToolTip from "../Components/ToolTip/ToolTip";
-import { useGetCompletedTest } from "../../TestPage/service/useGetCompletedTests";
 import TestsBar from "../Components/TestsBar/TestsBar";
 import { useCompletedTests } from "../hooks/useCompletedTests";
 import AddInfoText from "../Components/AddInfoText/AddInfoText";
@@ -22,11 +21,6 @@ import ProfileActionsMenu from "../Components/ProfileActionsMenu/ProfileActionsM
 
 const ProfilePage = () => {
   const { data, isLoading, isError } = useGetMe();
-  const {
-    data: testsData,
-    isLoading: isTestsLoading,
-    isError: isTestsError,
-  } = useGetCompletedTest();
 
   const { data: completedTests, isLoading: isCompletedTestLoading } =
     useCompletedTests();
@@ -75,14 +69,17 @@ const ProfilePage = () => {
     (test: any) => test.title === "Тест на совместимость"
   );
 
-  if (isLoading || isTestsLoading || isAllTestsLoading) {
+  if (isLoading || isAllTestsLoading) {
     return <Loading />;
   }
 
-  if (isError || isTestsError || isAllTestsError) return <Error />;
+  if (isError || isAllTestsError) return <Error />;
 
-  const isTestCompleted = testsData.length > 0;
   const isFilledProfile = data.username;
+
+  const isCompatibilityTestCompleted = completedTests.some(
+    (test: any) => test.uuid == compatibilityTest.uuid
+  );
 
   return (
     <Wrapper
@@ -123,7 +120,7 @@ const ProfilePage = () => {
         />
       </div>
 
-      {compatibilityTest && (
+      {!isCompatibilityTestCompleted && (
         <EditButton
           title={"Пройти тест на совместимость"}
           testId={compatibilityTest.uuid}
