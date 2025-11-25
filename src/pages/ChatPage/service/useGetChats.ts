@@ -14,7 +14,7 @@ export const useGetChats = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["chats"],
     queryFn: fetchChats,
-    staleTime: 3000,
+    staleTime: 5 * 60 * 1000,
   });
 
   return { data, isLoading, isError };

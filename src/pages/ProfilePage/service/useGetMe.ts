@@ -5,7 +5,7 @@ export const useGetMe = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["get-me"],
     queryFn: fetchMyProfile,
-    staleTime: 10000,
+    staleTime: 7 * 60 * 1000,
   });
 
   return { data, isLoading, isError };

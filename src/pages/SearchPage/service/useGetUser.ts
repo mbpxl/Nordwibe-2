@@ -13,7 +13,7 @@ export const useGetUser = (ids: string[]) => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["user", ids],
     queryFn: () => fetchUser(ids),
-    staleTime: 20000,
+    staleTime: 5 * 60 * 1000,
     enabled: ids.length > 0,
   });
 

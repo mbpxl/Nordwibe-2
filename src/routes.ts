@@ -1,13 +1,13 @@
 import { lazy } from "react";
 
 import {
+  BLACK_LIST,
   CHAT_DIALOG,
   CHAT_ROUTE,
   MAIN_ROUTE,
   MY_PROFILE_ROUTE,
   OAUTH_CALLBACK,
   PRIVACY_ROUTE,
-  PRIVATE_SETTINGS,
   PROFILE_EDIT_ROUTE,
   QUIZ_PASSING_ROUTE,
   QUIZ_RESULT_ROUTE,
@@ -115,6 +115,10 @@ export const routes = [
   {
     path: SETTINGS_ROUTE,
     Component: SettingsPage,
+  },
+  {
+    path: BLACK_LIST,
+    Component: lazy(() => import("./pages/BlackListPage/BlackListPage")),
   },
   {
     path: CHAT_DIALOG,

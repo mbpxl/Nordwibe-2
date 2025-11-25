@@ -7,9 +7,11 @@ import { setCompatibilityStyle } from "../../../utils/setCompatibilityStyle";
 const SearchPeopleItem = ({
   user,
   compatibility,
+  isBlocked = false,
 }: {
   user: userTypes;
   compatibility: number;
+  isBlocked?: boolean;
 }) => {
   console.log(user);
   return (
@@ -41,7 +43,8 @@ const SearchPeopleItem = ({
           </h2>
           <div
             className={`${setCompatibilityStyle(
-              compatibility
+              compatibility,
+              isBlocked
             )} text-nowrap h-5 rounded-[12px] text-[0.875rem] font-semibold leading-[0.75rem] text-white py-1 px-2`}
           >
             {compatibility ? compatibility + " %" : "???"}

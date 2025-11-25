@@ -1,8 +1,14 @@
+import { BLACK_LIST } from "../../../../shared/utils/consts";
 import type { SettingsButtonTypes } from "../SettingsButton/SettingsButton";
 import SettingsButton from "../SettingsButton/SettingsButton";
 import SettingsTip from "../SettingsTip/SettingsTip";
 
 const buttonsData: SettingsButtonTypes[] = [
+  {
+    title: "Чёрный список",
+    isRed: false,
+    to: BLACK_LIST,
+  },
   {
     title: "Выйти из аккаунта",
     isRed: true,
