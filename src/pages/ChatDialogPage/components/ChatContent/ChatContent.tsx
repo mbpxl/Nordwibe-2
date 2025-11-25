@@ -8,9 +8,15 @@ import { useMarkAsRead } from "../../service/useMarkAsRead";
 
 interface ChatContentProps {
   companionId: string;
+  isChatBlocked: boolean;
+  blockReason: "blocked_by_me" | "blocked_by_them";
 }
 
-const ChatContent: React.FC<ChatContentProps> = ({ companionId }) => {
+const ChatContent: React.FC<ChatContentProps> = ({
+  companionId,
+  isChatBlocked,
+  blockReason,
+}) => {
   const { data: currentUser, isLoading: isUserLoading } = useGetMe();
   const { data: allMessages, isLoading: isMessagesLoading } = useGetChats();
   const { mutate: markAsRead } = useMarkAsRead();
@@ -30,7 +36,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ companionId }) => {
 
   // Логика для отметки сообщений как прочитанных
   useEffect(() => {
-    if (!currentUser || !filteredMessages.length) return;
+    if (!currentUser || !filteredMessages.length || isChatBlocked) return;
 
     // Находим непрочитанные сообщения от companionId к currentUser
     const unreadMessagesFromCompanion = filteredMessages.filter(
@@ -44,7 +50,7 @@ const ChatContent: React.FC<ChatContentProps> = ({ companionId }) => {
       const messageIds = unreadMessagesFromCompanion.map((msg: any) => msg.id);
       markAsRead(messageIds);
     }
-  }, [filteredMessages, companionId, currentUser, markAsRead]);
+  }, [filteredMessages, companionId, currentUser, markAsRead, isChatBlocked]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -59,6 +65,24 @@ const ChatContent: React.FC<ChatContentProps> = ({ companionId }) => {
   return (
     <Wrapper className="h-full overflow-y-auto bg-purple-main-disabled">
       <div className="pt-3 pb-15">
+        {/* Баннер блокировки */}
+        {isChatBlocked && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mx-4 mb-4">
+            <div className="flex items-center gap-2 justify-center">
+              <img
+                src="/icons/block.svg"
+                alt="Заблокирован"
+                className="w-5 h-5"
+              />
+              <span className="text-red-700 font-medium text-center">
+                {blockReason === "blocked_by_me"
+                  ? "Вы заблокировали этого пользователя. Новые сообщения недоступны."
+                  : "Пользователь заблокировал вас. Новые сообщения недоступны."}
+              </span>
+            </div>
+          </div>
+        )}
+
         {filteredMessages.map((message: any) => (
           <ChatBubble
             key={message.id}

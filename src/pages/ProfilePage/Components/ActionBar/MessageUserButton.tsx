@@ -1,15 +1,23 @@
-import { Link } from "react-router-dom";
+interface MessageUserButtonProps {
+  onClick: () => void;
+  isBlocked?: boolean;
+}
 
-const MessageUserButton: React.FC<{ companionId: string }> = ({
-  companionId,
+const MessageUserButton: React.FC<MessageUserButtonProps> = ({
+  onClick,
+  isBlocked = false,
 }) => {
   return (
-    <Link
-      to={"/chats/" + companionId}
-      className="bg-purple-main w-full text-center rounded-[30px] py-3 text-[1.25rem] text-white font-bold leading-6"
+    <button
+      onClick={onClick}
+      className={`w-full text-center rounded-[30px] py-3 text-[1.25rem] font-bold leading-6 ${
+        isBlocked
+          ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+          : "bg-purple-main text-white hover:bg-purple-600"
+      }`}
     >
-      Написать
-    </Link>
+      {isBlocked ? "Заблокирован" : "Написать"}
+    </button>
   );
 };
 

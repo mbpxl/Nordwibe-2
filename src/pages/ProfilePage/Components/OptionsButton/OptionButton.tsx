@@ -19,7 +19,7 @@ const EditButton = ({ title, testId }: EditButtonProps) => {
   };
 
   return (
-    <div className="w-full text-white my-3 self-center">
+    <div className="w-full text-white my-2 self-center">
       <Link
         to={getLinkTo()}
         className="block bg-purple-main py-2 rounded-[1.875rem] text-center text-[1rem] font-bold leading-4 hover:bg-purple-600 transition-colors"

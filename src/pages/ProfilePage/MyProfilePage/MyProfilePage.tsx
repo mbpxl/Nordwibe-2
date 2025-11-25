@@ -9,16 +9,16 @@ import { useGetMe } from "../service/useGetMe";
 import TopicHeader from "../../../shared/Components/TopicHeader/TopicHeader";
 import StatusBar from "../Components/StatusBar/StatusBar";
 import AddAboutMySelf from "../Components/AddAboutMySelf/AddAboutMySelf";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import ToolTip from "../Components/ToolTip/ToolTip";
 import { useGetCompletedTest } from "../../TestPage/service/useGetCompletedTests";
 import TestsBar from "../Components/TestsBar/TestsBar";
 import { useCompletedTests } from "../hooks/useCompletedTests";
 import AddInfoText from "../Components/AddInfoText/AddInfoText";
-import ShareProfile from "../Components/ShareProfile/ShareProfile";
-import { useClickOutside } from "../hooks/useClickOutside";
 import { GoBackButton } from "../../../shared/Components/GoBackButton/GoBackButton";
 import { useGetTests } from "../../TestPage/service/useGetTests";
+import BottomSheetModal from "../../../shared/Components/Modal/BottomSheetModal/BottomSheetModal";
+import ProfileActionsMenu from "../Components/ProfileActionsMenu/ProfileActionsMenu";
 
 const ProfilePage = () => {
   const { data, isLoading, isError } = useGetMe();
@@ -59,16 +59,17 @@ const ProfilePage = () => {
     setIsEditAboutMyself(false);
   };
 
-  const [showShareMenu, setShowShareMenu] = useState(false);
-  const shareMenuRef = useRef<HTMLDivElement>(null);
-
-  useClickOutside(shareMenuRef, () => {
-    setShowShareMenu(false);
-  });
+  const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
 
   const handleShowMoreClick = () => {
-    setShowShareMenu((prev) => !prev);
+    setIsActionsMenuOpen(true);
   };
+
+  const handleCloseMenu = () => {
+    setIsActionsMenuOpen(false);
+  };
+
+  const handleShare = () => {};
 
   const compatibilityTest = allTests?.find(
     (test: any) => test.title === "Тест на совместимость"
@@ -100,17 +101,13 @@ const ProfilePage = () => {
         </button>
       </TopicHeader>
 
-      {showShareMenu && (
-        <div
-          ref={shareMenuRef}
-          className="absolute top-16 right-4 bg-white shadow-lg rounded-lg z-50 min-w-[200px] border border-gray-200"
-        >
-          <ShareProfile
-            myProfileId={data.id}
-            onShare={() => setShowShareMenu(false)}
-          />
-        </div>
-      )}
+      <BottomSheetModal isOpen={isActionsMenuOpen} onClose={handleCloseMenu}>
+        <ProfileActionsMenu
+          isMyProfile={true}
+          onShare={handleShare}
+          userId={data.id}
+        />
+      </BottomSheetModal>
 
       <PhotoSlider photos={[data.avatar_url]} username={data.username} />
 
@@ -126,7 +123,7 @@ const ProfilePage = () => {
         />
       </div>
 
-      {!isTestCompleted && compatibilityTest && (
+      {compatibilityTest && (
         <EditButton
           title={"Пройти тест на совместимость"}
           testId={compatibilityTest.uuid}
