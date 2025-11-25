@@ -37,7 +37,7 @@ const ProfilePage = () => {
 
   const handleSetShowToolTip = () => {
     setShowTooltip((prev) => !prev);
-    localStorage.setItem("showToolTip", "ok");
+    sessionStorage.setItem("showToolTip", "ok");
   };
 
   const [isEditAbouMyself, setIsEditAboutMyself] = useState<boolean>(false);

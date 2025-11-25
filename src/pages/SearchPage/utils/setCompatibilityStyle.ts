@@ -1,5 +1,10 @@
-export const setCompatibilityStyle = (compatibility: number) => {
-  if (compatibility > 80) {
+export const setCompatibilityStyle = (
+  compatibility: number,
+  isBlocked = false
+) => {
+  if (isBlocked) {
+    return "bg-gray-400";
+  } else if (compatibility > 80) {
     return "bg-[#06B500]";
   } else if (compatibility <= 80 && compatibility > 50) {
     return "bg-[#81AF00]";

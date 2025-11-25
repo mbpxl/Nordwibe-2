@@ -10,6 +10,7 @@ export const useGetStories = () => {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["stories"],
     queryFn: fetchStories,
+    staleTime: Infinity,
   });
 
   return { data, isLoading, isError };

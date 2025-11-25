@@ -17,6 +17,7 @@ export const USER_PROFILE_ROUTE = "/profile/:ids";
 export const PROFILE_EDIT_ROUTE = "/edit";
 export const SETTINGS_ROUTE = "/settings";
 export const PRIVATE_SETTINGS = "/private";
+export const BLACK_LIST = "/blacklist";
 
 export const QUIZ_ROUTE = "/quiz";
 export const QUIZ_PASSING_ROUTE = "/quiz/:uuid";

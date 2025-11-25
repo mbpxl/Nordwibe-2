@@ -9,6 +9,7 @@ export type SettingsButtonTypes = {
     | "Уведомление в Telegram-боте"
     | "Сменить номер телефона"
     | "Настройки приватности"
+    | "Чёрный список"
     | "О приложении"
     | "Часто задаваемые вопросы"
     | "Удалить аккаунт"
@@ -20,7 +21,7 @@ export type SettingsButtonTypes = {
 
 const SettingsButton: React.FC<SettingsButtonTypes> = ({
   title,
-  isRed,
+  isRed = false,
   isPhoneChange,
   to,
 }) => {
