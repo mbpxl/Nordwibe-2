@@ -5,6 +5,7 @@ import { baseURLforImages } from "../../../../../shared/plugin/axios";
 import { PhotoActionsMenu } from "../PhotoActionsMenu/PhotoActionsMenu";
 import { EditPhotoModal } from "../EditPhotoModal/EditPhotoModal";
 import { PhotoViewModal } from "../PhotoViewModal/PhotoViewModal";
+import OptimizedImage from "../../../../../shared/Components/OptimizedImage/OptimizedImage";
 
 interface PhotoSliderProps {
   photos: string[];
@@ -22,7 +23,7 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false); // Новое состояние для просмотра
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
   const currentPhoto = photos[activeIndex];
 
@@ -45,7 +46,6 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
   const handleDeletePhoto = () => {
     // TODO: Реализовать удаление фото
     console.log("Удалить фото:", currentPhoto);
-    alert("Функционал удаления будет реализован позже");
   };
 
   const handlePhotoUpdate = (newPhotoUrl: string) => {
@@ -63,10 +63,14 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
             className="w-[136px] h-[136px] rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-purple-main"
           >
             {photos[0] ? (
-              <img
+              <OptimizedImage
+                className="object-cover"
                 src={baseURLforImages + photos[0]}
-                alt="photo-0"
-                className="w-full h-full object-cover"
+                alt="avatar"
+                width={136}
+                height={136}
+                quality={30}
+                priority={true}
               />
             ) : (
               <div className="flex justify-center items-center h-full bg-purple-sub-button text-white font-semibold text-4xl">

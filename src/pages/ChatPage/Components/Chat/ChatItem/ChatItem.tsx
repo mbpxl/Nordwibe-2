@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { baseURLforImages } from "../../../../../shared/plugin/axios";
 import { useUnreadCounts } from "../../../hooks/useUnreadCounts";
+import OptimizedImage from "../../../../../shared/Components/OptimizedImage/OptimizedImage";
 
 type ChatItemProps = {
   name: string;
@@ -25,10 +26,14 @@ const ChatItem = ({ name, message, avatar, companionId }: ChatItemProps) => {
         }`}
       >
         {avatar ? (
-          <img
+          <OptimizedImage
+            className="rounded-xl shrink-0"
             src={baseURLforImages + avatar}
-            alt={name}
-            className="w-full h-full object-cover"
+            alt="avatar"
+            width={60}
+            height={60}
+            quality={30}
+            priority={true}
           />
         ) : (
           <div className="text-white font-semibold text-4xl">

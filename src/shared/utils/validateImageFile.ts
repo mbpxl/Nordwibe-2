@@ -1,6 +1,6 @@
 export const validateImageFile = (file: File): Promise<boolean> => {
   return new Promise((resolve) => {
-    if (!file.type.startsWith('image/')) {
+    if (!file.type.startsWith("image/")) {
       resolve(false);
       return;
     }
