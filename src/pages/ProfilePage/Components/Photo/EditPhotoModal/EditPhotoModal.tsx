@@ -85,6 +85,7 @@ export const EditPhotoModal: React.FC<EditPhotoModalProps> = ({
   const [isCompressing, setIsCompressing] = useState<boolean>(false);
   const [originalFile, setOriginalFile] = useState<File | null>(null);
   const [compressedFile, setCompressedFile] = useState<File | null>(null);
+  //@ts-ignore
   const [compressionStats, setCompressionStats] = useState<{
     originalSize: number;
     compressedSize: number;
@@ -216,6 +217,7 @@ export const EditPhotoModal: React.FC<EditPhotoModalProps> = ({
   }, [onClose, previewUrl]);
 
   // Форматирование размера файла
+  //@ts-ignore
   const formatFileSize = (bytes: number): string => {
     if (bytes === 0) return "0 Bytes";
     const k = 1024;
