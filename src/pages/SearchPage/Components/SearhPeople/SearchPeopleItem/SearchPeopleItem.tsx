@@ -3,6 +3,7 @@ import HashTag from "../../../../../shared/Components/HashTag/HashTag";
 import { baseURLforImages } from "../../../../../shared/plugin/axios";
 import type { userTypes } from "../../../types/userTypes";
 import { setCompatibilityStyle } from "../../../utils/setCompatibilityStyle";
+import OptimizedImage from "../../../../../shared/Components/OptimizedImage/OptimizedImage";
 
 const SearchPeopleItem = ({
   user,
@@ -28,10 +29,14 @@ const SearchPeopleItem = ({
               : user.name?.charAt(0) || ""}
           </div>
         ) : (
-          <img
-            className="w-[100px] h-[100px] rounded-xl"
+          <OptimizedImage
+            className="w-10 h-10 rounded-xl shrink-0"
             src={baseURLforImages + user.avatar_url}
             alt="avatar"
+            width={100}
+            height={100}
+            quality={50}
+            priority={true}
           />
         )}
       </div>

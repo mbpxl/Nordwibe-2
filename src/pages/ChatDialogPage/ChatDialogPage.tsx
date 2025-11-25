@@ -15,6 +15,7 @@ import toast from "react-hot-toast";
 import { useBlockUser } from "../ProfilePage/service/useBlockUser";
 import { useUnblockUser } from "../ProfilePage/service/useUnblockUser";
 import { useIsUserBlocked } from "../ProfilePage/hooks/useIsUserBlocked";
+import OptimizedImage from "../../shared/Components/OptimizedImage/OptimizedImage";
 
 const ChatDialogPage = () => {
   const { companionId } = useParams<{ companionId: string }>();
@@ -116,10 +117,14 @@ const ChatDialogPage = () => {
           <h1>
             <div className="flex gap-x-3 items-center w-full">
               {userData.avatar_url ? (
-                <img
-                  className="w-10 h-10 rounded-[50%] shrink-0"
+                <OptimizedImage
+                  className="rounded-[50%] shrink-0"
                   src={baseURLforImages + userData.avatar_url}
                   alt="avatar"
+                  width={40}
+                  height={40}
+                  quality={10}
+                  priority={true}
                 />
               ) : (
                 <div className="w-10 h-10 bg-purple-sub-button text-white font-semibold text-3xl flex items-center justify-center rounded-[50%] shrink-0">
