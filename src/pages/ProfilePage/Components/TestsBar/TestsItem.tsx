@@ -1,9 +1,24 @@
+import { useNavigate } from "react-router-dom";
+
 interface TestsItemProps {
   test: any;
   isCompleted?: boolean;
+  isMyProfile?: boolean;
 }
 
-const TestsItem: React.FC<TestsItemProps> = ({ test, isCompleted = false }) => {
+const TestsItem: React.FC<TestsItemProps> = ({
+  test,
+  isCompleted = false,
+  isMyProfile = false,
+}) => {
+  const navigate = useNavigate();
+
+  const goToTests = () => {
+    if (!isCompleted && isMyProfile) {
+      navigate("/test");
+    }
+  };
+
   return (
     <div
       className={`
@@ -16,6 +31,7 @@ const TestsItem: React.FC<TestsItemProps> = ({ test, isCompleted = false }) => {
             : "bg-gray-100 text-gray-500 border border-gray-200"
         }
       `}
+      onClick={goToTests}
     >
       {/* Заголовок теста */}
       <h3 className="text-[0.875rem] font-semibold leading-[1.125rem] line-clamp-2">
