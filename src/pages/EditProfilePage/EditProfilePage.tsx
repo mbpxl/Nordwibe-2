@@ -30,6 +30,9 @@ const EditProfilePage = () => {
 
   const [nameValue, setNameValue] = useState<string>("");
   const [loginValue, setLoginValue] = useState<string>("");
+  const [genderValue, setGenderValue] = useState<"Мужской" | "Женский" | null>(
+    null
+  );
   const { date, inputRef, handleChange } = useFormatBirthDate("");
   const [ageError, setAgeError] = useState<boolean>(false);
   const [usageGoalOption, setUsageGoalOption] = useState<string | null>(null);
@@ -149,6 +152,7 @@ const EditProfilePage = () => {
       // Основные данные
       setNameValue(myProfileData.username || "");
       setLoginValue(myProfileData.name || ""); // Инициализация логина
+      setGenderValue(myProfileData.gender || "");
       setUsageGoalOption(myProfileData.usage_goal || null); // Инициализация цели использования
 
       // Выборы
@@ -219,6 +223,7 @@ const EditProfilePage = () => {
   const updatedUserData = {
     ...(nameValue !== myProfileData?.username && { username: nameValue }),
     ...(loginValue !== myProfileData?.name && { name: loginValue }),
+    ...(genderValue !== myProfileData?.gender && { gender: genderValue }),
     ...(isBirthDateValid && { birth_date: birthDate }),
     ...(usageGoalOption !== myProfileData?.usage_goal && {
       usage_goal: usageGoalOption,
@@ -410,6 +415,13 @@ const EditProfilePage = () => {
                 placeholder={"Логин"}
               />
             </div>
+
+            <InlineSelect
+              title="Пол"
+              options={["Мужской", "Женский"]}
+              value={genderValue}
+              onChange={setGenderValue}
+            />
 
             <div ref={birthFieldRef}>
               <BirthField

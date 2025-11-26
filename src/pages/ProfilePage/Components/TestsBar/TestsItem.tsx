@@ -1,19 +1,45 @@
-import { baseURLforImages } from "../../../../shared/plugin/axios";
-import type { TestType } from "../../../TestPage/types/testDataTypes";
+interface TestsItemProps {
+  test: any;
+  isCompleted?: boolean;
+}
 
-type TestsItemProps = {
-  test: TestType;
-};
-
-const TestsItem: React.FC<TestsItemProps> = ({ test }) => {
+const TestsItem: React.FC<TestsItemProps> = ({ test, isCompleted = false }) => {
   return (
-    <div className="w-[150px] h-[150px] rounded-xl bg-purple-background-gender flex gap-y-2.5 flex-col items-center justify-center overflow-hidden shadow-sm">
-      <img
-        src={baseURLforImages + test.image_url}
-        alt={test.title}
-        className="w-1/2 h-1/2 object-cover rounded-xl"
-      />
-      <span className="text-[0.895rem] font-medium">{test.title}</span>
+    <div
+      className={`
+        relative min-w-[140px] h-[100px] rounded-2xl p-3 
+        flex flex-col justify-between
+        transition-all duration-200
+        ${
+          isCompleted
+            ? "bg-purple-main text-white shadow-sm"
+            : "bg-gray-100 text-gray-500 border border-gray-200"
+        }
+      `}
+    >
+      {/* Заголовок теста */}
+      <h3 className="text-[0.875rem] font-semibold leading-[1.125rem] line-clamp-2">
+        {test.title}
+      </h3>
+
+      {/* Описание теста */}
+      <p className="text-[0.75rem] leading-[0.875rem] line-clamp-2">
+        {test.description}
+      </p>
+
+      {/* Индикатор статуса */}
+      <div className="flex justify-between items-center">
+        <span className="text-[0.625rem] opacity-80">
+          {isCompleted ? "Пройден" : "Не пройден"}
+        </span>
+
+        {/* Иконка статуса */}
+        <div
+          className={`w-2 h-2 rounded-full ${
+            isCompleted ? "bg-green-400" : "bg-gray-400"
+          }`}
+        />
+      </div>
     </div>
   );
 };

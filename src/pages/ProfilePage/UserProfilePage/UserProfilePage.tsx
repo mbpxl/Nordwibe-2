@@ -19,12 +19,16 @@ import { useIsUserBlocked } from "../hooks/useIsUserBlocked";
 import ProfileActionsMenu from "../Components/ProfileActionsMenu/ProfileActionsMenu";
 import BottomSheetModal from "../../../shared/Components/Modal/BottomSheetModal/BottomSheetModal";
 import toast from "react-hot-toast";
+import { useUserTests } from "../hooks/useUserTests";
+import TestsBar from "../Components/TestsBar/TestsBar";
 
 const UserProfilePage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { ids } = useParams<{ ids: string }>();
   const userFromState = state?.user;
+
+  const { userTests, isLoading: isUserTestsLoading } = useUserTests(ids);
 
   const { data: rankingData, isLoading: isRankingLoading } = useRanking();
   const { isBlocked, isLoading: isBlockedLoading } = useIsUserBlocked(ids);
@@ -114,6 +118,8 @@ const UserProfilePage = () => {
     }
   };
 
+  console.log(user);
+
   if (
     (isLoading && !user) ||
     isMyProfileLoading ||
@@ -187,10 +193,30 @@ const UserProfilePage = () => {
           username={user.username}
         />
         <div>
-          <AboutMyself about={user.about} isMyProfile={false} />
+          <AboutMyself
+            gender={user.gender}
+            about={user.about}
+            name={user.username || user.name}
+            isMyProfile={false}
+          />
 
-          <HashTagBar hashTags={user.hashtags_list} />
-          {user && <StatusBar data={user} />}
+          <HashTagBar
+            gender={user.gender}
+            userName={user.username || user.name}
+            hashTags={user.hashtags_list}
+          />
+          <StatusBar
+            gender={user.gender}
+            userName={user.username || user.name}
+            data={user}
+          />
+          {!isUserTestsLoading && (
+            <TestsBar
+              userTests={userTests}
+              isMyProfile={false}
+              userName={user.username}
+            />
+          )}
         </div>
       </Wrapper>
       <ActionBar

@@ -13,13 +13,15 @@ import { useState } from "react";
 import ToolTip from "../Components/ToolTip/ToolTip";
 import TestsBar from "../Components/TestsBar/TestsBar";
 import { useCompletedTests } from "../hooks/useCompletedTests";
-import AddInfoText from "../Components/AddInfoText/AddInfoText";
 import { GoBackButton } from "../../../shared/Components/GoBackButton/GoBackButton";
 import { useGetTests } from "../../TestPage/service/useGetTests";
 import BottomSheetModal from "../../../shared/Components/Modal/BottomSheetModal/BottomSheetModal";
 import ProfileActionsMenu from "../Components/ProfileActionsMenu/ProfileActionsMenu";
+import { useNavigate } from "react-router-dom";
 
 const ProfilePage = () => {
+  const navigate = useNavigate();
+
   const { data, isLoading, isError } = useGetMe();
 
   const { data: completedTests, isLoading: isCompletedTestLoading } =
@@ -75,7 +77,7 @@ const ProfilePage = () => {
 
   if (isError || isAllTestsError) return <Error />;
 
-  const isFilledProfile = data.username;
+  const isFilledProfile = data.username && data.gender;
 
   const isCompatibilityTestCompleted = completedTests.some(
     (test: any) => test.uuid == compatibilityTest.uuid
@@ -143,15 +145,33 @@ const ProfilePage = () => {
             onStartEditing={handleStartEditing}
           />
         )}
-        {data.hashtags_list ? (
-          <HashTagBar hashTags={data.hashtags_list} />
-        ) : (
-          <AddInfoText text={"интересы"} title={"Интересы"} />
-        )}
-        {data && <StatusBar data={data} />}
+        <HashTagBar
+          hashTags={data.hashtags_list}
+          isMyProfile={true}
+          userName={data.username || data.name}
+          onEdit={() => {
+            navigate("/edit");
+          }}
+        />
+
+        <StatusBar
+          data={data}
+          isMyProfile={true}
+          userName={data.username || data.name}
+          onEdit={() => {
+            navigate("/edit");
+          }}
+        />
       </div>
 
-      {!isCompletedTestLoading && <TestsBar tests={completedTests} />}
+      {!isCompletedTestLoading && (
+        <TestsBar
+          tests={completedTests}
+          isMyProfile={true}
+          userName={data.username}
+          onEdit={() => navigate("/test")} // или другая функция для перехода к тестам
+        />
+      )}
     </Wrapper>
   );
 };
