@@ -215,7 +215,7 @@ const UserProfilePage = () => {
               gender={user.gender}
               userTests={userTests}
               isMyProfile={false}
-              userName={user.username}
+              userName={user.username || user.name}
             />
           )}
         </div>

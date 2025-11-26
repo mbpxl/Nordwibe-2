@@ -13,11 +13,15 @@ const TestsItem: React.FC<TestsItemProps> = ({
 }) => {
   const navigate = useNavigate();
 
+  console.log(test.uuid);
+
   const goToTests = () => {
     if (!isCompleted && isMyProfile) {
-      navigate("/test");
+      navigate(`/test/${test.uuid}`);
     }
   };
+
+  console.log(test);
 
   return (
     <div
