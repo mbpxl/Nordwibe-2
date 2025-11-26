@@ -3,7 +3,7 @@ import type { statusDataTypes } from "../../types/statusDataTypes";
 import { statusConfig } from "../../utils/statusConfig";
 
 interface StatusBarProps {
-  data: statusDataTypes | null;
+  data: statusDataTypes;
   isMyProfile?: boolean;
   userName?: string | null;
   onEdit?: () => void;
@@ -21,7 +21,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
 
   const statuses = (Object.keys(statusConfig) as (keyof statusDataTypes)[])
     .map((key) => {
-      const value = data![key];
+      const value = data[key];
       if (!value) return null;
       return statusConfig[key](value);
     })

@@ -16,6 +16,14 @@ export const statusConfig: Record<
     icon: "/icons/status/status-religion.svg",
     title: `Религия: ${value}`,
   }),
+  occupation: (value) => ({
+    icon: "/icons/status/status-occupation.svg",
+    title: `Род занятий: ${value}`,
+  }),
+  occupation_details: (value) => ({
+    icon: "/icons/status/status-occupation.svg",
+    title: `Профессия: ${value}`,
+  }),
   hometown_name: (value) => ({
     icon: "/icons/status/status-hometown.svg",
     title: `Родной город: ${value}`,
