@@ -11,6 +11,7 @@ type TestsBarProps = {
     is_important: boolean;
     isCompleted: boolean;
   }>;
+  gender?: "Женский" | "Мужской";
   isMyProfile?: boolean;
   userName?: string | null;
   onEdit?: () => void;
@@ -22,8 +23,9 @@ const TestsBar: React.FC<TestsBarProps> = ({
   isMyProfile = false,
   userName = null,
   onEdit,
+  gender,
 }) => {
-  const displayName = userName || "Пользователь";
+  const displayName = gender == null ? "Пользователь" : userName;
 
   // Определяем, какие тесты показывать
   const testsToShow = userTests || tests || [];
@@ -65,7 +67,9 @@ const TestsBar: React.FC<TestsBarProps> = ({
             <span className="text-sm">
               {isMyProfile
                 ? "Пройдите тесты, чтобы повысить шансы найти идеального соседа"
-                : `${displayName} ещё не прошёл тесты`}
+                : `${displayName} ещё не прош${
+                    gender == "Женский" ? "ла" : "ёл"
+                  } тесты`}
             </span>
           </div>
 
@@ -74,7 +78,7 @@ const TestsBar: React.FC<TestsBarProps> = ({
               onClick={onEdit}
               className="mt-3 text-purple-main hover:text-purple-600 transition-colors text-sm font-medium"
             >
-              Пройти тесты →
+              Пройти тесты
             </button>
           )}
         </div>
@@ -104,6 +108,7 @@ const TestsBar: React.FC<TestsBarProps> = ({
         {testsToShow.map((test) => (
           <TestsItem
             key={test.uuid}
+            isMyProfile={isMyProfile}
             test={test}
             isCompleted={"isCompleted" in test ? test.isCompleted : true}
           />

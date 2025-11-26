@@ -212,6 +212,7 @@ const UserProfilePage = () => {
           />
           {!isUserTestsLoading && (
             <TestsBar
+              gender={user.gender}
               userTests={userTests}
               isMyProfile={false}
               userName={user.username}
