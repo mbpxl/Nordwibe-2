@@ -61,6 +61,10 @@ const EditProfilePage = () => {
     { id: string; name: string }[]
   >([]);
 
+  // Новые состояния для рода занятий и профессии
+  const [occupation, setOccupation] = useState<string | null>(null);
+  const [occupationDetails, setOccupationDetails] = useState<string>("");
+
   const birthFieldRef = useRef<HTMLDivElement>(null);
 
   const [isFormTouched, setIsFormTouched] = useState(false);
@@ -73,6 +77,33 @@ const EditProfilePage = () => {
   const [pendingCreatedTag, setPendingCreatedTag] = useState<string | null>(
     null
   );
+
+  useEffect(() => {
+    console.log("Occupation changed to:", occupation);
+    console.log("Current occupationDetails:", occupationDetails);
+    console.log("Should show occupation details:", shouldShowOccupationDetails);
+  }, [occupation, occupationDetails]);
+
+  // Добавьте этот эффект для сброса profession при изменении occupation
+  useEffect(() => {
+    if (
+      isInitialized &&
+      occupation &&
+      occupation !== "Работаю" &&
+      occupation !== "Работаю из дома" &&
+      occupationDetails !== ""
+    ) {
+      console.log(
+        "Resetting occupationDetails because occupation changed to:",
+        occupation
+      );
+      setOccupationDetails("");
+    }
+  }, [occupation, isInitialized]);
+
+  // Определяем, нужно ли показывать поле "Профессия"
+  const shouldShowOccupationDetails =
+    occupation === "Работаю" || occupation === "Работаю из дома";
 
   const isUserOver18 = (birthDate: string): boolean => {
     if (!birthDate || birthDate.length !== 10) return false;
@@ -147,13 +178,15 @@ const EditProfilePage = () => {
 
   useEffect(() => {
     if (myProfileData && !isInitialized) {
-      console.log("Initializing form with profile data:", myProfileData);
-
       // Основные данные
       setNameValue(myProfileData.username || "");
-      setLoginValue(myProfileData.name || ""); // Инициализация логина
+      setLoginValue(myProfileData.name || "");
       setGenderValue(myProfileData.gender || "");
-      setUsageGoalOption(myProfileData.usage_goal || null); // Инициализация цели использования
+      setUsageGoalOption(myProfileData.usage_goal || null);
+
+      // Новые поля: род занятий и профессия
+      setOccupation(myProfileData.occupation || null);
+      setOccupationDetails(myProfileData.occupation_details || "");
 
       // Выборы
       setPetOption(myProfileData.pets || null);
@@ -177,16 +210,13 @@ const EditProfilePage = () => {
       });
 
       // Хештеги
-      console.log("Raw hashtags from API:", myProfileData.hashtags_list);
 
       if (myProfileData.hashtags_list) {
         const normalizedHashtags = normalizeHashtags(
           myProfileData.hashtags_list
         );
-        console.log("Normalized hashtags:", normalizedHashtags);
         setHashtagsList(normalizedHashtags);
       } else {
-        console.log("No hashtags found in profile data");
         setHashtagsList([]);
       }
 
@@ -210,6 +240,8 @@ const EditProfilePage = () => {
     budget,
     durationOption,
     hashtagsList,
+    occupation,
+    occupationDetails,
     isInitialized,
   ]);
 
@@ -227,6 +259,11 @@ const EditProfilePage = () => {
     ...(isBirthDateValid && { birth_date: birthDate }),
     ...(usageGoalOption !== myProfileData?.usage_goal && {
       usage_goal: usageGoalOption,
+    }),
+    ...(occupation !== myProfileData?.occupation && { occupation }),
+    ...(occupation !== myProfileData?.occupation && { occupation }),
+    ...(occupationDetails !== myProfileData?.occupation_details && {
+      occupation_details: occupationDetails.trim() || null,
     }),
     ...(petOption !== myProfileData?.pets && { pets: petOption }),
     ...(animalType !== myProfileData?.animal_type && {
@@ -289,7 +326,17 @@ const EditProfilePage = () => {
       ...(isBirthDateValid && { birth_date: birthDate }),
     };
 
-    console.log("Sending data:", dataToSend);
+    console.log("=== DEBUG OCCUPATION DATA ===");
+    console.log("Occupation:", occupation);
+    console.log("Occupation details:", occupationDetails);
+    console.log("Should show occupation details:", shouldShowOccupationDetails);
+    console.log(
+      "Sending occupation_details:",
+      shouldShowOccupationDetails ? occupationDetails : null
+    );
+    console.log("Full data being sent:", dataToSend);
+    console.log("=== END DEBUG ===");
+
     fillProfile({ ...myProfileData, ...dataToSend });
   };
 
@@ -437,6 +484,26 @@ const EditProfilePage = () => {
                 ageError={ageError}
               />
             </div>
+
+            {/* Новый блок: Род занятий */}
+            <InlineSelect
+              title="Род занятий"
+              options={["Учусь", "Работаю", "Работаю из дома", "Ищу работу"]}
+              value={occupation}
+              onChange={setOccupation}
+            />
+
+            {/* Условное отображение поля "Профессия" */}
+            {shouldShowOccupationDetails && (
+              <div className="mt-4">
+                <TextField
+                  title="Профессия"
+                  value={occupationDetails}
+                  onChange={setOccupationDetails}
+                  placeholder="Например: Frontend разработчик, Маркетолог, Учитель"
+                />
+              </div>
+            )}
 
             <InlineSelect
               title="Цель"
