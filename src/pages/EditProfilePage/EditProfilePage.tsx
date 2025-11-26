@@ -236,7 +236,7 @@ const EditProfilePage = () => {
       smoking_status: smokingOption,
     }),
     ...(religionOption !== myProfileData?.religion && {
-      religion: religionOption,
+      religion: null,
     }),
     ...(cityValue?.id !== myProfileData?.hometown_id && {
       hometown_id: cityValue?.id,
@@ -492,20 +492,6 @@ const EditProfilePage = () => {
               ]}
               value={smokingOption}
               onChange={setSmokingOption}
-            />
-
-            <InlineSelect
-              title="Религиозное предпочтение"
-              options={[
-                "Христианство",
-                "Ислам",
-                "Иудаизм",
-                "Буддизм",
-                "Атеизм",
-                "Другое",
-              ]}
-              value={religionOption}
-              onChange={setReligionOption}
             />
 
             <SuggestionField
