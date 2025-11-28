@@ -16,6 +16,7 @@ import { useBlockUser } from "../ProfilePage/service/useBlockUser";
 import { useUnblockUser } from "../ProfilePage/service/useUnblockUser";
 import { useIsUserBlocked } from "../ProfilePage/hooks/useIsUserBlocked";
 import OptimizedImage from "../../shared/Components/OptimizedImage/OptimizedImage";
+import { calculateAge } from "../../shared/utils/calculateAge";
 
 const ChatDialogPage = () => {
   const { companionId } = useParams<{ companionId: string }>();
@@ -107,7 +108,7 @@ const ChatDialogPage = () => {
     return <Error />;
   }
 
-  const userData = user[0];
+  const userData: any = user[0];
 
   return (
     <div className="h-screen flex flex-col">
@@ -140,7 +141,7 @@ const ChatDialogPage = () => {
                   to={"/profile/" + companionId}
                 >
                   {userData.username || userData.name || ""}
-                  {userData.age ? `, ${userData.age}` : ""}
+                  {userData.birth_date ? `, ${calculateAge(userData.birth_date)}` : ""}
                 </Link>
 
                 {/* Статус блокировки в заголовке */}

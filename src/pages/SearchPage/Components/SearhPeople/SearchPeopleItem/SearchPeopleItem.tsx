@@ -4,13 +4,14 @@ import { baseURLforImages } from "../../../../../shared/plugin/axios";
 import type { userTypes } from "../../../types/userTypes";
 import { setCompatibilityStyle } from "../../../utils/setCompatibilityStyle";
 import OptimizedImage from "../../../../../shared/Components/OptimizedImage/OptimizedImage";
+import { calculateAge } from "../../../../../shared/utils/calculateAge";
 
 const SearchPeopleItem = ({
   user,
   compatibility,
   isBlocked = false,
 }: {
-  user: userTypes;
+  user: any;
   compatibility: number;
   isBlocked?: boolean;
 }) => {
@@ -44,7 +45,7 @@ const SearchPeopleItem = ({
         <div className="flex justify-between">
           <h2 className="text-[0.875rem] font-semibold leading-5 text-left">
             {user.username || user.name || "Неизвестный"}
-            {user.age ? ", " : ""} {user.age}
+            {user.birth_date ? ", " : ""} {calculateAge(user.birth_date)}
           </h2>
           <div
             className={`${setCompatibilityStyle(
@@ -62,7 +63,7 @@ const SearchPeopleItem = ({
         </div>
         <div className="flex flex-col gap-1 mt-1">
           <div className="flex gap-1 flex-wrap">
-            {user.hashtags_list?.map((hashtag) => (
+            {user.hashtags_list?.map((hashtag: any) => (
               <HashTag key={hashtag} hashtagTitle={hashtag} />
             ))}
           </div>
