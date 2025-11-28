@@ -263,8 +263,9 @@ const EditProfilePage = () => {
     ...(occupation !== myProfileData?.occupation && { occupation }),
     ...(occupation !== myProfileData?.occupation && { occupation }),
     ...(occupationDetails !== myProfileData?.occupation_details && {
-      occupation_details: occupationDetails.trim() || null,
+      occupation_details: null,
     }),
+    ...{},
     ...(petOption !== myProfileData?.pets && { pets: petOption }),
     ...(animalType !== myProfileData?.animal_type && {
       animal_type: animalType,
@@ -326,18 +327,8 @@ const EditProfilePage = () => {
       ...(isBirthDateValid && { birth_date: birthDate }),
     };
 
-    console.log("=== DEBUG OCCUPATION DATA ===");
-    console.log("Occupation:", occupation);
-    console.log("Occupation details:", occupationDetails);
-    console.log("Should show occupation details:", shouldShowOccupationDetails);
-    console.log(
-      "Sending occupation_details:",
-      shouldShowOccupationDetails ? occupationDetails : null
-    );
-    console.log("Full data being sent:", dataToSend);
-    console.log("=== END DEBUG ===");
-
     fillProfile({ ...myProfileData, ...dataToSend });
+    console.log({ ...myProfileData, ...dataToSend });
   };
 
   useEffect(() => {
