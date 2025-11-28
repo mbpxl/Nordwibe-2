@@ -17,6 +17,9 @@ export const PhotoViewModal: React.FC<PhotoViewModalProps> = ({
   initialSlide = 0,
 }) => {
   if (!isOpen) return null;
+  if (photos[0] == null) {
+    return;
+  }
 
   return (
     <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">

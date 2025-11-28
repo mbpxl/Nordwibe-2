@@ -20,6 +20,7 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
   onPhotosUpdate,
   isMyAccount = true,
 }) => {
+  
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -28,6 +29,7 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
   const currentPhoto = photos[activeIndex];
 
   const handlePhotoClick = () => {
+
     if (!isMyAccount) {
       setIsViewModalOpen(true);
       return;
@@ -190,6 +192,7 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
       )}
 
       {/* Модальное окно просмотра фото - для всех аккаунтов */}
+      
       <PhotoViewModal
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}

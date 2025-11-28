@@ -6,7 +6,7 @@ const useFormatBirthDate = (initialValue = "") => {
 
   const formatDate = useCallback((rawValue: string): string => {
     const digits = rawValue.replace(/\D/g, "").slice(0, 8);
-    
+
     if (digits.length >= 5) {
       return `${digits.slice(0, 2)}/${digits.slice(2, 4)}/${digits.slice(4, 8)}`;
     }
@@ -27,7 +27,7 @@ const useFormatBirthDate = (initialValue = "") => {
 
   const validateDate = useCallback(() => {
     if (date.length !== 10) return false;
-    
+
     const day = Number(date.slice(0, 2));
     const month = Number(date.slice(3, 5));
     const year = Number(date.slice(6));

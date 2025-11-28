@@ -55,11 +55,11 @@ const EditProfilePage = () => {
   const [initialBirthDate, setInitialBirthDate] = useState<string>("");
 const { date, inputRef, handleChange, setDate } = useFormatBirthDate(initialBirthDate);
 
-useEffect(() => {
-  if (initialBirthDate && initialBirthDate !== date) {
-    setDate(initialBirthDate);
-  }
-}, [initialBirthDate, date, setDate]);
+// useEffect(() => {
+//   if (initialBirthDate && initialBirthDate !== date) {
+//     setDate(initialBirthDate);
+//   }
+// }, [initialBirthDate, date, setDate]);
   
   const [ageError, setAgeError] = useState<boolean>(false);
   const [usageGoalOption, setUsageGoalOption] = useState<string | null>(null);
@@ -191,8 +191,12 @@ useEffect(() => {
       // Инициализация даты рождения из сервера
       if (myProfileData.birth_date) {
         const formattedBirthDate = formatServerDateToInput(myProfileData.birth_date);
-        console.log(formattedBirthDate)
+        
+        // Мы сохраняем в initial (если он нужен для какой-то другой логики сравнения)
         setInitialBirthDate(formattedBirthDate);
+        
+        // ВАЖНО: Явно обновляем стейт хука ОДИН РАЗ при загрузке данных
+        setDate(formattedBirthDate); 
       }
 
       console.log("date", date);
@@ -234,7 +238,7 @@ useEffect(() => {
 
       setIsInitialized(true);
     }
-  }, [myProfileData, isInitialized]);
+  }, [myProfileData, isInitialized, setDate]);
 
   useEffect(() => {
     if (!isFormTouched && isInitialized) {
