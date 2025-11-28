@@ -65,7 +65,7 @@ const CodeStep: React.FC<Props> = ({
 
   const captcha_token = localStorage.getItem("captcha_token");
 
-  const { mutate, isError, isPending } = useConfirmPhone(handleSuccess);
+  const { mutate, isError, isPending, error } = useConfirmPhone(handleSuccess);
 
   const handleNext = useCallback(
     (e?: React.FormEvent) => {
@@ -78,6 +78,11 @@ const CodeStep: React.FC<Props> = ({
     },
     [captcha_token, code, fullPhoneNumber, mutate]
   );
+
+  if (isError) {
+    //@ts-ignore
+    console.log(error?.status);
+  }
 
   const handleCloseDeletionModal = () => {
     forceRedirectToWelcome();
@@ -118,8 +123,9 @@ const CodeStep: React.FC<Props> = ({
           </form>
 
           <WrongData
+            //@ts-ignore
+            errorCode={error?.status}
             isError={isError}
-            message={"Неправильный код. Попробуйте ещё раз"}
           />
         </section>
 
