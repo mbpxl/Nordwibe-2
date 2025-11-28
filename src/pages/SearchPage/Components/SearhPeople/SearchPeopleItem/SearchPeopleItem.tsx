@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import HashTag from "../../../../../shared/Components/HashTag/HashTag";
 import { baseURLforImages } from "../../../../../shared/plugin/axios";
-import type { userTypes } from "../../../types/userTypes";
 import { setCompatibilityStyle } from "../../../utils/setCompatibilityStyle";
 import OptimizedImage from "../../../../../shared/Components/OptimizedImage/OptimizedImage";
 import { calculateAge } from "../../../../../shared/utils/calculateAge";
