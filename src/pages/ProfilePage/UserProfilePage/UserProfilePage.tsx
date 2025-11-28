@@ -21,6 +21,7 @@ import BottomSheetModal from "../../../shared/Components/Modal/BottomSheetModal/
 import toast from "react-hot-toast";
 import { useUserTests } from "../hooks/useUserTests";
 import TestsBar from "../Components/TestsBar/TestsBar";
+import { calculateAge } from "../../../shared/utils/calculateAge";
 
 const UserProfilePage = () => {
   const { state } = useLocation();
@@ -144,7 +145,7 @@ const UserProfilePage = () => {
           <GoBackButton fromProfile />
           <h1 className={`${isBlocked ? "text-[14px]" : "text-[20px]"}`}>
             {user.username || user.name || ""}
-            {user.age ? ", " : ""} {user.age}
+            {user.birth_date ? ", " : ""} {calculateAge(user.birth_date)}
             {isBlocked && (
               <span className="ml-2 px-2 py-1 text-xs bg-red-100 text-red-600 rounded-full">
                 Заблокирован

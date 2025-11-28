@@ -10,13 +10,12 @@ import { useCreateHashtag, useGetHashtag } from "./service/useHashtag";
 import Modal from "../../shared/Components/Modal/Modal";
 import SaveButton from "./components/SaveButton/SaveButton";
 import { useGetMe } from "../ProfilePage/service/useGetMe";
-import { useFillProfile } from "../../shared/service/useFillProfileInfo";
 import { useNavigate } from "react-router-dom";
 import TextField from "./components/TextField/TextField";
 import BirthField from "./components/BirthField/BirthField";
 import useFormatBirthDate from "../AuthPage/hooks/useFormatBirthDate";
-import WrongData from "../AuthPage/Components/PhoneErrorMsg/PhoneErrorMsg";
 import PrivateSettingsList from "./components/Privacy/PrivateSettingsList/PrivateSettingsList";
+import { useFillProfile } from "../../shared/service/useFillProfileInfo";
 
 const EditProfilePage = () => {
   const {
@@ -33,7 +32,35 @@ const EditProfilePage = () => {
   const [genderValue, setGenderValue] = useState<"Мужской" | "Женский" | null>(
     null
   );
-  const { date, inputRef, handleChange } = useFormatBirthDate("");
+  
+  // Функция для преобразования даты из серверного формата в формат для поля ввода
+  const formatServerDateToInput = (serverDate: string): string => {
+    if (!serverDate) return "";
+    
+    try {
+      const date = new Date(serverDate);
+      if (isNaN(date.getTime())) return "";
+      
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      
+      return `${day}/${month}/${year}`;
+    } catch (error) {
+      console.error("Error formatting server date:", error);
+      return "";
+    }
+  };
+
+  const [initialBirthDate, setInitialBirthDate] = useState<string>("");
+const { date, inputRef, handleChange, setDate } = useFormatBirthDate(initialBirthDate);
+
+useEffect(() => {
+  if (initialBirthDate && initialBirthDate !== date) {
+    setDate(initialBirthDate);
+  }
+}, [initialBirthDate, date, setDate]);
+  
   const [ageError, setAgeError] = useState<boolean>(false);
   const [usageGoalOption, setUsageGoalOption] = useState<string | null>(null);
   const [petOption, setPetOption] = useState<string | null>(null);
@@ -77,29 +104,6 @@ const EditProfilePage = () => {
   const [pendingCreatedTag, setPendingCreatedTag] = useState<string | null>(
     null
   );
-
-  useEffect(() => {
-    console.log("Occupation changed to:", occupation);
-    console.log("Current occupationDetails:", occupationDetails);
-    console.log("Should show occupation details:", shouldShowOccupationDetails);
-  }, [occupation, occupationDetails]);
-
-  // Добавьте этот эффект для сброса profession при изменении occupation
-  useEffect(() => {
-    if (
-      isInitialized &&
-      occupation &&
-      occupation !== "Работаю" &&
-      occupation !== "Работаю из дома" &&
-      occupationDetails !== ""
-    ) {
-      console.log(
-        "Resetting occupationDetails because occupation changed to:",
-        occupation
-      );
-      setOccupationDetails("");
-    }
-  }, [occupation, isInitialized]);
 
   // Определяем, нужно ли показывать поле "Профессия"
   const shouldShowOccupationDetails =
@@ -184,6 +188,15 @@ const EditProfilePage = () => {
       setGenderValue(myProfileData.gender || "");
       setUsageGoalOption(myProfileData.usage_goal || null);
 
+      // Инициализация даты рождения из сервера
+      if (myProfileData.birth_date) {
+        const formattedBirthDate = formatServerDateToInput(myProfileData.birth_date);
+        console.log(formattedBirthDate)
+        setInitialBirthDate(formattedBirthDate);
+      }
+
+      console.log("date", date);
+
       // Новые поля: род занятий и профессия
       setOccupation(myProfileData.occupation || null);
       setOccupationDetails(myProfileData.occupation_details || "");
@@ -210,7 +223,6 @@ const EditProfilePage = () => {
       });
 
       // Хештеги
-
       if (myProfileData.hashtags_list) {
         const normalizedHashtags = normalizeHashtags(
           myProfileData.hashtags_list
@@ -248,63 +260,94 @@ const EditProfilePage = () => {
   const isBirthDateValid = date && date.length === 10;
   const isAgeValid = isBirthDateValid && isUserOver18(date);
 
-  const birthDate = isBirthDateValid
-    ? new Date(date.split("/").reverse().join("-")).toISOString()
-    : "";
-
-  const updatedUserData = {
-    ...(nameValue !== myProfileData?.username && { username: nameValue }),
-    ...(loginValue !== myProfileData?.name && { name: loginValue }),
-    ...(genderValue !== myProfileData?.gender && { gender: genderValue }),
-    ...(isBirthDateValid && { birth_date: birthDate }),
-    ...(usageGoalOption !== myProfileData?.usage_goal && {
-      usage_goal: usageGoalOption,
-    }),
-    ...(occupation !== myProfileData?.occupation && { occupation }),
-    ...(occupation !== myProfileData?.occupation && { occupation }),
-    ...(occupationDetails !== myProfileData?.occupation_details && {
-      occupation_details: null,
-    }),
-    ...{},
-    ...(petOption !== myProfileData?.pets && { pets: petOption }),
-    ...(animalType !== myProfileData?.animal_type && {
-      animal_type: animalType,
-    }),
-    ...(smokingOption !== myProfileData?.smoking_status && {
-      smoking_status: smokingOption,
-    }),
-    ...(religionOption !== myProfileData?.religion && {
-      religion: null,
-    }),
-    ...(cityValue?.id !== myProfileData?.hometown_id && {
-      hometown_id: cityValue?.id,
-    }),
-    ...(cityValue?.name !== myProfileData?.hometown_name && {
-      hometown_name: cityValue?.name,
-    }),
-    ...(budget.min !== String(myProfileData?.min_budget || "") && {
-      min_budget: +budget.min,
-    }),
-    ...(budget.max !== String(myProfileData?.max_budget || "") && {
-      max_budget: +budget.max,
-    }),
-    ...(durationOption !== myProfileData?.desired_length && {
-      desired_length: durationOption,
-    }),
-    ...{
-      hashtags_ids: hashtagsList.filter((t) => t.id).map((t) => t.id) || [],
-    },
+  // Функция для преобразования даты обратно в серверный формат
+  const formatDateToServer = (inputDate: string): string => {
+    if (!inputDate || inputDate.length !== 10) return "";
+    
+    try {
+      const [day, month, year] = inputDate.split("/").map(Number);
+      const dateObj = new Date(year, month - 1, day);
+      
+      // Форматируем в ISO строку с временем UTC
+      return dateObj.toISOString();
+    } catch (error) {
+      console.error("Error converting date to server format:", error);
+      return "";
+    }
   };
 
-  const filteredUserData = Object.fromEntries(
-    Object.entries(updatedUserData).filter(([_, value]) => {
-      if (value === null || value === undefined) return false;
-      if (Array.isArray(value)) return value.length > 0;
-      if (typeof value === "string") return value.trim() !== "";
-      if (typeof value === "number") return true;
-      return true;
-    })
-  );
+  const birthDate = isBirthDateValid ? formatDateToServer(date) : "";
+
+
+  const updatedUserData: any = {};
+
+if (nameValue !== (myProfileData?.username ?? "")) {
+  updatedUserData.username = nameValue;
+}
+
+if (loginValue !== (myProfileData?.name ?? "")) {
+  updatedUserData.name = loginValue || "...";
+}
+
+if (genderValue !== (myProfileData?.gender ?? null)) {
+  updatedUserData.gender = genderValue;
+}
+
+if (isBirthDateValid && birthDate !== (myProfileData?.birth_date ?? "")) {
+  updatedUserData.birth_date = birthDate;
+}
+
+if (usageGoalOption !== (myProfileData?.usage_goal ?? null)) {
+  updatedUserData.usage_goal = usageGoalOption;
+}
+
+if (occupation !== (myProfileData?.occupation ?? null)) {
+  updatedUserData.occupation = occupation;
+}
+
+if (occupationDetails !== (myProfileData?.occupation_details ?? "")) {
+  updatedUserData.occupation_details = shouldShowOccupationDetails
+    ? occupationDetails
+    : null;
+}
+
+if (petOption !== (myProfileData?.pets ?? null)) {
+  updatedUserData.pets = petOption;
+}
+
+if (animalType !== (myProfileData?.animal_type ?? null)) {
+  updatedUserData.animal_type = animalType;
+}
+
+if (smokingOption !== (myProfileData?.smoking_status ?? null)) {
+  updatedUserData.smoking_status = smokingOption;
+}
+
+if (religionOption !== (myProfileData?.religion ?? null)) {
+  updatedUserData.religion = religionOption;
+}
+
+if (cityValue?.id !== (myProfileData?.hometown_id ?? "")) {
+  updatedUserData.hometown_id = cityValue?.id || "";
+}
+
+if (cityValue?.name !== (myProfileData?.hometown_name ?? "")) {
+  updatedUserData.hometown_name = cityValue?.name || "";
+}
+
+if (budget.min !== String(myProfileData?.min_budget ?? "")) {
+  updatedUserData.min_budget = budget.min === "" ? null : +budget.min;
+}
+
+if (budget.max !== String(myProfileData?.max_budget ?? "")) {
+  updatedUserData.max_budget = budget.max === "" ? null : +budget.max;
+}
+
+if (durationOption !== (myProfileData?.desired_length ?? null)) {
+  updatedUserData.desired_length = durationOption;
+}
+
+updatedUserData.hashtags_ids = hashtagsList.filter(t => t.id).map(t => t.id);
 
   const handleUpdateProfileData = () => {
     if (!isBirthDateValid) {
@@ -322,13 +365,8 @@ const EditProfilePage = () => {
 
     setAgeError(false);
 
-    const dataToSend = {
-      ...filteredUserData,
-      ...(isBirthDateValid && { birth_date: birthDate }),
-    };
 
-    fillProfile({ ...myProfileData, ...dataToSend });
-    console.log({ ...myProfileData, ...dataToSend });
+    fillProfile({ ...myProfileData, ...updatedUserData });
   };
 
   useEffect(() => {
@@ -399,7 +437,6 @@ const EditProfilePage = () => {
     }
   }, [isCreateSuccess, pendingCreatedTag]);
 
-  const hasChanges = Object.keys(filteredUserData).length > 0;
 
   return (
     <>
@@ -463,18 +500,16 @@ const EditProfilePage = () => {
 
             <div ref={birthFieldRef}>
               <BirthField
-                title={"Дата рождения *"}
+                title={"Дата рождения"}
                 value={date}
                 onChange={handleChange}
                 ref={inputRef}
-                error={
-                  !isBirthDateValid && isFormTouched
-                    ? "Обязательное поле"
-                    : undefined
-                }
+                error={ageError ? "Вам должно быть больше 18 лет" : undefined}
                 ageError={ageError}
               />
             </div>
+
+            {/* Убрано предупреждение о заполнении даты рождения */}
 
             {/* Новый блок: Род занятий */}
             <InlineSelect
@@ -491,7 +526,6 @@ const EditProfilePage = () => {
                   title="Профессия"
                   value={occupationDetails}
                   onChange={setOccupationDetails}
-                  placeholder="Например: Frontend разработчик, Маркетолог, Учитель"
                 />
               </div>
             )}
@@ -599,15 +633,10 @@ const EditProfilePage = () => {
                 isProfileDataError ||
                 isProfileDataLoading ||
                 !isBirthDateValid ||
-                !hasChanges ||
                 ageError
               }
               isPending={isPending}
               onSubmit={handleUpdateProfileData}
-            />
-            <WrongData
-              isError={Boolean(!isBirthDateValid)}
-              message={"Заполните дату рождения"}
             />
           </div>
         ) : (

@@ -1,7 +1,7 @@
 type TextFieldTypes = {
   title: string;
   value: string;
-  placeholder: string;
+  placeholder?: string;
   onChange: (value: string) => void;
 };
 

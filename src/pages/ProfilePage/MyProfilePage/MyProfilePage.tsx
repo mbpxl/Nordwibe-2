@@ -18,6 +18,7 @@ import { useGetTests } from "../../TestPage/service/useGetTests";
 import BottomSheetModal from "../../../shared/Components/Modal/BottomSheetModal/BottomSheetModal";
 import ProfileActionsMenu from "../Components/ProfileActionsMenu/ProfileActionsMenu";
 import { useNavigate } from "react-router-dom";
+import { calculateAge } from "../../../shared/utils/calculateAge";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -93,7 +94,7 @@ const ProfilePage = () => {
         <GoBackButton fromProfile />
         <h1>
           {data.username || data.name || ""}
-          {data.age ? ", " : ""} {data.age}
+          {data.birth_date ? ", " : ""} {calculateAge(data.birth_date)}
         </h1>
         <button onClick={handleShowMoreClick}>
           <img src="/icons/show_more.svg" alt="Показать меню" />
