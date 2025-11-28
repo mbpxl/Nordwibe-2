@@ -28,7 +28,7 @@ const BlackListPage = () => {
   }
 
   if (!ranking?.length || !blockedUsers?.length) {
-    return <NoResults />;
+    return <NoResults message={"Заблокированных пользователей нет"}/>;
   }
 
   return (
