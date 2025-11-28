@@ -1,6 +1,6 @@
 import Wrapper from "../Wrapper/Wrapper";
 
-const NoResults = () => {
+const NoResults: React.FC<{message?: string}> = ({message}) => {
   return (
     <Wrapper className="bg-purple-background-wrap min-h-screen">
       <div className="flex flex-col items-center text-center text-purple-main-disabled text-[1.125rem] font-bold leading-6">
@@ -9,7 +9,7 @@ const NoResults = () => {
           src="/icons/no-results.svg"
           alt="no results"
         />
-        <h1>Похоже никого не нашлось! Попробуйте изменить фильтр.</h1>
+        <h1>{message ? message : "Похоже никого не нашлось! Попробуйте изменить фильтр."}</h1>
       </div>
     </Wrapper>
   );
