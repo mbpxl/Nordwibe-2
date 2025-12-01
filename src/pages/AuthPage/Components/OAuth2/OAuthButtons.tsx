@@ -32,7 +32,7 @@ const OAuthButtons: React.FC = () => {
   };
 
   return (
-    <div className="mt-6 space-y-3">
+    <div className="mt-2 space-y-3">
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
           <div className="w-full border-t border-gray-300" />

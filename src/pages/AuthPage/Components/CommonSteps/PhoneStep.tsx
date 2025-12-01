@@ -9,11 +9,8 @@ import type { StepPropsTypes } from "../../types/SignUpTypes";
 
 import goBackIcon from "/icons/arrow-left.svg";
 import Continue from "../Continue/Continue";
-import Heading from "../SignUp/Heading";
 import UserAgreement from "../UserAgreement/UserAgreement";
 import { WELCOME_ROUTE } from "../../../../shared/utils/consts";
-import React from "react";
-import ContinueWrapper from "../ContinueWrapper/ContinueWrapper";
 import WrongData from "../PhoneErrorMsg/PhoneErrorMsg";
 import { clearAuthUserData } from "../../../../shared/plugin/clearUserData";
 import OAuthButtons from "../OAuth2/OAuthButtons";
@@ -35,8 +32,7 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
     []
   );
 
-  const { data: captchaPublicToken, isError: isCaptchaError } =
-    useGetCaptchaToken();
+  const { data: captchaPublicToken } = useGetCaptchaToken();
 
   useEffect(() => {
     const savedToken = localStorage.getItem("captcha_token");
@@ -59,10 +55,6 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
     onNext();
   }, [phone, updateForm, onNext]);
 
-  if (isCaptchaError) {
-    console.error("Ошибка получения токена капчи");
-  }
-
   const {
     sendPhoneRequest,
     isPending,
@@ -79,10 +71,9 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
       return;
     }
 
-    // Обновляем состояние токена
     setCaptchaToken(currentToken);
-
     clearAuthUserData();
+
     const fullPhoneNumber = `+7${phone}`;
 
     sendPhoneRequest({
@@ -113,76 +104,106 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
   const isPhoneValid = phone.length === 10 && isCaptchaVerified && !isPending;
 
   return (
-    <main className="pt-[1rem]">
-      <article className="pl-3">
-        <Link to={WELCOME_ROUTE}>
-          <img src={goBackIcon} alt="Go Back" />
-        </Link>
-      </article>
-
-      <Heading title="Введите номер телефона" subTitle="" />
-
-      <section className="mt-6 flex flex-col items-center gap-2">
-        <form
-          className="w-[308px] font-medium text-[1.938rem] leading-10"
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleNext();
-          }}
+    <main className="px-2 min-h-screen lg:bg-[url(/imgs/desktop/sign-background.jpg)] bg-cover flex items-center justify-center">
+      <div
+        className="flex flex-col items-center justify-between h-screen
+                      lg:h-[500px] lg:w-[736px] lg:overflow-visible 
+                      lg:bg-white lg:rounded-2xl lg:shadow-xl lg:justify-start"
+      >
+        <div
+          className="w-full h-full flex flex-col items-center justify-between
+                      lg:w-[616px] lg:h-auto lg:mx-auto lg:flex lg:flex-col lg:items-center lg:relative"
         >
-          <div className="relative">
-            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[#1A1A1A] font-semibold">
-              +7
-            </span>
-            <input
-              type="tel"
-              inputMode="numeric"
-              ref={inputRef}
-              value={formatPhone(phone)}
-              onChange={(e) => handleInputChange(e, setPhone, inputRef)}
-              onKeyDown={handleKeyDown}
-              placeholder="(000) 000-00-00"
-              className="w-full pl-[3.5rem] pr-4 py-0.5 text-[#1A1A1A] outline-none focus:outline-none"
-            />
-          </div>
-        </form>
+          {/* === Первый блок - заголовок, поле ввода, капча, OAuth === */}
+          <div className="flex flex-col items-center w-full text-center pt-[8vh] lg:pt-0">
+            {/* === Назад + заголовок === */}
+            <div className="relative flex items-center justify-center w-full lg:mt-8 lg:mb-6">
+              <Link
+                to={WELCOME_ROUTE}
+                className="absolute left-0 top-1/2 -translate-y-1/2
+                           text-purple-main font-medium
+                           lg:w-[44px] lg:h-[44px] lg:bg-[#E1E1F3]
+                           lg:rounded-xl lg:flex lg:items-center lg:justify-center"
+              >
+                <img src={goBackIcon} alt="Назад" className="w-5 h-5" />
+              </Link>
 
-        <div className="flex flex-col items-center gap-2">
-          <div key={captchaKey}>
-            <SmartCaptcha
-              sitekey={captchaPublicToken}
-              language="ru"
-              onSuccess={handleCaptchaSuccess}
+              <h1 className="font-semibold text-[1.55rem] leading-[32px] lg:text-[32px] lg:leading-[40px]">
+                Введите номер телефона
+              </h1>
+            </div>
+
+            {/* === Поле ввода === */}
+            <form
+              className="mt-4 w-[308px] mx-auto"
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleNext();
+              }}
+            >
+              <div className="relative w-full mx-auto">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-[31px] text-[#1A1A1A]">
+                  +7
+                </span>
+
+                <input
+                  type="tel"
+                  inputMode="numeric"
+                  ref={inputRef}
+                  value={formatPhone(phone)}
+                  onChange={(e) => handleInputChange(e, setPhone, inputRef)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="(000) 000-00-00"
+                  className="w-full pl-[4rem] pr-4 py-2 text-[#1A1A1A] font-medium text-[31px] leading-[40px] outline-none
+                             lg:border-b-2 lg:border-gray-300 lg:focus:border-purple-main"
+                />
+              </div>
+            </form>
+
+            {/* === Капча === */}
+            <div className="w-full flex justify-center mt-2 lg:mt-2">
+              <div className="lg:p-4 lg:border lg:border-gray-200 lg:rounded-xl lg:shadow-sm lg:bg-gray-50">
+                <SmartCaptcha
+                  key={captchaKey}
+                  sitekey={captchaPublicToken}
+                  language="ru"
+                  onSuccess={handleCaptchaSuccess}
+                />
+              </div>
+            </div>
+
+            {captchaError && (
+              <WrongData
+                isError={true}
+                message="Пожалуйста, пройдите проверку капчи"
+              />
+            )}
+
+            <WrongData
+              isError={isPhoneError}
+              message="Неправильный формат номера телефона!"
             />
+
+            {/* === OAuth кнопки === */}
+            <div className="w-full">
+              <OAuthButtons />
+            </div>
+          </div>
+
+          {/* === Второй блок - кнопка "Получить код" и UserAgreement === */}
+          <div className="w-full flex flex-col items-center pb-[6.8vh] lg:pb-0">
+            <div className="w-full mt-2 lg:mt-2">
+              <Continue
+                handleNext={handleNext}
+                isPending={isPending}
+                isValid={isPhoneValid}
+                title="Получить код"
+              />
+              <UserAgreement />
+            </div>
           </div>
         </div>
-      </section>
-
-      <OAuthButtons />
-
-      <WrongData
-        isError={isPhoneError}
-        message={"Неправильный формат номера телефона!"}
-      />
-
-      {captchaError && (
-        <div className="flex flex-col items-center gap-2">
-          <WrongData
-            isError={true}
-            message={"Пожалуйста, пройдите проверку капчи"}
-          />
-        </div>
-      )}
-
-      <ContinueWrapper>
-        <Continue
-          handleNext={handleNext}
-          isPending={isPending}
-          isValid={isPhoneValid}
-          title="Получить код"
-        />
-        <UserAgreement />
-      </ContinueWrapper>
+      </div>
     </main>
   );
 };
