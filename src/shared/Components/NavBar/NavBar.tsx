@@ -10,12 +10,19 @@ import quizIcon from "/icons/navbar/quiz.svg";
 import quizIconActive from "/icons/navbar/quiz-active.svg";
 import profileIcon from "/icons/navbar/profile.svg";
 import profileIconActive from "/icons/navbar/profile-active.svg";
+
 import { useHasUnreadMessages } from "../../../pages/ChatPage/hooks/useHasUnreadMessages";
+import { useGetMe } from "../../../pages/ProfilePage/service/useGetMe";
+import { baseURLforImages } from "../../plugin/axios";
+import OptimizedImage from "../OptimizedImage/OptimizedImage";
 
 const NavBar = () => {
+  const { data: myData, isLoading, isError } = useGetMe();
+
   const location = useLocation();
   const hasUnreadMessages = useHasUnreadMessages();
-  const menuItems = [
+
+  const mobileMenuItems = [
     {
       path: "/search",
       icon: searchUsersIcon,
@@ -49,19 +56,31 @@ const NavBar = () => {
     },
   ];
 
+  const desktopMenuItems = [
+    { path: "/", label: "Главная" },
+    { path: "/search", label: "Поиск людей" },
+    { path: "/chat", label: "Чаты", hasNotification: hasUnreadMessages },
+    { path: "/quiz", label: "Квизы" },
+  ];
+
   const isActive = (path: any) => {
-    if (path === "/") {
-      return location.pathname === "/";
-    }
+    if (path === "/") return location.pathname === "/";
     return location.pathname.startsWith(path);
   };
 
   return (
-    <nav className="fixed bottom-0 w-full z-30">
-      <div className="bg-white px-2">
+    <nav
+      className="
+        fixed bottom-0 w-full z-30 bg-white
+        lg:top-0 lg:bottom-auto
+      "
+    >
+      {/* ================= MOBILE NAVIGATION ================= */}
+      <div className="lg:hidden bg-white px-2">
         <ul className="flex justify-center gap-[2.5rem] pt-[0.531rem] pb-[1.094rem] text-[#A0A0A0]">
-          {menuItems.map((item) => {
+          {mobileMenuItems.map((item) => {
             const active = isActive(item.path);
+
             return (
               <li
                 key={item.path}
@@ -81,10 +100,12 @@ const NavBar = () => {
                       <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></div>
                     )}
                   </div>
+
                   <p
-                    className={`transition delay-50 text-[0.5rem] leading-2 font-bold ${
-                      active ? "text-purple-main" : "text-[#A0A0A0]"
-                    }`}
+                    className={`
+                      transition delay-50 text-[0.5rem] leading-2 font-bold 
+                      ${active ? "text-purple-main" : "text-[#A0A0A0]"}
+                    `}
                   >
                     {item.label}
                   </p>
@@ -93,6 +114,67 @@ const NavBar = () => {
             );
           })}
         </ul>
+      </div>
+
+      {/* ================= DESKTOP NAVIGATION ================= */}
+      <div
+        className="
+          hidden lg:flex items-center justify-between
+          mx-auto px-2 max-w-[1340px] h-[60px]
+        "
+      >
+        {/* ЛОГОТИП */}
+        <Link to="/" className="text-2xl font-bold text-purple-main w-[164px]">
+          <img src="/imgs/desktop/logo.png" alt="" />
+        </Link>
+
+        {/* ТЕКСТОВЫЕ РАЗДЕЛЫ */}
+        <ul className="flex items-center xl:gap-40 gap-10 text-base font-medium">
+          {desktopMenuItems.map((item) => (
+            <li key={item.path}>
+              <Link
+                to={item.path}
+                className={`
+                  transition-colors
+                  ${
+                    isActive(item.path)
+                      ? "text-purple-main font-semibold"
+                      : "text-gray-500"
+                  }
+                `}
+              >
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        {/* АВАТАР + НАСТРОЙКИ */}
+        <div className="flex items-center gap-5">
+          <Link to="/profile">
+            {!myData?.avatar_url ? (
+              <div className="flex w-[44px] h-[44px] rounded-xl justify-center items-center bg-purple-sub-button text-white font-semibold text-4xl">
+                {myData?.username
+                  ? myData?.username[0].toUpperCase()
+                  : myData?.name?.charAt(0) || "П"}
+              </div>
+            ) : (
+              <OptimizedImage
+                className="rounded-xl"
+                src={baseURLforImages + myData?.avatar_url}
+                alt="avatar"
+                width={44}
+                height={44}
+                quality={50}
+                priority={true}
+              />
+            )}
+          </Link>
+
+          <Link to="/settings">
+            <img src="/icons/gear.svg" className="w-7 h-7" alt="settings" />
+          </Link>
+        </div>
       </div>
     </nav>
   );

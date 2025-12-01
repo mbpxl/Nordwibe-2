@@ -18,28 +18,38 @@ const News = () => {
   }
 
   return (
-    <div className="max-w-[630px] m-auto">
-      <div className="py-0.5 ml-3 flex flex-col">
-        <div className="text-[0.875rem] font-semibold leading-3 text-black-heading self-left">
+    <div className="max-w-[630px] m-auto lg:p-5 lg:mt-10 lg:max-w-[1340px] lg:border lg:border-gray-200 lg:bg-white lg:rounded-lg lg:shadow-sm">
+      <div className="py-0.5 ml-3 flex flex-col lg:ml-0">
+        <div className="text-[0.875rem] font-semibold leading-3 text-black-heading lg:text-[1.5rem] lg:leading-none lg:font-bold">
           Новости сообщества
         </div>
 
         <div className="mt-[11px] overflow-x-auto scrollbar-none">
-          <ul className="flex gap-3.5 w-max px-1">
-            {data?.map((story: any, i: any) => (
+          <ul className="flex gap-3.5 w-max px-1 lg:gap-4 lg:px-0">
+            {data?.map((story: any, i: number) => (
               <li key={story.uuid}>
                 <button
                   onClick={() => {
                     setCurrentStory(i);
                     setIsOpen(true);
                   }}
-                  className="w-[50px] h-[50px] rounded-full overflow-hidden focus:outline-none"
+                  className="
+                    w-[50px] h-[50px] rounded-full overflow-hidden focus:outline-none
+                    lg:w-[152px] lg:h-[196px] lg:rounded-xl lg:shadow-sm lg:border lg:border-gray-200
+                    flex items-center justify-center
+                  "
                 >
+                  {/* Мобильная версия — иконка */}
                   <img
-                    src={"/icons/nordwibe/nordwibe.svg"}
+                    src="/icons/nordwibe/nordwibe.svg"
                     alt={story.title}
-                    className="object-cover w-full h-full"
+                    className="object-cover w-full h-full lg:hidden"
                   />
+
+                  {/* Desktop версия — текст на фиолетовом фоне */}
+                  <div className="hidden lg:flex w-full h-full bg-purple-main text-white font-bold text-center items-center justify-center rounded-lg">
+                    Что такое Nordwibe?
+                  </div>
                 </button>
               </li>
             ))}
@@ -47,6 +57,7 @@ const News = () => {
         </div>
       </div>
 
+      {/* Модалка Stories */}
       {isOpen && currentStory !== null && (
         <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
           <Stories
@@ -54,8 +65,8 @@ const News = () => {
               url: baseURLforImages + part.image_url,
               header: {
                 heading: data[currentStory].title,
-                subheading: "", // например, сюда можно дату или описание
-                profileImage: "/icons/nordwibe/nordwibe.svg", // можно заменить на аватарку автора
+                subheading: "",
+                profileImage: "/icons/nordwibe/nordwibe.svg",
               },
               seeMore: ({ close }: any) => (
                 <div
@@ -72,6 +83,7 @@ const News = () => {
             height="100%"
             onAllStoriesEnd={() => setIsOpen(false)}
           />
+
           <button
             onClick={() => setIsOpen(false)}
             className="absolute top-4 right-4 text-white text-2xl"

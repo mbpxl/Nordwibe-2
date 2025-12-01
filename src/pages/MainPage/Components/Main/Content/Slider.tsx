@@ -1,11 +1,14 @@
-// компонента для слайдера, который под сторисами на главной странице
 import content_slider from "/imgs/content-slider/content-slider.png";
 
 const Slider = () => {
   return (
-    <div className="py-2 min-[338px]:mb-4 flex justify-center">
-      <div className="h-[8.5rem] rounded-[12px] w-full">
-        <img src={content_slider} alt="img" className="w-full" />
+    <div className="w-full max-w-6xl mx-auto rounded-xl mb-1 overflow-hidden shadow-2xl lg:w-[640px] lg:h-[360px] lg:flex-shrink-0">
+      <div className="w-full h-full object-cover">
+        <img
+          src={content_slider}
+          alt="img"
+          className="w-full h-full object-cover"
+        />
       </div>
     </div>
   );
