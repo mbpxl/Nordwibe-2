@@ -86,7 +86,7 @@ const StatusBar: React.FC<StatusBarProps> = ({
         </h1>
       </div>
 
-      <div className="flex flex-wrap gap-x-3">
+      <div className="flex flex-wrap gap-x-3 lg:gap-x-5 lg:gap-y-4">
         {statuses.map((item, idx) => (
           <Status key={idx} imgSrc={item!.icon} title={item!.title} />
         ))}

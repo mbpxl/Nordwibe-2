@@ -81,7 +81,7 @@ const HashTagBar = ({
         <div className="flex flex-wrap gap-x-2 gap-y-2">
           {hashTags.map((hashTag: any) => (
             <div key={hashTag} className="shrink-0">
-              <HashTag hashtagTitle={hashTag} />
+              <HashTag hashtagTitle={hashTag} isMyProfile={isMyProfile} />
             </div>
           ))}
         </div>

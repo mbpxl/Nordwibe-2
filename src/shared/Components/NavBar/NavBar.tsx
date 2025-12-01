@@ -15,12 +15,22 @@ import { useHasUnreadMessages } from "../../../pages/ChatPage/hooks/useHasUnread
 import { useGetMe } from "../../../pages/ProfilePage/service/useGetMe";
 import { baseURLforImages } from "../../plugin/axios";
 import OptimizedImage from "../OptimizedImage/OptimizedImage";
+import Loading from "../Loading/Loading";
+import Error from "../ErrorPage/ErrorPage";
 
 const NavBar = () => {
   const { data: myData, isLoading, isError } = useGetMe();
 
   const location = useLocation();
   const hasUnreadMessages = useHasUnreadMessages();
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (isError) {
+    return <Error />;
+  }
 
   const mobileMenuItems = [
     {
@@ -76,7 +86,14 @@ const NavBar = () => {
       "
     >
       {/* ================= MOBILE NAVIGATION ================= */}
-      <div className="lg:hidden bg-white px-2">
+      <div
+        className={`${
+          location.pathname == "/settings" ||
+          location.pathname.startsWith("/profile/")
+            ? "hidden"
+            : ""
+        } lg:hidden bg-white px-2`}
+      >
         <ul className="flex justify-center gap-[2.5rem] pt-[0.531rem] pb-[1.094rem] text-[#A0A0A0]">
           {mobileMenuItems.map((item) => {
             const active = isActive(item.path);
@@ -172,7 +189,15 @@ const NavBar = () => {
           </Link>
 
           <Link to="/settings">
-            <img src="/icons/gear.svg" className="w-7 h-7" alt="settings" />
+            {location.pathname == "/settings" ? (
+              <img
+                src="/icons/settings-active.svg"
+                className="w-7 h-7"
+                alt="settings"
+              />
+            ) : (
+              <img src="/icons/gear.svg" className="w-7 h-7" alt="settings" />
+            )}
           </Link>
         </div>
       </div>

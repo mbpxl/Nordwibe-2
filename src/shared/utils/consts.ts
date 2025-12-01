@@ -31,9 +31,4 @@ export const TEST_RESULT_PAGE = "/test/:uuid/result";
 export const PRIVACY_ROUTE = "/privacy";
 
 // СТРАНИЦЫ, ГДЕ БУДЕТ СКРЫТ НАВБАР
-export const hideNavBarRoutes = [
-  "/sign-up",
-  "/sign-in",
-  "/welcome",
-  "/settings",
-];
+export const hideNavBarRoutes = ["/sign-up", "/sign-in", "/welcome"];

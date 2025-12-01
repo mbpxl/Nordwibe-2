@@ -130,7 +130,7 @@ const SettingsButton: React.FC<SettingsButtonTypes> = ({
         <>
           <button
             onClick={handleClick}
-            className={`${commonStyles} ${
+            className={`cursor-pointer ${commonStyles} ${
               isPendingLogout || isPendingDelete
                 ? "bg-gray-400"
                 : isRed

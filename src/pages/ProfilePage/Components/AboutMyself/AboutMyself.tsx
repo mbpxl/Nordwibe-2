@@ -91,8 +91,9 @@ const AboutMyself = ({
           О себе
         </h1>
       )}
-
-      <ShowMore maxHeight={72}>{about}</ShowMore>
+      <div className="p-2 border-purple-main border-1 rounded-xl">
+        <ShowMore maxHeight={72}>{about}</ShowMore>
+      </div>
     </div>
   );
 };
