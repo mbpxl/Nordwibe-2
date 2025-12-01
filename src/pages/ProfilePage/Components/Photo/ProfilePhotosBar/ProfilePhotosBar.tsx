@@ -20,7 +20,6 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
   onPhotosUpdate,
   isMyAccount = true,
 }) => {
-  
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -29,7 +28,6 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
   const currentPhoto = photos[activeIndex];
 
   const handlePhotoClick = () => {
-
     if (!isMyAccount) {
       setIsViewModalOpen(true);
       return;
@@ -59,18 +57,16 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
   if (photos.length === 1) {
     return (
       <>
-        <div className="w-full h-[136px] flex justify-center items-center overflow-hidden">
+        <div className="w-full  flex justify-center items-center overflow-hidden">
           <button
             onClick={handlePhotoClick}
-            className="w-[136px] h-[136px] rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-purple-main"
+            className="w-[136px] h-[136px] lg:w-[300px] lg:h-[300px] lg:rounded-none rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-purple-main"
           >
             {photos[0] ? (
               <OptimizedImage
                 className="object-cover"
                 src={baseURLforImages + photos[0]}
                 alt="avatar"
-                width={136}
-                height={136}
                 quality={30}
                 priority={true}
               />
@@ -192,7 +188,7 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
       )}
 
       {/* Модальное окно просмотра фото - для всех аккаунтов */}
-      
+
       <PhotoViewModal
         isOpen={isViewModalOpen}
         onClose={() => setIsViewModalOpen(false)}

@@ -20,15 +20,15 @@ const Сompatibility: React.FC<СompatibilityProps> = ({
   return (
     <div
       onClick={handleClick}
-      className={`flex flex-col items-center ${
+      className={`flex max-lg:flex-col lg:gap-12 lg:justify-center items-center ${
         isBlocked ? "cursor-not-allowed opacity-50" : "cursor-pointer"
       }`}
     >
-      <h1 className="text-[0.75rem] text-black-heading font-semibold leading-[0.875rem]">
+      <h1 className="text-[0.75rem] lg:text-[20px] text-black-heading font-semibold leading-[0.875rem]">
         Совместимость
       </h1>
       <div
-        className={`relative rounded-[12px] mt-0.5 py-1 px-2 text-white ${
+        className={`relative rounded-[12px] mt-0.5 py-1 px-2 lg:py-2 lg:px-3 lg:text-nowrap text-white ${
           isBlocked ? "bg-gray-400" : setCompatibilityStyle(compatibility)
         }`}
       >

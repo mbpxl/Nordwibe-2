@@ -8,7 +8,6 @@ import StatusBar from "../Components/StatusBar/StatusBar";
 import { useGetUser } from "../../SearchPage/service/useGetUser";
 import Loading from "../../../shared/Components/Loading/Loading";
 import Error from "../../../shared/Components/ErrorPage/ErrorPage";
-import ActionBar from "../Components/ActionBar/ActionBar";
 import { GoBackButton } from "../../../shared/Components/GoBackButton/GoBackButton";
 import { useGetMe } from "../service/useGetMe";
 import { useState } from "react";
@@ -22,6 +21,7 @@ import toast from "react-hot-toast";
 import { useUserTests } from "../hooks/useUserTests";
 import TestsBar from "../Components/TestsBar/TestsBar";
 import { calculateAge } from "../../../shared/utils/calculateAge";
+import ActionBar from "../Components/ActionBar/ActionBar";
 
 const UserProfilePage = () => {
   const { state } = useLocation();
@@ -135,27 +135,29 @@ const UserProfilePage = () => {
   }
 
   return (
-    <div className="">
+    <div className="lg:bg-purple-background-wrap min-h-[100vh]">
       <Wrapper
         className={
-          "flex flex-col max-w-[475px] m-auto overflow-hidden pb-28 relative"
+          "flex flex-col max-w-[475px] m-auto overflow-hidden pb-28 relative lg:max-w-[1340px] lg:mt-20"
         }
       >
-        <TopicHeader>
-          <GoBackButton fromProfile />
-          <h1 className={`${isBlocked ? "text-[14px]" : "text-[20px]"}`}>
-            {user.username || user.name || ""}
-            {user.birth_date ? ", " : ""} {calculateAge(user.birth_date)}
-            {isBlocked && (
-              <span className="ml-2 px-2 py-1 text-xs bg-red-100 text-red-600 rounded-full">
-                Заблокирован
-              </span>
-            )}
-          </h1>
-          <button onClick={handleShowMoreClick}>
-            <img src="/icons/show_more.svg" alt="Показать меню" />
-          </button>
-        </TopicHeader>
+        <div className="lg:hidden">
+          <TopicHeader>
+            <GoBackButton fromProfile />
+            <h1 className={`${isBlocked ? "text-[14px]" : "text-[20px]"}`}>
+              {user.username || user.name || ""}
+              {user.birth_date ? ", " : ""} {calculateAge(user.birth_date)}
+              {isBlocked && (
+                <span className="ml-2 px-2 py-1 text-xs bg-red-100 text-red-600 rounded-full">
+                  Заблокирован
+                </span>
+              )}
+            </h1>
+            <button onClick={handleShowMoreClick}>
+              <img src="/icons/show_more.svg" alt="Показать меню" />
+            </button>
+          </TopicHeader>
+        </div>
 
         {/* Баннер, если пользователь заблокирован */}
         {isBlocked && (
@@ -188,29 +190,62 @@ const UserProfilePage = () => {
           />
         </BottomSheetModal>
 
-        <PhotoSlider
-          isMyAccount={false}
-          photos={[user.avatar_url]}
-          username={user.username}
-        />
-        <div>
-          <AboutMyself
-            gender={user.gender}
-            about={user.about}
-            name={user.username || user.name}
-            isMyProfile={false}
-          />
+        <div className="lg:flex lg:gap-3 lg:mt-4 lg:h-[460px]">
+          <div className="lg:grow-1 lg:p-5 lg:bg-white lg:rounded-xl ">
+            <PhotoSlider
+              isMyAccount={false}
+              photos={[user.avatar_url]}
+              username={user.username}
+            />
+            <div className="lg:p-5  lg:mt-0">
+              <div className="max-lg:hidden">
+                <ActionBar
+                  companionId={user.id}
+                  compatibility={compatibility!}
+                  isBlocked={isBlocked}
+                />
+              </div>
+            </div>
+          </div>
 
-          <HashTagBar
-            gender={user.gender}
-            userName={user.username || user.name}
-            hashTags={user.hashtags_list}
-          />
-          <StatusBar
-            gender={user.gender}
-            userName={user.username || user.name}
-            data={user}
-          />
+          <div className="lg:basis-[980px] lg:p-5 lg:bg-white lg:rounded-xl">
+            <h1 className={`${isBlocked ? "text-[14px]" : "text-[20px]"}`}>
+              {user.username || user.name || ""}
+              {user.birth_date ? ", " : ""} {calculateAge(user.birth_date)}
+              {isBlocked && (
+                <span className="ml-2 px-2 py-1 text-xs bg-red-100 text-red-600 rounded-full">
+                  Заблокирован
+                </span>
+              )}
+            </h1>
+
+            <div className="lg:mt-4">
+              <AboutMyself
+                gender={user.gender}
+                about={user.about}
+                name={user.username || user.name}
+                isMyProfile={false}
+              />
+            </div>
+
+            <div className="lg:mt-4">
+              <HashTagBar
+                gender={user.gender}
+                userName={user.username || user.name}
+                hashTags={user.hashtags_list}
+              />
+            </div>
+
+            <div className="lg:mt-4">
+              <StatusBar
+                gender={user.gender}
+                userName={user.username || user.name}
+                data={user}
+              />
+            </div>
+          </div>
+        </div>
+        <div>
           {!isUserTestsLoading && (
             <TestsBar
               gender={user.gender}
@@ -221,11 +256,13 @@ const UserProfilePage = () => {
           )}
         </div>
       </Wrapper>
-      <ActionBar
-        companionId={user.id}
-        compatibility={compatibility!}
-        isBlocked={isBlocked}
-      />
+      <div className="lg:hidden">
+        <ActionBar
+          companionId={user.id}
+          compatibility={compatibility!}
+          isBlocked={isBlocked}
+        />
+      </div>
     </div>
   );
 };

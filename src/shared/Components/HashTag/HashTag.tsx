@@ -4,18 +4,30 @@ const HashTag: React.FC<{
   isCreating?: boolean;
   isFavorite?: boolean;
   isNotFavorite?: boolean;
-}> = ({ hashtagTitle, onRemove, isCreating, isFavorite, isNotFavorite }) => {
+  isMyProfile?: boolean;
+}> = ({
+  hashtagTitle,
+  onRemove,
+  isCreating,
+  isFavorite,
+  isNotFavorite,
+  isMyProfile,
+}) => {
   return (
     <div
       className={`flex items-center gap-1 ${
-        isFavorite
+        isMyProfile
+          ? "bg-[#EAEAFF]"
+          : isFavorite
           ? "bg-[#05A300]"
           : isNotFavorite
           ? "bg-[#FF2727]"
           : "bg-purple-main"
-      }  text-white px-2 py-1 rounded-[12px]`}
+      }  ${
+        isMyProfile ? "text-purple-main-disabled" : "text-white"
+      } px-2 py-1 lg:px-3 lg:py-2 rounded-[12px]`}
     >
-      <span className="text-[0.75rem] font-medium leading-[0.5rem]">
+      <span className="text-[0.75rem] lg:text-[1rem] font-medium leading-[0.5rem]">
         #{hashtagTitle}
       </span>
       {isCreating && (
