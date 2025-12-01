@@ -1,5 +1,3 @@
-//* компонента для карточек "поиск людей", "чаты", "квизы", "профиль" на главной странице
-
 import { Link } from "react-router-dom";
 import type { MainPageCartsTypes } from "../../../types/MainPageCartsTypes";
 import { useQuizProgress } from "../../../hooks/useQuizProgress";
@@ -70,27 +68,50 @@ const Carts = () => {
   ];
 
   return (
-    <div className="">
-      <div className="grid grid-cols-2 gap-2 mx-auto">
+    <div className="w-full lg:w-[696px] mx-auto max-lg:mb-20">
+      <div
+        className="
+      grid grid-cols-2 gap-2 lg:gap-x-4 lg:gap-y-4
+      auto-rows-min
+      place-items-stretch
+    "
+      >
         {carts.map((cart) => (
           <Link key={cart.id} to={cart.to}>
             <div
-              className={`min-[443px]: relative z-30 overflow-hidden bg-white rounded-[12px] p-4`}
+              className="
+            relative overflow-hidden bg-white rounded-[12px] p-4
+            shadow-sm hover:shadow-md transition-shadow
+            min-h-[140px] lg:min-h-[168px]
+          "
             >
               <img
                 src={cart.bg_image}
                 alt="img"
-                className="absolute -z-10 w-[100px] h-[100px] right-[-20px]"
+                className="
+              absolute top-2 right-[-12px] w-[100px] h-[100px] opacity-90 z-0 pointer-events-none
+              lg:w-[130px] lg:h-[130px] lg:right-[-8px]
+            "
               />
-              <h2 className="text-[1rem] text-black-heading leading-4 font-bold">
-                {cart.headind}
-              </h2>
-              <h3 className="mt-[0.5rem] text-black-heading text-[0.75rem] font-semibold leading-3">
-                {cart.message}
-              </h3>
-              <button className="mt-[2.7rem] min-[442px]:mt-[3.7rem] min-[486px]:mt-[5.7rem] min-[540px]:mt-[6.9rem] text-white bg-purple-main w-full py-1 rounded-[12px]">
-                Перейти
-              </button>
+
+              <div className="relative z-10">
+                <h2 className="text-[1rem] text-black-heading leading-4 font-bold lg:text-[1.25rem]">
+                  {cart.headind}
+                </h2>
+
+                <h3 className="mt-[0.5rem] text-black-heading text-[0.75rem] font-semibold lg:text-[0.9rem]">
+                  {cart.message}
+                </h3>
+
+                <button
+                  className="
+                mt-[2.7rem] min-[442px]:mt-[3.7rem] min-[486px]:mt-[5.7rem] min-[540px]:mt-[6.9rem]
+                text-white bg-purple-main w-full py-1 rounded-[12px] lg:hidden
+              "
+                >
+                  Перейти
+                </button>
+              </div>
             </div>
           </Link>
         ))}
