@@ -22,7 +22,7 @@ const QuizTestPage = () => {
   const { uuid } = useParams<{ uuid: string }>();
   const navigate = useNavigate();
 
-  const selectedQuiz = data.find((quiz: any) => quiz.uuid === uuid);
+  const selectedQuiz = data?.find((quiz: any) => quiz.uuid === uuid);
   if (!selectedQuiz) return <Error />;
 
   const quizData = selectedQuiz.quiz[0];

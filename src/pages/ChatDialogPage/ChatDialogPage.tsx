@@ -1,4 +1,4 @@
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useGetUser } from "../SearchPage/service/useGetUser";
 import TopicHeader from "../../shared/Components/TopicHeader/TopicHeader";
 import { GoBackButton } from "../../shared/Components/GoBackButton/GoBackButton";
@@ -24,7 +24,6 @@ interface ChatDialogPageProps {
 
 const ChatDialogPage = ({ isDesktop = false }: ChatDialogPageProps) => {
   const { companionId } = useParams<{ companionId: string }>();
-  const navigate = useNavigate();
 
   const {
     data: user,
