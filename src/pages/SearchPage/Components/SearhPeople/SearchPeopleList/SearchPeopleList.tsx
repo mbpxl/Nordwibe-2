@@ -49,7 +49,7 @@ const SearchPeopleList = ({ filters }: SearchPeopleListProps) => {
   return (
     <>
       {/* Мобильная версия */}
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <Wrapper className="bg-purple-background-wrap min-h-screen pt-1 pb-16">
           <div>
             {ranking.map((r) => {
@@ -68,7 +68,7 @@ const SearchPeopleList = ({ filters }: SearchPeopleListProps) => {
       </div>
 
       {/* Desktop версия */}
-      <div className="hidden md:block">
+      <div className="hidden lg:block">
         <div>
           {ranking.map((r) => {
             const user = usersMap.get(r.user_id);

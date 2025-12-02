@@ -19,9 +19,9 @@ const SearchPage = () => {
   };
 
   return (
-    <div className="md:bg-purple-background-wrap md:min-h-[100vh]">
+    <div className="lg:bg-purple-background-wrap lg:min-h-[100vh]">
       {/* Мобильная версия - оставляем как было */}
-      <div className="md:hidden">
+      <div className="lg:hidden">
         {!isFilterOpened && (
           <TopicHeader>
             <h1>Поиск людей</h1>
@@ -42,9 +42,9 @@ const SearchPage = () => {
       </div>
 
       {/* Desktop версия - две колонки */}
-      <div className="hidden md:block md:mt-10">
+      <div className="hidden lg:block lg:mt-10">
         <div className="max-w-[1340px] mx-auto px-4 py-6">
-          <div className="md:hidden">
+          <div className="lg:hidden">
             <TopicHeader>
               <h1 className="text-2xl font-bold">Поиск людей</h1>
               {/* На десктопе убираем кнопку фильтра - фильтр всегда открыт */}
