@@ -34,11 +34,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
     );
   }, [allMessages, companionId, currentUser]);
 
-  // Логика для отметки сообщений как прочитанных
   useEffect(() => {
     if (!currentUser || !filteredMessages.length || isChatBlocked) return;
 
-    // Находим непрочитанные сообщения от companionId к currentUser
     const unreadMessagesFromCompanion = filteredMessages.filter(
       (message: any) =>
         message.from_user_id === companionId &&

@@ -6,7 +6,7 @@ type QuizAnswerPayload = {
   answer_id: string;
 };
 
-const postQuiz = async (payload: QuizAnswerPayload) => {
+const postQuiz = async (payload: QuizAnswerPayload[]) => {
   const response = await api.post("/ranking/quiz", payload);
   return response.data;
 };

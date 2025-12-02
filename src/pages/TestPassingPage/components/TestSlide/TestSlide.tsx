@@ -16,7 +16,11 @@ import type {
 } from "../../../TestResultPage/types/test";
 import { baseURLforImages } from "../../../../shared/plugin/axios";
 
-const TestSlide = () => {
+interface TestSlideProps {
+  isDesktop?: boolean;
+}
+
+const TestSlide = ({ isDesktop = false }: TestSlideProps) => {
   const { data, isLoading, isError } = useGetTests();
   if (isLoading) return <Loading />;
   if (isError) return <Error />;
@@ -65,35 +69,90 @@ const TestSlide = () => {
   const [direction, setDirection] = useState<"forward" | "backward">("forward");
 
   return (
-    <Wrapper className="min-h-screen flex flex-col justify-between pb-[30px] items-center">
-      <div className="max-w-[344px] w-full flex-grow flex flex-col">
-        <div className="flex flex-col flex-grow">
-          <EducationSlideHeader heading={selectedTest.title} unit={"/test"} />
+    <>
+      {/* Мобильная версия */}
+      {!isDesktop && (
+        <Wrapper className="min-h-screen flex flex-col justify-between pb-[30px] items-center">
+          <div className="max-w-[344px] w-full flex-grow flex flex-col">
+            <div className="flex flex-col flex-grow">
+              <EducationSlideHeader
+                heading={selectedTest.title}
+                unit={"/test"}
+              />
 
-          <EducationImage image_url={baseURLforImages + slide.image_url} />
+              <EducationImage image_url={baseURLforImages + slide.image_url} />
 
-          <EducationTitle title={slide.question} />
+              <EducationTitle title={slide.question} />
 
-          <div className="flex-grow">
+              <div className="flex-grow">
+                <TestAnswersList
+                  answers={slide.answers}
+                  questionUuid={slide.uuid}
+                  selectedAnswerUuid={selectedAnswers[slide.uuid]?.answerId}
+                  onSelect={handleSelectAnswer}
+                />
+              </div>
+
+              <TestNext
+                setCurrentSlide={setCurrentSlide}
+                isLast={currentSlide === questions.length - 1}
+                disabled={!isAnswerSelected}
+                answers={Object.values(selectedAnswers)}
+                scaleMap={scaleMap}
+                title={selectedTest.title}
+              />
+            </div>
+          </div>
+        </Wrapper>
+      )}
+      {/* Desktop версия */}
+      {isDesktop && (
+        <div className="h-full flex flex-col">
+          {/* Заголовок (без крестика на desktop) */}
+          <div className="px-6 pt-6 flex-shrink-0">
+            <EducationSlideHeader
+              heading={selectedTest.title}
+              unit={"/test"}
+              isDesktop={true}
+            />
+          </div>
+
+          {/* Контент с прокруткой */}
+          <div className="flex-1 overflow-y-auto px-6">
+            {/* Картинка на всю ширину */}
+            <EducationImage
+              image_url={baseURLforImages + slide.image_url}
+              isDesktop={true}
+            />
+
+            {/* Вопрос */}
+            <EducationTitle title={slide.question} isDesktop={true} />
+
+            {/* Варианты ответов */}
             <TestAnswersList
               answers={slide.answers}
               questionUuid={slide.uuid}
               selectedAnswerUuid={selectedAnswers[slide.uuid]?.answerId}
               onSelect={handleSelectAnswer}
+              isDesktop={true}
             />
           </div>
 
-          <TestNext
-            setCurrentSlide={setCurrentSlide}
-            isLast={currentSlide === questions.length - 1}
-            disabled={!isAnswerSelected}
-            answers={Object.values(selectedAnswers)}
-            scaleMap={scaleMap}
-            title={selectedTest.title}
-          />
+          {/* Кнопка далее - фиксирована внизу */}
+          <div className="flex-shrink-0 p-6 border-t border-gray-200">
+            <TestNext
+              setCurrentSlide={setCurrentSlide}
+              isLast={currentSlide === questions.length - 1}
+              disabled={!isAnswerSelected}
+              answers={Object.values(selectedAnswers)}
+              scaleMap={scaleMap}
+              title={selectedTest.title}
+              isDesktop={true}
+            />
+          </div>
         </div>
-      </div>
-    </Wrapper>
+      )}
+    </>
   );
 };
 

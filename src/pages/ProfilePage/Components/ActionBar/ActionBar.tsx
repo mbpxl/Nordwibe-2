@@ -3,6 +3,7 @@ import MessageUserButton from "./MessageUserButton";
 import Сompatibility from "./Сompatibility";
 import Modal from "../../../../shared/Components/Modal/Modal";
 import { Link, useNavigate } from "react-router-dom";
+import { useIsDesktop } from "../../../../shared/hooks/useIsDesktop";
 
 interface ActionBarProps {
   companionId: string;
@@ -19,6 +20,7 @@ const ActionBar: React.FC<ActionBarProps> = ({
     useState<boolean>(false);
   const [isBlockedModalOpen, setIsBlockedModalOpen] = useState<boolean>(false);
   const navigate = useNavigate();
+  const isDesktop = useIsDesktop();
 
   const handleCompatibilityChange = () => {
     if (isBlocked) {
@@ -31,6 +33,8 @@ const ActionBar: React.FC<ActionBarProps> = ({
   const handleWriteMessage = () => {
     if (isBlocked) {
       setIsBlockedModalOpen(true);
+    } else if (isDesktop) {
+      navigate("/chat/" + companionId);
     } else {
       navigate("/chats/" + companionId);
     }

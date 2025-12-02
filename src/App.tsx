@@ -4,14 +4,22 @@ import NavBar from "./shared/Components/NavBar/NavBar";
 import { hideNavBarRoutes } from "./shared/utils/consts";
 import CookieConsent from "react-cookie-consent";
 import { Toaster } from "react-hot-toast";
+import { useIsDesktop } from "./shared/hooks/useIsDesktop";
 
 function AppContent() {
+  const isDesktop = useIsDesktop();
   const location = useLocation();
-  const shouldHideNavBar =
+
+  // Проверяем, нужно ли скрывать NavBar для текущего пути
+  const shouldHideNavBarForRoute =
     hideNavBarRoutes.includes(location.pathname) ||
-    ["/quiz/", "/quiz/test", "/test/", "/chats"].some((path) =>
-      location.pathname.startsWith(path)
+    ["/quiz/", "/settings", "/profile/", "/quiz/test", "/test/", "/chats"].some(
+      (path) => location.pathname.startsWith(path)
     );
+
+  // Скрываем NavBar только на мобильных устройствах для этих маршрутов
+  // На desktop NavBar всегда показывается (если не требуется скрыть)
+  const shouldHideNavBar = shouldHideNavBarForRoute && !isDesktop;
 
   return (
     <>
