@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import Error from "../../../../../shared/Components/ErrorPage/ErrorPage";
 import Loading from "../../../../../shared/Components/Loading/Loading";
 import Wrapper from "../../../../../shared/Components/Wrapper/Wrapper";
@@ -8,7 +7,6 @@ import { useGetChats } from "../../../service/useGetChats";
 import SupportChat from "../SupportChat/SupportChat";
 import ChatItem from "../ChatItem/ChatItem";
 import { useGetMe } from "../../../../ProfilePage/service/useGetMe";
-import TopicHeader from "../../../../../shared/Components/TopicHeader/TopicHeader";
 import search from "/icons/search.svg";
 
 type ChatMsg = {
@@ -26,7 +24,6 @@ interface ChatListProps {
 }
 
 const ChatList = ({ isDesktop = false }: ChatListProps) => {
-  const navigate = useNavigate();
   const { data: meData, isLoading: isMeLoading } = useGetMe();
   const currentUserId = meData?.id;
 

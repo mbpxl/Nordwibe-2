@@ -31,7 +31,6 @@ import SignInPage from "./pages/AuthPage/SignInPage";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import ErrorPage from "./shared/Components/ErrorPage/ErrorPage";
 import PrivacyPage from "./pages/PrivacyPage/PrivacyPage";
-import QuizPage from "./pages/QuizPage/QuizPage";
 import OAuthCallback from "./pages/AuthPage/Components/OAuth2/OAuthCallback";
 import TestWrapper from "./pages/TestPage/TestWrapper";
 import QuizWrapper from "./pages/QuizPage/QuizWrapper";
