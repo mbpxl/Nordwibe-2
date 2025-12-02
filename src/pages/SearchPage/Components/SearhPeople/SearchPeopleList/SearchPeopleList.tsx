@@ -1,4 +1,4 @@
-// SearchPeopleList.tsx
+// SearchPeopleList.tsx (обновленная версия)
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import Error from "../../../../../shared/Components/ErrorPage/ErrorPage";
@@ -47,21 +47,45 @@ const SearchPeopleList = ({ filters }: SearchPeopleListProps) => {
   const usersMap = new Map(users.map((u) => [u.id, u]));
 
   return (
-    <Wrapper className="bg-purple-background-wrap min-h-screen pt-1 pb-16">
-      <div>
-        {ranking.map((r) => {
-          const user = usersMap.get(r.user_id);
-          if (!user) return null;
-          return (
-            <SearchPeopleItem
-              key={r.user_id}
-              user={user}
-              compatibility={r.score}
-            />
-          );
-        })}
+    <>
+      {/* Мобильная версия */}
+      <div className="md:hidden">
+        <Wrapper className="bg-purple-background-wrap min-h-screen pt-1 pb-16">
+          <div>
+            {ranking.map((r) => {
+              const user = usersMap.get(r.user_id);
+              if (!user) return null;
+              return (
+                <SearchPeopleItem
+                  key={r.user_id}
+                  user={user}
+                  compatibility={r.score}
+                />
+              );
+            })}
+          </div>
+        </Wrapper>
       </div>
-    </Wrapper>
+
+      {/* Desktop версия */}
+      <div className="hidden md:block">
+        <div>
+          {ranking.map((r) => {
+            const user = usersMap.get(r.user_id);
+            if (!user) return null;
+            return (
+              <div className="not-first:mt-4">
+                <SearchPeopleItem
+                  key={r.user_id}
+                  user={user}
+                  compatibility={r.score}
+                />
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </>
   );
 };
 

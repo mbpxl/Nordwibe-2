@@ -1,6 +1,19 @@
 import React from "react";
+import QuizItem from "./QuizItem";
+import QuizItemDesktop from "./QuizItemDesktop";
+
+type QuizItemType = {
+  uuid: string;
+  title: string;
+  description: string;
+  image_url: string;
+  duration: number;
+  isCompleted: boolean;
+};
 
 type QuizzesBarProps = {
+  quizzes?: QuizItemType[];
+  userQuizzes?: QuizItemType[];
   gender?: "Женский" | "Мужской";
   isMyProfile?: boolean;
   userName?: string | null;
@@ -8,6 +21,8 @@ type QuizzesBarProps = {
 };
 
 const QuizzesBar: React.FC<QuizzesBarProps> = ({
+  quizzes,
+  userQuizzes,
   isMyProfile = false,
   userName = null,
   onEdit,
@@ -15,11 +30,46 @@ const QuizzesBar: React.FC<QuizzesBarProps> = ({
 }) => {
   const displayName = gender == null ? "Пользователь" : userName;
 
-  // Всегда 6 заглушек для квизов
+  const quizzesToShow = userQuizzes
+    ? userQuizzes.map((quiz) => ({
+        ...quiz,
+        uuid: quiz.uuid,
+        title: quiz.title,
+        description: quiz.description,
+        image_url: quiz.image_url,
+        duration: quiz.duration,
+        isCompleted: quiz.isCompleted,
+      }))
+    : quizzes || [];
+  const hasQuizzes = quizzesToShow.length > 0;
+
+  const completedQuizzesCount = userQuizzes
+    ? userQuizzes.filter((q) => q.isCompleted).length
+    : quizzes
+    ? quizzes.length
+    : 0;
+
+  // Создаем массивы элементов для обеих версий
   const maxItems = 6;
-  const placeholderItems = Array(maxItems).fill({
-    type: "placeholder" as const,
-  });
+  const desktopItems = [];
+  const mobileItems = [];
+
+  // Добавляем реальные квизы
+  for (let i = 0; i < Math.min(quizzesToShow.length, maxItems); i++) {
+    const item = {
+      type: "quiz" as const,
+      quiz: quizzesToShow[i],
+      isCompleted: quizzesToShow[i].isCompleted,
+    };
+    desktopItems.push(item);
+    mobileItems.push(item);
+  }
+
+  // Добавляем заглушки для оставшихся мест (6 - количество реальных квизов)
+  for (let i = desktopItems.length; i < maxItems; i++) {
+    desktopItems.push({ type: "placeholder" as const });
+    mobileItems.push({ type: "placeholder" as const });
+  }
 
   // Компонент заглушки для десктопной версии
   const PlaceholderItemDesktop = () => (
@@ -121,6 +171,57 @@ const QuizzesBar: React.FC<QuizzesBarProps> = ({
     </div>
   );
 
+  // Если нет реальных квизов, показываем заглушку
+  if (!hasQuizzes) {
+    return (
+      <div className="mt-3">
+        <div className="flex justify-between items-center mb-2">
+          <h2 className="text-[0.875rem] font-semibold text-black-heading leading-3">
+            Квизы
+          </h2>
+        </div>
+
+        <div className="border border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
+          <div className="flex items-center justify-center gap-3 text-gray-500">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3ZM19 19H5V5H19V19Z"
+                fill="currentColor"
+              />
+              <path
+                d="M7 7H17V9H7V7ZM7 11H17V13H7V11ZM7 15H14V17H7V15Z"
+                fill="currentColor"
+              />
+            </svg>
+
+            <span className="text-sm">
+              {isMyProfile
+                ? "Пройдите квизы, чтобы узнать больше о себе"
+                : `${displayName} ещё не прош${
+                    gender == "Женский" ? "ла" : "ёл"
+                  } квизы`}
+            </span>
+          </div>
+
+          {isMyProfile && onEdit && (
+            <button
+              onClick={onEdit}
+              className="mt-3 text-purple-main hover:text-purple-600 transition-colors text-sm font-medium"
+            >
+              Пройти квизы
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="mt-3">
       <div className="flex justify-between items-center mb-2">
@@ -128,14 +229,15 @@ const QuizzesBar: React.FC<QuizzesBarProps> = ({
           <h2 className="text-[0.875rem] font-semibold text-black-heading leading-3">
             Квизы
           </h2>
-          {isMyProfile && (
+
+          {!isMyProfile && userQuizzes && (
             <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-              0/{maxItems} пройдено
+              {completedQuizzesCount}/{userQuizzes.length} пройдено
             </span>
           )}
-          {!isMyProfile && (
+          {isMyProfile && userQuizzes && (
             <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-              0/{maxItems} пройдено
+              {completedQuizzesCount}/{userQuizzes.length} пройдено
             </span>
           )}
         </div>
@@ -143,9 +245,22 @@ const QuizzesBar: React.FC<QuizzesBarProps> = ({
 
       {/* MOBILE — горизонтальный скролл (всегда 6 элементов) */}
       <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide xl:hidden">
-        {placeholderItems.map((_, index) => (
-          <PlaceholderItemMobile key={`quiz-placeholder-mobile-${index}`} />
-        ))}
+        {mobileItems.map((item, index) => {
+          if (item.type === "quiz") {
+            return (
+              <QuizItem
+                key={item.quiz.uuid}
+                quiz={item.quiz}
+                isCompleted={item.isCompleted}
+                isMyProfile={isMyProfile}
+              />
+            );
+          } else {
+            return (
+              <PlaceholderItemMobile key={`placeholder-mobile-${index}`} />
+            );
+          }
+        })}
       </div>
 
       {/* DESKTOP — сетка 3×2 */}
@@ -157,11 +272,24 @@ const QuizzesBar: React.FC<QuizzesBarProps> = ({
           w-[630px]
         "
       >
-        {placeholderItems.map((_, index) => (
-          <div key={`quiz-placeholder-desktop-${index}`} className="h-full">
-            <PlaceholderItemDesktop />
-          </div>
-        ))}
+        {desktopItems.map((item, index) => {
+          if (item.type === "quiz") {
+            return (
+              <QuizItemDesktop
+                key={item.quiz.uuid}
+                quiz={item.quiz}
+                isCompleted={item.isCompleted}
+                isMyProfile={isMyProfile}
+              />
+            );
+          } else {
+            return (
+              <div key={`placeholder-desktop-${index}`} className="h-full">
+                <PlaceholderItemDesktop />
+              </div>
+            );
+          }
+        })}
       </div>
     </div>
   );

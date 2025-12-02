@@ -1,7 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../../shared/plugin/axios";
 
-const fetchCompletedQuizes = async () => {
+export interface CompletedQuizAnswer {
+  question_id: string;
+  answer_id: string;
+}
+
+const fetchCompletedQuizes = async (): Promise<CompletedQuizAnswer[]> => {
   const response = await api.get("/ranking/quiz/me");
   return response.data;
 };
