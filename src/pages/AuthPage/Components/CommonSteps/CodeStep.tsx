@@ -79,7 +79,7 @@ const CodeStep: React.FC<Props> = ({
   const isCodeValid = code.length === 4 && !isPending && !!captcha_token;
 
   return (
-    <main className="px-2 min-h-screen lg:bg-[url(/imgs/desktop/sign-background.jpg)] bg-cover flex items-center justify-center">
+    <main className="px-2 min-h-screen flex items-center justify-center">
       <div
         className="flex flex-col items-center justify-between h-screen
                       lg:h-[500px] lg:w-[736px] lg:overflow-visible 
