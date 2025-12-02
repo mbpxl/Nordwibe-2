@@ -10,16 +10,17 @@ function AppContent() {
   const isDesktop = useIsDesktop();
   const location = useLocation();
 
-  // Проверяем, нужно ли скрывать NavBar для текущего пути
-  const shouldHideNavBarForRoute =
+  const shouldHideNavBar =
     hideNavBarRoutes.includes(location.pathname) ||
-    ["/quiz/", "/settings", "/profile/", "/quiz/test", "/test/", "/chats"].some(
-      (path) => location.pathname.startsWith(path)
-    );
-
-  // Скрываем NavBar только на мобильных устройствах для этих маршрутов
-  // На desktop NavBar всегда показывается (если не требуется скрыть)
-  const shouldHideNavBar = shouldHideNavBarForRoute && !isDesktop;
+    (!isDesktop &&
+      [
+        "/quiz/",
+        "/settings",
+        "/profile/",
+        "/quiz/test",
+        "/test/",
+        "/chats",
+      ].some((path) => location.pathname.startsWith(path)));
 
   return (
     <>

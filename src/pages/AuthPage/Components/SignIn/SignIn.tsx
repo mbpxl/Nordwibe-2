@@ -68,11 +68,11 @@ const SignIn = () => {
   ];
 
   return (
-    <>
+    <div className="lg:bg-[url(/imgs/desktop/sign-background.jpg)] bg-cover">
       <AnimatedStepWrapper stepKey={step} direction={direction}>
         {steps[step]}
       </AnimatedStepWrapper>
-    </>
+    </div>
   );
 };
 

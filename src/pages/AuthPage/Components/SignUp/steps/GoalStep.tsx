@@ -65,7 +65,7 @@ const GoalStep: React.FC<Props> = ({ onBack, formData, updateForm }) => {
   }
 
   return (
-    <main className="min-h-screen lg:bg-[url(/imgs/desktop/sign-background.jpg)] bg-cover flex items-center justify-center overflow-hidden">
+    <main className="min-h-screen flex items-center justify-center overflow-hidden">
       <div
         className="flex flex-col items-center justify-between h-screen w-full
                       lg:h-[500px] lg:w-[736px] lg:overflow-visible 

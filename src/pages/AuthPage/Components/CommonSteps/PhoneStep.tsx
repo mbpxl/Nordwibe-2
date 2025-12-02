@@ -104,7 +104,7 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
   const isPhoneValid = phone.length === 10 && isCaptchaVerified && !isPending;
 
   return (
-    <main className="px-2 min-h-screen lg:bg-[url(/imgs/desktop/sign-background.jpg)] bg-cover flex items-center justify-center">
+    <main className="px-2 min-h-screen flex items-center justify-center">
       <div
         className="flex flex-col items-center justify-between h-screen
                       lg:h-[500px] lg:w-[736px] lg:overflow-visible 
@@ -114,9 +114,7 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
           className="w-full h-full flex flex-col items-center justify-between
                       lg:w-[616px] lg:h-auto lg:mx-auto lg:flex lg:flex-col lg:items-center lg:relative"
         >
-          {/* === Первый блок - заголовок, поле ввода, капча, OAuth === */}
           <div className="flex flex-col items-center w-full text-center pt-[8vh] lg:pt-0">
-            {/* === Назад + заголовок === */}
             <div className="relative flex items-center justify-center w-full lg:mt-8 lg:mb-6">
               <Link
                 to={WELCOME_ROUTE}
