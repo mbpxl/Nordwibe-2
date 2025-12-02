@@ -9,7 +9,7 @@ function AppContent() {
   const location = useLocation();
   const shouldHideNavBar =
     hideNavBarRoutes.includes(location.pathname) ||
-    ["/quiz", "/quiz/test", "/test", "/chats"].some((path) =>
+    ["/quiz/", "/quiz/test", "/test/", "/chats"].some((path) =>
       location.pathname.startsWith(path)
     );
 

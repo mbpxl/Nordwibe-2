@@ -21,6 +21,7 @@ import { useNavigate } from "react-router-dom";
 import { calculateAge } from "../../../shared/utils/calculateAge";
 import { useMyTests } from "../hooks/useMyTests";
 import QuizzesBar from "../Components/QuizzesBar/QuizzesBar";
+import { useMyQuizzes } from "../hooks/useMyQuizzes";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -33,6 +34,7 @@ const ProfilePage = () => {
   console.log(completedTests);
 
   const { myTests, isLoading: isMyTestsLoading } = useMyTests();
+  const { myQuizzes, isLoading: isQuizzesLoading } = useMyQuizzes();
 
   const {
     data: allTests,
@@ -78,7 +80,7 @@ const ProfilePage = () => {
     (test: any) => test.title === "Тест на совместимость"
   );
 
-  if (isLoading || isAllTestsLoading) {
+  if (isLoading || isAllTestsLoading || isMyTestsLoading || isQuizzesLoading) {
     return <Loading />;
   }
 
@@ -201,7 +203,14 @@ const ProfilePage = () => {
             )}
           </div>
           <div className="lg:p-3 lg:bg-white lg:rounded-xl">
-            <QuizzesBar isMyProfile={true} />
+            {!isQuizzesLoading && (
+              <QuizzesBar
+                userQuizzes={myQuizzes}
+                isMyProfile={true}
+                userName={data.username || data.name}
+                onEdit={() => navigate("/quizzes")}
+              />
+            )}
           </div>
         </div>
       </Wrapper>
