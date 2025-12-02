@@ -21,7 +21,7 @@ const SearchPeopleItem = ({
       <Link
         to={"/profile/" + user.id}
         state={{ user }}
-        className="md:hidden bg-white p-2 flex gap-3 max-w-[700px] rounded-[12px] mt-4"
+        className="lg:hidden bg-white p-2 flex gap-3 max-w-[700px] rounded-[12px] mt-4"
       >
         <div className="w-[100px] h-[100px] bg-purple-sub-button rounded-xl shrink-0">
           {!user.avatar_url ? (
@@ -84,7 +84,7 @@ const SearchPeopleItem = ({
       <Link
         to={"/profile/" + user.id}
         state={{ user }}
-        className="hidden md:block bg-white p-6 max-w-[868px] rounded-xl hover:shadow-md transition-shadow duration-200"
+        className="hidden lg:block bg-white p-6 max-w-[868px] rounded-xl hover:shadow-md transition-shadow duration-200"
       >
         <div className="flex gap-8 items-stretch">
           {/* Левая часть - фото (фиксированная высота) */}
