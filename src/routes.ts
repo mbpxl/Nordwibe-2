@@ -32,8 +32,9 @@ import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import ErrorPage from "./shared/Components/ErrorPage/ErrorPage";
 import PrivacyPage from "./pages/PrivacyPage/PrivacyPage";
 import QuizPage from "./pages/QuizPage/QuizPage";
-import TestPage from "./pages/TestPage/TestPage";
 import OAuthCallback from "./pages/AuthPage/Components/OAuth2/OAuthCallback";
+import TestWrapper from "./pages/TestPage/TestWrapper";
+import QuizWrapper from "./pages/QuizPage/QuizWrapper";
 
 // где lazy() - ленивая подгрузка. То есть компонента булет загружена в момент перехода, а не в момент запуска приложения
 
@@ -68,11 +69,11 @@ export const routes = [
   },
   {
     path: CHAT_ROUTE,
-    Component: lazy(() => import("./pages/ChatPage/ChatPage")),
+    Component: lazy(() => import("./pages/ChatDialogPage/ChatWrapper")),
   },
   {
     path: QUIZ_ROUTE,
-    Component: QuizPage,
+    Component: QuizWrapper,
   },
   {
     path: QUIZ_PASSING_ROUTE,
@@ -94,15 +95,15 @@ export const routes = [
   },
   {
     path: QUIZ_TEST_ROUTE,
-    Component: lazy(() => import("./pages/QuizTestPage/QuizTestPage")),
+    Component: lazy(() => import("./pages/QuizTestPage/QuizTestWrapper")),
   },
   {
     path: QUIZ_RESULT_ROUTE,
-    Component: lazy(() => import("./pages/QuizResultPage/QuizResultPage")),
+    Component: lazy(() => import("./pages/QuizResultPage/QuizResultWrapper")),
   },
   {
     path: TEST_ROUTE,
-    Component: TestPage,
+    Component: TestWrapper,
   },
   {
     path: TEST_PASSING_ROUTE,

@@ -1,5 +1,3 @@
-// TestAnswersList.tsx
-
 import type { AnswerType } from "../../../TestPage/types/testDataTypes";
 import TestAnsersItem from "../TestAnswersItem/TestAnsersItem";
 
@@ -8,6 +6,7 @@ interface Props {
   questionUuid: string;
   selectedAnswerUuid?: string;
   onSelect: (questionUuid: string, answerUuid: string, value: number) => void;
+  isDesktop?: boolean;
 }
 
 const TestAnswersList: React.FC<Props> = ({
@@ -15,9 +14,10 @@ const TestAnswersList: React.FC<Props> = ({
   questionUuid,
   selectedAnswerUuid,
   onSelect,
+  isDesktop = false,
 }) => {
   return (
-    <div className="mt-2 mb-22">
+    <div className={`${isDesktop ? "mb-6" : "mt-2 mb-22"}`}>
       {answers.map((item) => (
         <TestAnsersItem
           key={item.uuid}

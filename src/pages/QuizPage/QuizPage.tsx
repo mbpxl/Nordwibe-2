@@ -4,9 +4,12 @@ import QuizList from "./Components/QuizList/QuizList";
 const QuizPage = () => {
   return (
     <div className="">
-      <TopicHeader>
-        <h1>Квизы</h1>
-      </TopicHeader>
+      <div className="md:hidden">
+        <TopicHeader>
+          <h1>Квизы</h1>
+        </TopicHeader>
+      </div>
+
       <QuizList />
     </div>
   );

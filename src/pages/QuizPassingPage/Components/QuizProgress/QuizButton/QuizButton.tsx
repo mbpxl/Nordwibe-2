@@ -8,6 +8,7 @@ export interface QuizButtonProps {
   quizData: LessonsType[];
   currentSlide: number;
   isLastQuizStep?: boolean;
+  isDesktop?: boolean;
 }
 
 const QuizButton: React.FC<QuizButtonProps> = ({
@@ -16,6 +17,7 @@ const QuizButton: React.FC<QuizButtonProps> = ({
   quizData,
   currentSlide,
   isLastQuizStep,
+  isDesktop = false,
 }) => {
   const isDisabled = isNext
     ? currentSlide === quizData.length - 1
@@ -28,23 +30,52 @@ const QuizButton: React.FC<QuizButtonProps> = ({
   };
 
   return (
-    <button
-      className={`${
-        isLastQuizStep ? "opacity-0" : "opacity-100 "
-      } w-[2.5rem] h-[2.5rem] rounded-[30px] flex justify-center items-center ${
-        isDisabled ? "bg-gray-300 cursor-not-allowed" : "bg-purple-sub-button"
-      }`}
-      onClick={handleClick}
-      disabled={isDisabled}
-    >
-      <img
-        src={next}
-        alt={isNext ? "next" : "prev"}
-        className={`${!isNext ? "rotate-180" : ""} opacity-${
-          isDisabled ? "50" : "100"
-        }`}
-      />
-    </button>
+    <>
+      {/* Мобильная версия */}
+      {!isDesktop && (
+        <button
+          className={`${
+            isLastQuizStep ? "opacity-0" : "opacity-100"
+          } w-[2.5rem] h-[2.5rem] rounded-[30px] flex justify-center items-center ${
+            isDisabled
+              ? "bg-gray-300 cursor-not-allowed"
+              : "bg-purple-sub-button hover:bg-purple-500"
+          } transition-colors`}
+          onClick={handleClick}
+          disabled={isDisabled}
+        >
+          <img
+            src={next}
+            alt={isNext ? "next" : "prev"}
+            className={`${!isNext ? "rotate-180" : ""} ${
+              isDisabled ? "opacity-50" : "opacity-100"
+            }`}
+          />
+        </button>
+      )}
+
+      {/* Desktop версия */}
+      {isDesktop && (
+        <button
+          className={`w-10 h-10 rounded-lg flex justify-center items-center ${
+            isDisabled
+              ? "bg-gray-200 cursor-not-allowed"
+              : "bg-purple-main hover:bg-purple-600"
+          } transition-colors`}
+          onClick={handleClick}
+          disabled={isDisabled}
+        >
+          <img
+            src={next}
+            alt={isNext ? "next" : "prev"}
+            className={`${!isNext ? "rotate-180" : ""} ${
+              isDisabled ? "opacity-40" : "opacity-100"
+            }`}
+          />
+        </button>
+      )}
+    </>
   );
 };
+
 export default QuizButton;
