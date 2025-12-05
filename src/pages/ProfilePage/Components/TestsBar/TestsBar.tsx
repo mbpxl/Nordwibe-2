@@ -16,6 +16,7 @@ type TestsBarProps = {
   isMyProfile?: boolean;
   userName?: string | null;
   onEdit?: () => void;
+  onResultClick?: (testId: string) => void;
 };
 
 const TestsBar: React.FC<TestsBarProps> = ({
@@ -25,6 +26,7 @@ const TestsBar: React.FC<TestsBarProps> = ({
   userName = null,
   onEdit,
   gender,
+  onResultClick,
 }) => {
   const displayName = gender == null ? "Пользователь" : userName;
 
@@ -250,6 +252,11 @@ const TestsBar: React.FC<TestsBarProps> = ({
                 isMyProfile={isMyProfile}
                 test={item}
                 isCompleted={"isCompleted" in item ? item.isCompleted : true}
+                onResultClick={
+                  !isMyProfile && item.isCompleted && onResultClick
+                    ? () => onResultClick(item.uuid)
+                    : undefined
+                }
               />
             );
           } else {
@@ -278,6 +285,11 @@ const TestsBar: React.FC<TestsBarProps> = ({
                 test={item.test}
                 isMyProfile={isMyProfile}
                 isCompleted={item.isCompleted}
+                onResultClick={
+                  !isMyProfile && item.isCompleted && onResultClick
+                    ? () => onResultClick(item.test.uuid) // Исправлено: item.test.uuid вместо item.uuid
+                    : undefined
+                }
               />
             );
           } else {

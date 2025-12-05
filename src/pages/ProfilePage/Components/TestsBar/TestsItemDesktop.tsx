@@ -1,27 +1,37 @@
 import { useNavigate } from "react-router-dom";
 
-const TestsItemDesktop = ({ test, isCompleted, isMyProfile }: any) => {
+const TestsItemDesktop = ({
+  test,
+  isCompleted,
+  isMyProfile,
+  onResultClick,
+}: any) => {
   const navigate = useNavigate();
 
-  const goToTests = () => {
-    if (!isCompleted && isMyProfile) {
+  const isOtherProfile = !isMyProfile;
+
+  const handleClick = () => {
+    if (isMyProfile && !isCompleted) {
       navigate(`/test/${test.uuid}`);
+    } else if (isOtherProfile && isCompleted && onResultClick) {
+      onResultClick();
     }
   };
 
+  const cursorStyle =
+    (isMyProfile && !isCompleted) ||
+    (isOtherProfile && isCompleted && onResultClick)
+      ? "cursor-pointer hover:opacity-90"
+      : "";
+
   return (
     <div
-      className={`
-        w-[196px] h-[196px] rounded-2xl p-4 cursor-pointer
-        flex flex-col justify-between
-        transition-all duration-200
-        ${
-          isCompleted
-            ? "bg-purple-main text-white shadow-md"
-            : "bg-gray-100 text-gray-500 border border-gray-200"
-        }
-      `}
-      onClick={goToTests}
+      className={`w-[196px] h-[196px] rounded-2xl p-4 flex flex-col justify-between transition-all duration-200 ${
+        isCompleted
+          ? "bg-purple-main text-white shadow-md"
+          : "bg-gray-100 text-gray-500 border border-gray-200"
+      } ${cursorStyle}`}
+      onClick={handleClick}
     >
       <h3 className="text-base font-semibold line-clamp-2">{test.title}</h3>
 

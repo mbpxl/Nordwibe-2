@@ -20,6 +20,7 @@ export type TestType = {
   is_important: boolean;
   time?: number;
   questions: QuestionType[];
+  isCompleted?: boolean;
 };
 
 export type TestsResponse = TestType[];
