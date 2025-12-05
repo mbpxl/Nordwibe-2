@@ -1,6 +1,7 @@
 // SearchPeopleList.tsx (обновленная версия)
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { useEffect } from "react";
 import Error from "../../../../../shared/Components/ErrorPage/ErrorPage";
 import Loading from "../../../../../shared/Components/Loading/Loading";
 import NoResults from "../../../../../shared/Components/NoResults/NoResults";
@@ -20,6 +21,11 @@ const SearchPeopleList = ({ filters }: SearchPeopleListProps) => {
     isLoading: rankingLoading,
     isError: rankingError,
   } = useRanking(filters);
+
+  useEffect(() => {
+    console.log("=== ДАННЫЕ ИЗ /ranking/ ===");
+    console.log(JSON.stringify(ranking, null, 2));
+  }, [ranking]);
 
   // вытаскиваем все user_id
   const userIds = ranking?.map((r) => r.user_id) || [];

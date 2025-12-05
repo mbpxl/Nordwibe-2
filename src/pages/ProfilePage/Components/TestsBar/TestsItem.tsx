@@ -4,38 +4,40 @@ interface TestsItemProps {
   test: any;
   isCompleted?: boolean;
   isMyProfile?: boolean;
+  onResultClick?: () => void;
 }
 
 const TestsItem: React.FC<TestsItemProps> = ({
   test,
   isCompleted = false,
   isMyProfile = false,
+  onResultClick,
 }) => {
   const navigate = useNavigate();
+  const isOtherProfile = !isMyProfile;
 
-  console.log(test.uuid);
-
-  const goToTests = () => {
-    if (!isCompleted && isMyProfile) {
+  const handleClick = () => {
+    if (isMyProfile && !isCompleted) {
       navigate(`/test/${test.uuid}`);
+    } else if (isOtherProfile && isCompleted && onResultClick) {
+      onResultClick();
     }
   };
 
-  console.log(test);
+  const cursorStyle =
+    (isMyProfile && !isCompleted) ||
+    (isOtherProfile && isCompleted && onResultClick)
+      ? "cursor-pointer hover:opacity-90"
+      : "";
 
   return (
     <div
-      className={`
-        relative min-w-[140px] h-[100px] rounded-2xl p-3 
-        flex flex-col justify-between
-        transition-all duration-200
-        ${
-          isCompleted
-            ? "bg-purple-main text-white shadow-sm"
-            : "bg-gray-100 text-gray-500 border border-gray-200"
-        }
-      `}
-      onClick={goToTests}
+      className={`relative min-w-[140px] h-[100px] rounded-2xl p-3 flex flex-col justify-between transition-all duration-200 ${
+        isCompleted
+          ? "bg-purple-main text-white shadow-sm"
+          : "bg-gray-100 text-gray-500 border border-gray-200"
+      } ${cursorStyle}`}
+      onClick={handleClick}
     >
       {/* Заголовок теста */}
       <h3 className="text-[0.875rem] font-semibold leading-[1.125rem] line-clamp-2">

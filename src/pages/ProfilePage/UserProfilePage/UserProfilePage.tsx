@@ -10,7 +10,7 @@ import Loading from "../../../shared/Components/Loading/Loading";
 import Error from "../../../shared/Components/ErrorPage/ErrorPage";
 import { GoBackButton } from "../../../shared/Components/GoBackButton/GoBackButton";
 import { useGetMe } from "../service/useGetMe";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRanking } from "../../SearchPage/service/useRanking";
 import { useBlockUser } from "../service/useBlockUser";
 import { useUnblockUser } from "../service/useUnblockUser";
@@ -22,14 +22,77 @@ import { useUserTests } from "../hooks/useUserTests";
 import TestsBar from "../Components/TestsBar/TestsBar";
 import { calculateAge } from "../../../shared/utils/calculateAge";
 import ActionBar from "../Components/ActionBar/ActionBar";
+import { useUserTestResults } from "../../../shared/hooks/useUserTestResults";
+import { TestResultModal } from "../Components/TestsBar/TestResultModal";
 
 const UserProfilePage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { ids } = useParams<{ ids: string }>();
+  const { ids } = useParams<{ ids: string }>(); // получаем id текущего пользователя
   const userFromState = state?.user;
 
   const { userTests, isLoading: isUserTestsLoading } = useUserTests(ids);
+
+  const { results: userTestResults, isLoading: isResultsLoading } =
+    useUserTestResults(ids!);
+
+  const [selectedResult, setSelectedResult] = useState<{
+    testTitle: string;
+    letter: string;
+    description: string;
+    imageUrl?: string;
+  } | null>(null);
+
+  useEffect(() => {
+    if (!isResultsLoading && userTestResults.length > 0) {
+      console.log("=== Результаты тестов успешно загружены ===");
+      userTestResults.forEach((result: any, index: any) => {
+        console.log(`Результат #${index + 1}:`);
+        console.log(`- Тест: ${result.title} (${result.testId})`);
+        console.log(`- Буква: ${result.result.letter}`);
+        console.log(`- Описание: ${result.result.description}`);
+      });
+    } else if (!isResultsLoading) {
+      console.log("=== Нет результатов тестов ===");
+    }
+  }, [isResultsLoading, userTestResults]);
+
+  const handleTestResultClick = (testId: string) => {
+    console.log("\n=== Обработка клика по тесту ===");
+    console.log("ID теста из клика:", testId);
+    console.log(
+      "Доступные результаты:",
+      userTestResults.map((r: any) => ({ id: r.testId, title: r.title }))
+    );
+
+    const result = userTestResults.find((r: any) => r.testId === testId);
+
+    if (!result) {
+      console.error(`❌ Результат не найден для теста ${testId}`);
+      // Попробуем найти по частичному совпадению (на случай проблем с UUID)
+      const similarResults = userTestResults.filter(
+        (r: any) =>
+          r.testId.includes(testId.substring(0, 8)) ||
+          r.title.toLowerCase().includes("сосед")
+      );
+
+      if (similarResults.length > 0) {
+        console.log("🔍 Найдены похожие результаты:", similarResults);
+      }
+
+      toast.error("Результат теста не найден");
+      return;
+    }
+
+    console.log("✅ Найденный результат:", result);
+
+    setSelectedResult({
+      testTitle: result.title,
+      letter: result.result.letter,
+      description: result.result.description,
+      imageUrl: result.result.imageUrl,
+    });
+  };
 
   const { data: rankingData, isLoading: isRankingLoading } = useRanking();
   const { isBlocked, isLoading: isBlockedLoading } = useIsUserBlocked(ids);
@@ -119,13 +182,12 @@ const UserProfilePage = () => {
     }
   };
 
-  console.log(user);
-
   if (
     (isLoading && !user) ||
     isMyProfileLoading ||
     isRankingLoading ||
-    isBlockedLoading
+    isBlockedLoading ||
+    isResultsLoading
   ) {
     return <Loading />;
   }
@@ -252,9 +314,20 @@ const UserProfilePage = () => {
               userTests={userTests}
               isMyProfile={false}
               userName={user.username || user.name}
+              onResultClick={handleTestResultClick}
             />
           )}
         </div>
+        {selectedResult && (
+          <TestResultModal
+            isOpen={!!selectedResult}
+            onClose={() => setSelectedResult(null)}
+            testTitle={selectedResult.testTitle}
+            resultLetter={selectedResult.letter}
+            resultDescription={selectedResult.description}
+            resultImage={selectedResult.imageUrl}
+          />
+        )}
       </Wrapper>
       <div className="lg:hidden">
         <ActionBar
