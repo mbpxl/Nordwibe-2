@@ -1,8 +1,7 @@
 import { useEffect, useRef } from "react";
-import { useLocation, useParams, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { usePostTest } from "../TestPassingPage/service/usePostTest";
 import type { SelectedAnswer, ScaleMap } from "./types/test";
-import { calculateResult } from "./utils/calculateResult";
 
 type LocationState = {
   answers?: SelectedAnswer[];
@@ -11,8 +10,8 @@ type LocationState = {
 
 const ResultPage = () => {
   const { state } = useLocation();
-  const { uuid } = useParams<{ uuid: string }>();
-  const { mutate, isSuccess, isError } = usePostTest();
+  //todo: const { uuid } = useParams<{ uuid: string }>();
+  const { mutate } = usePostTest();
 
   const answers = (state as LocationState)?.answers;
   const scaleMap = (state as LocationState)?.scaleMap;
@@ -21,16 +20,15 @@ const ResultPage = () => {
     return (
       <div className="p-4 text-center">
         <div>
-          <h1 className="text-xl font-bold">Нет данных для результата</h1>
-          <Link to={`/test/${uuid}`} className="text-purple-main underline">
-            Пройти тест
-          </Link>
+          <h1 className="text-xl font-bold">Высчитываем результат!</h1>
+          <h2 className="text-purple-main underline">
+            посмотреть его можно у себя в профиле
+          </h2>
         </div>
       </div>
     );
   }
 
-  const result = calculateResult(answers, scaleMap);
 
   const postedRef = useRef(false);
   useEffect(() => {
@@ -61,25 +59,17 @@ const ResultPage = () => {
           </div>
         </div>
       ) : (
-        <div>
-          <h1 className="text-2xl font-bold text-purple-main mb-4">
-            {result.title}
-          </h1>
-          <p className="text-lg">{result.description}</p>
-
-          <div className="mt-6">
-            {isSuccess && (
-              <p className="text-green-600">Результат успешно сохранён 🎉</p>
-            )}
-            {isError && (
-              <p className="text-red-600">Ошибка при сохранении результата</p>
-            )}
-          </div>
-
-          <div className="mt-6 text-white">
-            <Link to={"/"} className="bg-purple-main px-4 py-2 rounded-[30px]">
-              На главную
-            </Link>
+        <div className="p-4 text-center">
+          <div>
+            <h1 className="text-xl font-bold">Высчитываем результат!</h1>
+            <h2 className="text-purple-main underline">
+              посмотреть его можно у себя в профиле
+            </h2>
+            <div className="mt-6 text-white">
+              <Link to={"/profile"} className="bg-purple-main px-4 py-2 rounded-[30px]">
+                В профиль
+              </Link>
+            </div>
           </div>
         </div>
       )}

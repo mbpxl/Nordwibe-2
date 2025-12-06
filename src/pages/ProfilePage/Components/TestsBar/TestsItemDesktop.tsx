@@ -11,12 +11,12 @@ const TestsItemDesktop = ({
   const isOtherProfile = !isMyProfile;
 
   const handleClick = () => {
-    if (isMyProfile && !isCompleted) {
-      navigate(`/test/${test.uuid}`);
-    } else if (isOtherProfile && isCompleted && onResultClick) {
-      onResultClick();
-    }
-  };
+  if (isMyProfile && !isCompleted) {
+    navigate(`/test/${test.uuid}`);
+  } else if (onResultClick) {
+    onResultClick();
+  }
+};
 
   const cursorStyle =
     (isMyProfile && !isCompleted) ||
