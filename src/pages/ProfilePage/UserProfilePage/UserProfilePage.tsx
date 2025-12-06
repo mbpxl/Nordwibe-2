@@ -78,7 +78,7 @@ const UserProfilePage = () => {
     setIsActionsMenuOpen(false);
   };
 
-  const handleShare = () => {};
+  const handleShare = () => { };
 
   const handleBlock = () => {
     if (ids) {
@@ -279,45 +279,45 @@ const UserProfilePage = () => {
             />
           )}
         </div>
-        
+
         <Modal closeModal={() => setSelectedResult(null)} isOpen={!!selectedResult}>
-  <div
-    className=""
-    onClick={() => setSelectedResult(null)}
-  >
-    <div
-      className="bg-white rounded-2xl w-full max-w-md mx-2"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="p-5 sm:p-6">
-        <div className="text-center">
-          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
-            {selectedResult?.testTitle}
-          </h3>
-
-          <div className="bg-purple-50 rounded-xl p-3 sm:p-4 mb-3 sm:mb-4">
-            <p className="text-base sm:text-lg font-semibold text-purple-800">
-              {selectedResult?.test_title}
-            </p>
-          </div>
-
-          <div className="bg-gray-50 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
-            <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
-              {selectedResult?.description}
-            </p>
-          </div>
-
-          <button
+          <div
+            className=""
             onClick={() => setSelectedResult(null)}
-            className="w-full bg-purple-main text-white font-medium py-3 rounded-xl hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
           >
-            <span className="text-base font-medium">Понятно</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</Modal>
+            <div
+              className="bg-white rounded-2xl w-full max-w-md mx-2"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-5 sm:p-6">
+                <div className="text-center">
+                  <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                    {selectedResult?.testTitle}
+                  </h3>
+
+                  <div className="bg-purple-50 rounded-xl p-3 sm:p-4 mb-3 sm:mb-4">
+                    <p className="text-base sm:text-lg font-semibold text-purple-800">
+                      {selectedResult?.test_title}
+                    </p>
+                  </div>
+
+                  <div className="bg-gray-50 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
+                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                      {selectedResult?.description}
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => setSelectedResult(null)}
+                    className="w-full bg-purple-main text-white font-medium py-3 rounded-xl hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                  >
+                    <span className="text-base font-medium">Понятно</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal>
       </Wrapper>
       <div className="lg:hidden">
         <ActionBar

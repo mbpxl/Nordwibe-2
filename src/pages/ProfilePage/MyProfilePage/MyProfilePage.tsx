@@ -22,6 +22,8 @@ import { calculateAge } from "../../../shared/utils/calculateAge";
 import { useMyTests } from "../hooks/useMyTests";
 import QuizzesBar from "../Components/QuizzesBar/QuizzesBar";
 import { useMyQuizzes } from "../hooks/useMyQuizzes";
+import { useMyTestResults } from "../../../shared/hooks/useMyTestResults";
+import Modal from "../../../shared/Components/Modal/Modal";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -31,7 +33,25 @@ const ProfilePage = () => {
   const { data: completedTests, isLoading: isCompletedTestLoading } =
     useCompletedTests();
 
-  console.log(completedTests);
+  const { results: myTestResults } = useMyTestResults();
+  const [selectedResult, setSelectedResult] = useState<{
+    testTitle: string;
+    test_title: string;
+    description: string;
+    imageUrl?: string;
+  } | null>(null);
+
+  const handleMyTestResultClick = (testId: string) => {
+    const result = myTestResults.find((r: any) => r.testId === testId);
+    if (result) {
+      setSelectedResult({
+        testTitle: result.title,
+        test_title: result.result.test_title,
+        description: result.result.description,
+        imageUrl: result.result.imageUrl,
+      });
+    }
+  };
 
   const { myTests, isLoading: isMyTestsLoading } = useMyTests();
   const { myQuizzes, isLoading: isQuizzesLoading } = useMyQuizzes();
@@ -74,7 +94,7 @@ const ProfilePage = () => {
     setIsActionsMenuOpen(false);
   };
 
-  const handleShare = () => {};
+  const handleShare = () => { };
 
   const compatibilityTest = allTests?.find(
     (test: any) => test.title === "Тест на совместимость"
@@ -199,8 +219,47 @@ const ProfilePage = () => {
                 isMyProfile={true}
                 userName={data.username || data.name}
                 onEdit={() => navigate("/test")}
+                onResultClick={handleMyTestResultClick}
               />
             )}
+            <Modal closeModal={() => setSelectedResult(null)} isOpen={!!selectedResult}>
+              <div
+                className=""
+                onClick={() => setSelectedResult(null)}
+              >
+                <div
+                  className="bg-white rounded-2xl w-full max-w-md mx-2"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="p-5 sm:p-6">
+                    <div className="text-center">
+                      <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+                        {selectedResult?.testTitle}
+                      </h3>
+
+                      <div className="bg-purple-50 rounded-xl p-3 sm:p-4 mb-3 sm:mb-4">
+                        <p className="text-base sm:text-lg font-semibold text-purple-800">
+                          {selectedResult?.test_title}
+                        </p>
+                      </div>
+
+                      <div className="bg-gray-50 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
+                        <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+                          {selectedResult?.description}
+                        </p>
+                      </div>
+
+                      <button
+                        onClick={() => setSelectedResult(null)}
+                        className="w-full bg-purple-main text-white font-medium py-3 rounded-xl hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                      >
+                        <span className="text-base font-medium">Понятно</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Modal>
           </div>
           <div className="lg:p-3 lg:bg-white lg:rounded-xl">
             {!isQuizzesLoading && (
