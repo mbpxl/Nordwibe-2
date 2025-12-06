@@ -1,63 +1,69 @@
-// Статическое хранилище результатов тестов
-export const TEST_RESULTS_MAPPING: any = {
-  //! тест "Какой ты сосед?"
+export const TEST_RESULTS_MAPPING: Record<string, any[]> = {
   "d28db520-e09f-4188-8bf5-42e2cadfa54f": [
     {
       letter: "А",
-      description: "Тусовщик",
+      test_title: "Тусовщик",
+      description: "Вы любите шумные компании, вечеринки и активный отдых. Для вас важны яркие впечатления и общение с большим количеством людей. Вы заряжаете окружающих своей энергией и всегда готовы к новым приключениям.",
       imageUrl: "/results/party-animal.jpg",
     },
     {
       letter: "Б",
-      description: "Домосед",
+      test_title: "Домосед",
+      description: "Вы цените уют и комфорт своего дома. Предпочитаете спокойный отдых в кругу близких или в одиночестве. Для вас важна личная территория и стабильность. Вы надежный сосед, который уважает личное пространство других.",
       imageUrl: "/results/homebody.jpg",
     },
     {
       letter: "В",
-      description: "Лояльный сосед",
+      test_title: "Лояльный сосед",
+      description: "Вы легко находите общий язык с разными людьми и уважаете их границы. Способны идти на компромиссы и находить взаимовыгодные решения. Для вас важны гармоничные отношения с окружающими и взаимное уважение.",
       imageUrl: "/results/loyal.jpg",
     },
     {
       letter: "Г",
-      description: "Гармоничный",
+      test_title: "Гармоничный",
+      description: "Вы стремитесь к балансу во всех сферах жизни. Умеете сочетать активность и отдых, общение и уединение. Для вас важна гармония в отношениях и внутреннее спокойствие. Вы создаете позитивную атмосферу вокруг себя.",
       imageUrl: "/results/harmonious.jpg",
     },
     {
       letter: "Д",
-      description: "Уникальный сосед",
+      test_title: "Уникальный сосед",
+      description: "Вы не боитесь быть самим собой и иметь свою точку зрения. Отличаетесь нестандартным мышлением и креативным подходом к жизни. Для вас важна свобода самовыражения и возможность реализовывать свои идеи. Вы привносите разнообразие в жизнь окружающих.",
       imageUrl: "/results/unique.jpg",
     },
   ],
-
-  // // UUID теста "Тип личности"
-  // "b2c3d4e5-6789-01fg-hijk-lmnopqrstuvw": [
-  //   { letter: "А", description: "Аналитик" },
-  //   { letter: "Б", description: "Дипломат" },
-  //   { letter: "В", description: "Стратег" },
-  //   { letter: "Г", description: "Энтузиаст" },
-  //   { letter: "Д", description: "Новатор" },
-  // ],
-
-  // Добавляйте новые тесты здесь
 };
 
-// Функция-хелпер для получения результата по UUID теста и букве
-export const getTestResultDescription = (
+export const getTestResultData = (
   testUuid: string,
   letter: string
-): string => {
+): {
+  test_title: string;
+  description: string;
+  imageUrl?: string;
+} => {
   const testResults = TEST_RESULTS_MAPPING[testUuid];
-  if (!testResults) return `Результат ${letter}`;
+
+  if (!testResults) {
+    return {
+      test_title: `Результат ${letter}`,
+      description: "Подробное описание недоступно. Обратитесь в поддержку.",
+      imageUrl: undefined
+    };
+  }
 
   const result = testResults.find((r: any) => r.letter === letter);
-  return result ? result.description : `Неизвестный результат ${letter}`;
-};
 
-// Функция для получения изображения результата
-export const getTestResultImage = (
-  testUuid: string,
-  letter: string
-): string | undefined => {
-  const testResults = TEST_RESULTS_MAPPING[testUuid];
-  return testResults?.find((r: any) => r.letter === letter)?.imageUrl;
+  if (!result) {
+    return {
+      test_title: `Неизвестный результат ${letter}`,
+      description: "Описание для этого результата не найдено. Возможно, данные устарели.",
+      imageUrl: undefined
+    };
+  }
+
+  return {
+    test_title: result.test_title,
+    description: result.description,
+    imageUrl: result.imageUrl
+  };
 };

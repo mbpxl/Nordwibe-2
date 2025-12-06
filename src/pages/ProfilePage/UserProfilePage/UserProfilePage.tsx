@@ -23,76 +23,24 @@ import TestsBar from "../Components/TestsBar/TestsBar";
 import { calculateAge } from "../../../shared/utils/calculateAge";
 import ActionBar from "../Components/ActionBar/ActionBar";
 import { useUserTestResults } from "../../../shared/hooks/useUserTestResults";
-import { TestResultModal } from "../Components/TestsBar/TestResultModal";
+import Modal from "../../../shared/Components/Modal/Modal";
 
 const UserProfilePage = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { ids } = useParams<{ ids: string }>(); // получаем id текущего пользователя
+  const { ids } = useParams<{ ids: string }>();
   const userFromState = state?.user;
 
   const { userTests, isLoading: isUserTestsLoading } = useUserTests(ids);
-
   const { results: userTestResults, isLoading: isResultsLoading } =
     useUserTestResults(ids!);
 
   const [selectedResult, setSelectedResult] = useState<{
     testTitle: string;
-    letter: string;
+    test_title: string;
     description: string;
     imageUrl?: string;
   } | null>(null);
-
-  useEffect(() => {
-    if (!isResultsLoading && userTestResults.length > 0) {
-      console.log("=== Результаты тестов успешно загружены ===");
-      userTestResults.forEach((result: any, index: any) => {
-        console.log(`Результат #${index + 1}:`);
-        console.log(`- Тест: ${result.title} (${result.testId})`);
-        console.log(`- Буква: ${result.result.letter}`);
-        console.log(`- Описание: ${result.result.description}`);
-      });
-    } else if (!isResultsLoading) {
-      console.log("=== Нет результатов тестов ===");
-    }
-  }, [isResultsLoading, userTestResults]);
-
-  const handleTestResultClick = (testId: string) => {
-    console.log("\n=== Обработка клика по тесту ===");
-    console.log("ID теста из клика:", testId);
-    console.log(
-      "Доступные результаты:",
-      userTestResults.map((r: any) => ({ id: r.testId, title: r.title }))
-    );
-
-    const result = userTestResults.find((r: any) => r.testId === testId);
-
-    if (!result) {
-      console.error(`❌ Результат не найден для теста ${testId}`);
-      // Попробуем найти по частичному совпадению (на случай проблем с UUID)
-      const similarResults = userTestResults.filter(
-        (r: any) =>
-          r.testId.includes(testId.substring(0, 8)) ||
-          r.title.toLowerCase().includes("сосед")
-      );
-
-      if (similarResults.length > 0) {
-        console.log("🔍 Найдены похожие результаты:", similarResults);
-      }
-
-      toast.error("Результат теста не найден");
-      return;
-    }
-
-    console.log("✅ Найденный результат:", result);
-
-    setSelectedResult({
-      testTitle: result.title,
-      letter: result.result.letter,
-      description: result.result.description,
-      imageUrl: result.result.imageUrl,
-    });
-  };
 
   const { data: rankingData, isLoading: isRankingLoading } = useRanking();
   const { isBlocked, isLoading: isBlockedLoading } = useIsUserBlocked(ids);
@@ -152,7 +100,6 @@ const UserProfilePage = () => {
             handleCloseMenu();
           },
           onError: (error) => {
-            console.error("Ошибка при блокировке:", error);
             toast.error("Ошибка при блокировке");
           },
         }
@@ -175,11 +122,26 @@ const UserProfilePage = () => {
           handleCloseMenu();
         },
         onError: (error) => {
-          console.error("Ошибка при разблокировке:", error);
           toast.error("Ошибка при разблокировке");
         },
       });
     }
+  };
+
+  const handleTestResultClick = (testId: string) => {
+    const result = userTestResults.find((r: any) => r.testId === testId);
+
+    if (!result) {
+      toast.error("Результат теста не найден");
+      return;
+    }
+
+    setSelectedResult({
+      testTitle: result.title,
+      test_title: result.result.test_title,
+      description: result.result.description,
+      imageUrl: result.result.imageUrl,
+    });
   };
 
   if (
@@ -221,7 +183,6 @@ const UserProfilePage = () => {
           </TopicHeader>
         </div>
 
-        {/* Баннер, если пользователь заблокирован */}
         {isBlocked && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
             <div className="flex items-center gap-2">
@@ -318,16 +279,45 @@ const UserProfilePage = () => {
             />
           )}
         </div>
-        {selectedResult && (
-          <TestResultModal
-            isOpen={!!selectedResult}
-            onClose={() => setSelectedResult(null)}
-            testTitle={selectedResult.testTitle}
-            resultLetter={selectedResult.letter}
-            resultDescription={selectedResult.description}
-            resultImage={selectedResult.imageUrl}
-          />
-        )}
+        
+        <Modal closeModal={() => setSelectedResult(null)} isOpen={!!selectedResult}>
+  <div
+    className=""
+    onClick={() => setSelectedResult(null)}
+  >
+    <div
+      className="bg-white rounded-2xl w-full max-w-md mx-2"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="p-5 sm:p-6">
+        <div className="text-center">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">
+            {selectedResult?.testTitle}
+          </h3>
+
+          <div className="bg-purple-50 rounded-xl p-3 sm:p-4 mb-3 sm:mb-4">
+            <p className="text-base sm:text-lg font-semibold text-purple-800">
+              {selectedResult?.test_title}
+            </p>
+          </div>
+
+          <div className="bg-gray-50 rounded-xl p-3 sm:p-4 mb-4 sm:mb-6">
+            <p className="text-sm sm:text-base text-gray-700 leading-relaxed">
+              {selectedResult?.description}
+            </p>
+          </div>
+
+          <button
+            onClick={() => setSelectedResult(null)}
+            className="w-full bg-purple-main text-white font-medium py-3 rounded-xl hover:bg-purple-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+          >
+            <span className="text-base font-medium">Понятно</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</Modal>
       </Wrapper>
       <div className="lg:hidden">
         <ActionBar
