@@ -42,7 +42,7 @@ const ChatDialogPage = ({ isDesktop = false }: ChatDialogPageProps) => {
 
   const { isBlocked } = useIsUserBlocked(companionId);
 
-  const handleShare = () => {};
+  const handleShare = () => { };
 
   const handleBlock = () => {
     if (companionId) {
@@ -115,12 +115,24 @@ const ChatDialogPage = ({ isDesktop = false }: ChatDialogPageProps) => {
   const userData: any = user[0];
 
   return (
-    <div className="h-full flex flex-col">
+    <div
+      className={`
+        ${!isDesktop
+          ? "fixed inset-0 flex flex-col"
+          : "h-full flex flex-col"
+        }
+        bg-white
+      `}
+    >
       {/* Заголовок */}
       <div
-        className={`${
-          !isDesktop ? "sticky top-0 z-40" : ""
-        } bg-white border-b border-gray-200`}
+        className={`
+          ${!isDesktop
+            ? "sticky top-0 z-40 shrink-0"
+            : ""
+          }
+          bg-white border-b border-gray-200
+        `}
       >
         {!isDesktop ? (
           <TopicHeader>
@@ -171,7 +183,7 @@ const ChatDialogPage = ({ isDesktop = false }: ChatDialogPageProps) => {
             </button>
           </TopicHeader>
         ) : (
-          <div className="p-4 flex items-center justify-between">
+          <div className="p-4 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-3">
               <div className="relative">
                 {userData.avatar_url ? (
@@ -233,7 +245,7 @@ const ChatDialogPage = ({ isDesktop = false }: ChatDialogPageProps) => {
       </div>
 
       {/* Контент чата */}
-      <div className="flex-1 min-h-0">
+      <div className="flex-1 min-h-0 overflow-y-auto">
         <ChatContent
           companionId={companionId!}
           isChatBlocked={isChatBlocked}
@@ -242,7 +254,7 @@ const ChatDialogPage = ({ isDesktop = false }: ChatDialogPageProps) => {
       </div>
 
       {/* Поле ввода */}
-      <div className="sticky bottom-0 z-30 bg-white border-t border-gray-200">
+      <div className="sticky bottom-0 z-30 bg-white border-t border-gray-200 shrink-0">
         <InputMessage
           toUserId={companionId!}
           isChatBlocked={isChatBlocked}

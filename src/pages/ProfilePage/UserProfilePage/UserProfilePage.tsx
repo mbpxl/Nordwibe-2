@@ -10,7 +10,7 @@ import Loading from "../../../shared/Components/Loading/Loading";
 import Error from "../../../shared/Components/ErrorPage/ErrorPage";
 import { GoBackButton } from "../../../shared/Components/GoBackButton/GoBackButton";
 import { useGetMe } from "../service/useGetMe";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRanking } from "../../SearchPage/service/useRanking";
 import { useBlockUser } from "../service/useBlockUser";
 import { useUnblockUser } from "../service/useUnblockUser";
@@ -99,7 +99,7 @@ const UserProfilePage = () => {
             });
             handleCloseMenu();
           },
-          onError: (error) => {
+          onError: () => {
             toast.error("Ошибка при блокировке");
           },
         }
@@ -121,7 +121,7 @@ const UserProfilePage = () => {
           });
           handleCloseMenu();
         },
-        onError: (error) => {
+        onError: () => {
           toast.error("Ошибка при разблокировке");
         },
       });
