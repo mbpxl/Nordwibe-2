@@ -130,6 +130,9 @@ const UserProfilePage = () => {
 
   const handleTestResultClick = (testId: string) => {
     const result = userTestResults.find((r: any) => r.testId === testId);
+    if (testId == "cfd48889-06ca-4edf-832e-248b7ed534b2") {
+      return;
+    }
 
     if (!result) {
       toast.error("Результат теста не найден");
@@ -232,7 +235,7 @@ const UserProfilePage = () => {
           </div>
 
           <div className="lg:basis-[980px] lg:p-5 lg:bg-white lg:rounded-xl">
-            <h1 className={`${isBlocked ? "text-[14px]" : "text-[20px]"}`}>
+            <h1 className={`max-lg:hidden ${isBlocked ? "text-[14px]" : "text-[20px]"}`}>
               {user.username || user.name || ""}
               {user.birth_date ? ", " : ""} {calculateAge(user.birth_date)}
               {isBlocked && (
@@ -242,7 +245,7 @@ const UserProfilePage = () => {
               )}
             </h1>
 
-            <div className="lg:mt-4">
+            <div className="mt-4">
               <AboutMyself
                 gender={user.gender}
                 about={user.about}
