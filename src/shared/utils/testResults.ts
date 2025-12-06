@@ -1,15 +1,10 @@
-import {
-  getTestResultDescription,
-  getTestResultImage,
-} from "../data/testResultsData";
+import { getTestResultData } from "../data/testResultsData";
 
-// Перевод числового значения в букву
 export const valueToLetter = (value: number): string => {
   const letters = ["А", "Б", "В", "Г", "Д"];
   return letters[value - 1] || "";
 };
 
-// Определение самого частого ответа
 export const getMostFrequentResult = (letters: string[]): string => {
   if (!letters.length) return "—";
 
@@ -27,98 +22,48 @@ export const getMostFrequentResult = (letters: string[]): string => {
 
 export const calculateTestResult = (
   test: any,
-  userTestAnswers: [string, string][] // Гарантированно правильный формат
+  userTestAnswers: [string, string][]
 ): {
   letter: string;
+  test_title: string;
   description: string;
   imageUrl?: string;
 } => {
-  console.log(`\n=== РАСЧЕТ РЕЗУЛЬТАТА ===`);
-  console.log(`Тест: ${test.title} (${test.uuid})`);
-  console.log(`Вопросов в тесте: ${test.questions?.length || 0}`);
-  console.log(`Ответов пользователя: ${userTestAnswers.length}`);
-
-  // Создаем Map для быстрого поиска ответов по questionId
   const answersMap = new Map<string, string>();
-  userTestAnswers.forEach(([questionId, answerId], index) => {
+  userTestAnswers.forEach(([questionId, answerId]) => {
     if (questionId && answerId) {
       answersMap.set(questionId, answerId);
-      console.log(
-        `✅ Ответ #${index + 1}: ${questionId.substring(
-          0,
-          8
-        )}... -> ${answerId.substring(0, 8)}...`
-      );
-    } else {
-      console.warn(`⚠️ Некорректный ответ #${index + 1}:`, [
-        questionId,
-        answerId,
-      ]);
     }
   });
 
-  // Собираем буквы для всех ответов
   const answerLetters = (test.questions || [])
-    .map((question: any, qIndex: number) => {
+    .map((question: any) => {
       const answerId = answersMap.get(question.uuid);
-
-      if (!answerId) {
-        console.warn(
-          `❌ Ответ не найден для вопроса ${question.uuid.substring(
-            0,
-            8
-          )}... (#${qIndex + 1})`,
-          "Всего ответов:",
-          answersMap.size
-        );
-        return null;
-      }
+      if (!answerId) return null;
 
       const answer = question.answers?.find((a: any) => a.uuid === answerId);
-      if (!answer) {
-        console.warn(
-          `❌ Вариант ответа не найден: ${answerId.substring(
-            0,
-            8
-          )}... для вопроса ${question.uuid.substring(0, 8)}...`,
-          "Всего вариантов:",
-          question.answers?.length || 0
-        );
-        return null;
-      }
+      if (!answer) return null;
 
-      const letter = valueToLetter(answer.value);
-      console.log(
-        `✅ Вопрос #${qIndex + 1}: ${question.uuid.substring(
-          0,
-          8
-        )}... -> ответ ${answer.uuid.substring(0, 8)}... (value=${
-          answer.value
-        }) -> буква ${letter}`
-      );
-      return letter;
+      return valueToLetter(answer.value);
     })
-    .filter(
-      (letter: any): letter is string => letter !== null && letter !== ""
-    );
-
-  console.log("📊 Полученные буквы:", answerLetters);
+    .filter((letter: any): letter is string => letter !== null && letter !== "");
 
   if (answerLetters.length === 0) {
-    console.error(`❌ Нет корректных ответов для расчета`);
     return {
       letter: "—",
+      test_title: "Результат недоступен",
       description: "Недостаточно данных для расчета",
       imageUrl: undefined,
     };
   }
 
   const resultLetter = getMostFrequentResult(answerLetters);
-  console.log(`🎯 Самая частая буква: ${resultLetter}`);
+  const resultData = getTestResultData(test.uuid, resultLetter);
 
   return {
     letter: resultLetter,
-    description: getTestResultDescription(test.uuid, resultLetter),
-    imageUrl: getTestResultImage(test.uuid, resultLetter),
+    test_title: resultData.test_title,
+    description: resultData.description,
+    imageUrl: resultData.imageUrl,
   };
 };
