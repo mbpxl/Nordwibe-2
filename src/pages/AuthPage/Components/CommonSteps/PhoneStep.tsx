@@ -13,6 +13,7 @@ import UserAgreement from "../UserAgreement/UserAgreement";
 import { WELCOME_ROUTE } from "../../../../shared/utils/consts";
 import WrongData from "../PhoneErrorMsg/PhoneErrorMsg";
 import { clearAuthUserData } from "../../../../shared/plugin/clearUserData";
+import OAuthButtons from "../OAuth2/OAuthButtons";
 
 type Props = StepPropsTypes<"phone">;
 
@@ -181,10 +182,10 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
               message="Неправильный формат номера телефона!"
             />
 
-            {/* === OAuth кнопки ===
+            {/* === OAuth кнопки === */}
             <div className="w-full">
               <OAuthButtons />
-            </div> */}
+            </div>
           </div>
 
           {/* === Второй блок - кнопка "Получить код" и UserAgreement === */}
