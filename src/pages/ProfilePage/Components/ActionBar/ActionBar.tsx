@@ -4,6 +4,7 @@ import Сompatibility from "./Сompatibility";
 import Modal from "../../../../shared/Components/Modal/Modal";
 import { Link, useNavigate } from "react-router-dom";
 import { useIsDesktop } from "../../../../shared/hooks/useIsDesktop";
+import { CompatibilityDetailsModal } from "./CompatibilityDetailsModal";
 
 interface ActionBarProps {
   companionId: string;
@@ -58,19 +59,20 @@ const ActionBar: React.FC<ActionBarProps> = ({
         </div>
       </nav>
 
-      {/* Модальное окно совместимости */}
       <Modal
         closeModal={() => setIsСompatibilityActive(false)}
         isOpen={isСompatibilityActive}
       >
         <div className="text-black-heading">
           {compatibility ? (
-            <h3>Подробная статистика совместимости скоро будет доступна!</h3>
+            <CompatibilityDetailsModal
+              companionId={companionId}
+              overallPercentage={compatibility}
+            />
           ) : (
             <div>
               <h1>
-                Чтобы получить данные о проценте совместимости необходимо пройти
-                тесты.
+                Чтобы получить данные о проценте совместимости необходимо пройти тесты.
               </h1>
               <div className="mt-6 text-white">
                 <Link
@@ -85,7 +87,6 @@ const ActionBar: React.FC<ActionBarProps> = ({
         </div>
       </Modal>
 
-      {/* Модальное окно для заблокированного пользователя */}
       <Modal
         closeModal={() => setIsBlockedModalOpen(false)}
         isOpen={isBlockedModalOpen}

@@ -1,0 +1,374 @@
+{
+  "uuid": "cfd48889-06ca-4edf-832e-248b7ed534b2",
+  "title": "Тест на совместимость",
+  "description": "Тест оценит ваши привычки и темперамент.\r\nПоможет избежать конфликтов\r\nи создать комфортное соседство.",
+  "image_url": "/media/Test/images/image.png",
+  "is_important": true,
+  "questions": [
+    {
+      "uuid": "96fbbc71-3796-4a8e-85dc-13c9df6e68af",
+      "question": "Насколько вам важно обсуждать бытовые вопросы заранее?",
+      "description": "",
+      "image_url": "/media/question/images/%D0%9E%D0%B1%D0%BB%D0%BE%D0%B6%D0%BA%D0%B0.png",
+      "answers": [
+        {
+          "uuid": "cd7af66d-9152-4ea2-b2fe-7ba5d5b65da8",
+          "answer": "Очень важно",
+          "value": 3
+        },
+        {
+          "uuid": "2d25fa82-3a07-455e-9a82-e817f522f341",
+          "answer": "Иногда",
+          "value": 2
+        },
+        {
+          "uuid": "fc1145c0-3cfb-4b83-b424-35197bdacff4",
+          "answer": "Можно и без договоренностей",
+          "value": 1
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "64353fec-b71b-4abf-8139-cdebcddca16f",
+      "question": "Курите ли вы?",
+      "description": "",
+      "image_url": "/media/question/images/6_DkO612v.png",
+      "answers": [
+        {
+          "uuid": "08675bf7-1cdc-4aa5-8a43-1f0124e58950",
+          "answer": "Вейп или айкос",
+          "value": 2
+        },
+        {
+          "uuid": "ddd6d032-1dbd-4f99-8508-36bc73cb2c43",
+          "answer": "Да, сигареты",
+          "value": 1
+        },
+        {
+          "uuid": "f87093b2-c639-4e7c-be59-350c601acf0d",
+          "answer": "Нет",
+          "value": 3
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "375cd650-c2e3-4ddb-9fc0-94b2e43b32f9",
+      "question": "Как относитесь к правилам в доме?",
+      "description": "",
+      "image_url": "/media/question/images/%D0%A1%D1%83%D0%BF%D0%B5%D1%80%D0%BC%D0%B5%D0%BD.png",
+      "answers": [
+        {
+          "uuid": "f09653ee-e158-4cae-aafc-04dde52853a4",
+          "answer": "Люблю когда всё заранее обговорено",
+          "value": 3
+        },
+        {
+          "uuid": "1868a1e2-d49e-487d-9e89-66160a5ae9ac",
+          "answer": "Лучше решать по ходу",
+          "value": 2
+        },
+        {
+          "uuid": "982737f3-fd99-4f0d-9fa6-dc692d9a84ce",
+          "answer": "Не люблю рамки, предпочитаю гибкость",
+          "value": 1
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "35ee02b0-17bd-4af2-8b3b-d2fac4967877",
+      "question": "Насколько тесно вы хотите взаимодействовать с соседом?",
+      "description": "",
+      "image_url": "/media/question/images/%D0%A4%D1%80%D0%B5%D0%BD%D0%B4%D0%BB%D0%B8_%D0%BD%D0%BE_%D0%BD%D0%B5_%D1%82%D0%B0%D0%B3.png",
+      "answers": [
+        {
+          "uuid": "d3d2539c-e902-43f9-ab8b-2d86bca6ddf7",
+          "answer": "Просто делим квартиру, минимум общения",
+          "value": 1
+        },
+        {
+          "uuid": "b39116db-bafc-4851-9974-3a4ac6c8b48e",
+          "answer": "Хотелось бы найти друга, с кем интересно жить",
+          "value": 3
+        },
+        {
+          "uuid": "795e5f6a-c81c-4816-a7a8-a2a702c6c285",
+          "answer": "Открыт(а) к общению, иногда готовить, гулять вместе",
+          "value": 2
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "757b4fb6-007c-41d5-afa2-835ecf5c5f78",
+      "question": "Как часто вы убираетесь дома?",
+      "description": "",
+      "image_url": "/media/question/images/1.png",
+      "answers": [
+        {
+          "uuid": "06290e06-0e39-4373-855a-6f0184b10a4c",
+          "answer": "Каждый день",
+          "value": 4
+        },
+        {
+          "uuid": "8ef45966-8a8b-4ade-8922-403047d35178",
+          "answer": "Пару раз в неделю",
+          "value": 3
+        },
+        {
+          "uuid": "56d44b41-decc-4a6e-b067-7ebb8d25c32a",
+          "answer": "Когда накапливается",
+          "value": 2
+        },
+        {
+          "uuid": "78906518-7ef2-4a06-a455-18e3127ec511",
+          "answer": "Почти никогда",
+          "value": 1
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "73d4b230-ef0d-4691-85a9-e7df3682f992",
+      "question": "Вас раздражает грязная посуда в раковине?",
+      "description": "",
+      "image_url": "/media/question/images/2.png",
+      "answers": [
+        {
+          "uuid": "37b52b59-adf1-4921-8a99-af4110605904",
+          "answer": "Да, сильно",
+          "value": 3
+        },
+        {
+          "uuid": "c347f7db-2309-4be5-be95-7b87bceeeac7",
+          "answer": "Немного",
+          "value": 2
+        },
+        {
+          "uuid": "a8b31d7e-c763-4d5c-874a-072ccade5890",
+          "answer": "Нет, не замечаю",
+          "value": 1
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "ffffbfa8-7961-4f07-bec9-44241494ae7d",
+      "question": "Как вы относитесь к идее совместных продуктов и готовки?",
+      "description": "",
+      "image_url": "/media/question/images/7.png",
+      "answers": [
+        {
+          "uuid": "f74e1e46-5e95-457c-9557-a8027c906c0d",
+          "answer": "Предпочитаю делить расходы и еду",
+          "value": 3
+        },
+        {
+          "uuid": "31b0c9c7-fa11-4175-8976-ffeebacc4551",
+          "answer": "Иногда готовим вместе / обсуждаем",
+          "value": 2
+        },
+        {
+          "uuid": "20732f76-b8a9-4a91-9f3c-efef48f70115",
+          "answer": "Каждый сам по себе, у каждого своя полка",
+          "value": 1
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "e146cc51-bc5e-47c3-9226-996c00aecdfa",
+      "question": "Насколько вы экономны в быту?",
+      "description": "",
+      "image_url": "/media/question/images/5.png",
+      "answers": [
+        {
+          "uuid": "a2709c38-bb53-48a1-b578-04bb872df60c",
+          "answer": "Считаю каждую копейку",
+          "value": 3
+        },
+        {
+          "uuid": "639f6862-9b89-4909-a280-f4621e2f61c7",
+          "answer": "Предпочитаю баланс",
+          "value": 2
+        },
+        {
+          "uuid": "b6d31706-31cb-4c3b-899a-d58065b13172",
+          "answer": "Трачу по настроению",
+          "value": 1
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "6a702d2e-3ef8-4499-83f1-ca15e20338d4",
+      "question": "Когда вы обычно ложитесь спать?",
+      "description": "",
+      "image_url": "/media/question/images/%D0%A1%D0%B0%D0%BF%D0%BF%D0%BE%D1%80%D1%82.png",
+      "answers": [
+        {
+          "uuid": "b31328a3-5a2b-4ce3-89b6-fbdc018b2c89",
+          "answer": "До 23:00",
+          "value": 1
+        },
+        {
+          "uuid": "1749a5e8-9ad7-4910-8149-c8efceff0287",
+          "answer": "23:00 - 01:00",
+          "value": 2
+        },
+        {
+          "uuid": "3ed95d58-5b40-42ec-aaf1-474baed74d1b",
+          "answer": "После часа ночи",
+          "value": 3
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "64818aba-e0dd-4a45-a342-27aa3260ceff",
+      "question": "Вы больше про уединение или про совместный досуг?",
+      "description": "",
+      "image_url": "/media/question/images/6.png",
+      "answers": [
+        {
+          "uuid": "54a7f831-fd9a-42a4-94eb-13dd51c1c622",
+          "answer": "Люблю быть один",
+          "value": 1
+        },
+        {
+          "uuid": "6fdb10db-0a9b-4524-945c-f4326ce8d736",
+          "answer": "Могу и так, и так",
+          "value": 2
+        },
+        {
+          "uuid": "4f2727f8-3e04-4092-a93c-9b06317a472c",
+          "answer": "Обожаю общаться",
+          "value": 3
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "2bdfe8cf-ec20-4fd3-ac02-983e64461d80",
+      "question": "Как относитесь к тому, что у соседа бывают гости с ночёвкой?",
+      "description": "",
+      "image_url": "/media/question/images/%D1%80%D0%BE%D0%BA_%D1%81%D1%82%D0%B0%D1%80.png",
+      "answers": [
+        {
+          "uuid": "d64c22cc-abdc-4f4d-9211-1e9da12a8475",
+          "answer": "Мне некомфортно",
+          "value": 1
+        },
+        {
+          "uuid": "8d9a04de-b42c-4da9-ab47-749f4c83f619",
+          "answer": "Нормально, если не часто",
+          "value": 2
+        },
+        {
+          "uuid": "029e5a19-c496-4dcd-8855-02b40e58d4aa",
+          "answer": "Вообще без разницы",
+          "value": 3
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "b3ba452b-2f71-4fd2-8ae2-b29ee5c6ebcb",
+      "question": "Если возникают бытовые конфликты, вы скорее...",
+      "description": "",
+      "image_url": "/media/question/images/1_vdqczML.png",
+      "answers": [
+        {
+          "uuid": "b6e3fad3-2d00-4413-a708-8a321cab4e46",
+          "answer": "Сразу обсуждаю",
+          "value": 3
+        },
+        {
+          "uuid": "ac07a6e6-51b3-4af6-b0c0-894d35e5fc49",
+          "answer": "Жду, пока накопится",
+          "value": 2
+        },
+        {
+          "uuid": "b9e616ac-c3a6-4f6b-a803-8015196ab637",
+          "answer": "Стараюсь избегать",
+          "value": 1
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "818a3c42-b2bc-403c-a136-74a1310b4e16",
+      "question": "Как вы решаете бытовые споры?",
+      "description": "",
+      "image_url": "/media/question/images/4.png",
+      "answers": [
+        {
+          "uuid": "0a7f4eb1-aaa1-4dfb-9a5c-2523e678f270",
+          "answer": "Обсуждаю сразу",
+          "value": 3
+        },
+        {
+          "uuid": "f60dac67-fda4-48f2-9b25-e800bc4b86b1",
+          "answer": "Даю себе время подумать",
+          "value": 2
+        },
+        {
+          "uuid": "b1d73d2d-dea5-41e9-9cf6-eea673ea2888",
+          "answer": "Стараюсь не обсуждать и просто делаю по-своему",
+          "value": 1
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "5a9a33a2-4d7b-4b98-9cb2-dd8630df68a8",
+      "question": "Насколько вам важна тишина дома?",
+      "description": "",
+      "image_url": "/media/question/images/%D0%9A%D1%82%D0%BE_%D1%81%D0%BA%D0%B0%D0%B7%D0%B0%D0%BB_party.png",
+      "answers": [
+        {
+          "uuid": "1cf087ae-d44c-4cec-93fc-e756eaf8e720",
+          "answer": "Очень важна",
+          "value": 1
+        },
+        {
+          "uuid": "e07f4b82-e471-4457-8cce-a4e1f3c0b4b3",
+          "answer": "Можно немного шума",
+          "value": 2
+        },
+        {
+          "uuid": "f700000f-40b4-4dae-9450-5d773d6fb09b",
+          "answer": "Без разницы",
+          "value": 3
+        }
+      ],
+      "duration": 0
+    },
+    {
+      "uuid": "860a3bae-4e17-4964-bc46-4e24bb74945a",
+      "question": "Часто ли вы устраиваете вечеринки или собираете гостей?",
+      "description": "",
+      "image_url": "/media/question/images/3.png",
+      "answers": [
+        {
+          "uuid": "808f6a5f-2a5f-4326-8c02-cea16fc08e82",
+          "answer": "Почти никогда",
+          "value": 1
+        },
+        {
+          "uuid": "87247c06-2442-4173-a7cf-01189f82eaad",
+          "answer": "Иногда, по поводу",
+          "value": 2
+        },
+        {
+          "uuid": "98650075-fb83-4a3e-9d4a-6a83c4d9ac05",
+          "answer": "Часто",
+          "value": 3
+        }
+      ],
+      "duration": 0
+    }
+  ]
+}

@@ -6,7 +6,6 @@ import {
   CHAT_ROUTE,
   MAIN_ROUTE,
   MY_PROFILE_ROUTE,
-  OAUTH_CALLBACK,
   PRIVACY_ROUTE,
   PROFILE_EDIT_ROUTE,
   QUIZ_PASSING_ROUTE,
@@ -31,7 +30,6 @@ import SignInPage from "./pages/AuthPage/SignInPage";
 import SettingsPage from "./pages/SettingsPage/SettingsPage";
 import ErrorPage from "./shared/Components/ErrorPage/ErrorPage";
 import PrivacyPage from "./pages/PrivacyPage/PrivacyPage";
-import OAuthCallback from "./pages/AuthPage/Components/OAuth2/OAuthCallback";
 import TestWrapper from "./pages/TestPage/TestWrapper";
 import QuizWrapper from "./pages/QuizPage/QuizWrapper";
 
@@ -46,10 +44,10 @@ export const routes = [
     path: WELCOME_ROUTE,
     Component: WelcomePage,
   },
-  {
-    path: OAUTH_CALLBACK,
-    Component: OAuthCallback,
-  },
+  // {
+  //   path: OAUTH_CALLBACK,
+  //   Component: OAuthCallback,
+  // },
   {
     path: SIGN_UP_ROUTE,
     Component: SignUpPage,
