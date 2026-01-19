@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import ProgressBar from "../../../../shared/Components/ProgressBar/ProgressBar";
 import GotoTest from "../GotoTest/GotoTest";
 import QuizButton from "./QuizButton/QuizButton";
@@ -8,6 +9,7 @@ interface QuizProgressProps {
   currentSlide: number;
   uuid: string;
   isDesktop?: boolean;
+  isQuizCompleted?: boolean;
 }
 
 const QuizProgress: React.FC<QuizProgressProps> = ({
@@ -16,17 +18,36 @@ const QuizProgress: React.FC<QuizProgressProps> = ({
   currentSlide,
   uuid,
   isDesktop = false,
+  isQuizCompleted = false,
 }) => {
-  const middleContent =
-    quizData.length == currentSlide + 1 ? (
-      <GotoTest uuid={uuid} isDesktop={isDesktop} />
-    ) : (
+  // Изменяем логику отображения контента в середине
+  const middleContent = useMemo(() => {
+    if (quizData.length === currentSlide + 1) {
+      // Если квиз пройден, показываем информационный блок
+      if (isQuizCompleted) {
+        return (
+          <div className="flex flex-col items-center justify-center">
+            <p className="text-gray-700 font-medium text-center">
+              Квиз уже пройден
+            </p>
+            <p className="text-gray-500 text-sm text-center">
+              Вы можете просматривать материалы повторно
+            </p>
+          </div>
+        );
+      }
+      // Иначе показываем кнопку перехода к тесту
+      return <GotoTest uuid={uuid} isDesktop={isDesktop} />;
+    }
+    // Показываем прогресс бар для остальных слайдов
+    return (
       <ProgressBar
         progress={String(currentSlide + 1)}
         totalProgress={quizData.length}
         title="прохождение"
       />
     );
+  }, [currentSlide, quizData.length, isQuizCompleted, uuid, isDesktop]);
 
   // Desktop версия
   if (isDesktop) {
@@ -42,7 +63,9 @@ const QuizProgress: React.FC<QuizProgressProps> = ({
           />
         </div>
 
-        <div className="flex-1">{middleContent}</div>
+        <div className="flex-1 min-h-[80px] flex items-center justify-center">
+          {middleContent}
+        </div>
 
         <div className="w-16 flex justify-end">
           <QuizButton
@@ -50,8 +73,9 @@ const QuizProgress: React.FC<QuizProgressProps> = ({
             isNext={true}
             quizData={quizData}
             currentSlide={currentSlide}
-            isLastQuizStep={quizData.length == currentSlide + 1}
+            isLastQuizStep={quizData.length === currentSlide + 1}
             isDesktop={true}
+            isQuizCompleted={isQuizCompleted}
           />
         </div>
       </div>
@@ -70,7 +94,9 @@ const QuizProgress: React.FC<QuizProgressProps> = ({
         />
       </div>
 
-      <div className="w-full">{middleContent}</div>
+      <div className="w-full min-h-[60px] flex items-center justify-center">
+        {middleContent}
+      </div>
 
       <div className="w-[64px] flex justify-end">
         <QuizButton
@@ -78,7 +104,8 @@ const QuizProgress: React.FC<QuizProgressProps> = ({
           isNext={true}
           quizData={quizData}
           currentSlide={currentSlide}
-          isLastQuizStep={quizData.length == currentSlide + 1}
+          isLastQuizStep={quizData.length === currentSlide + 1}
+          isQuizCompleted={isQuizCompleted}
         />
       </div>
     </div>

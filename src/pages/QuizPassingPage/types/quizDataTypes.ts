@@ -16,6 +16,7 @@ export type QuizCardType = {
   image_url: string;
   time: string;
   isDesktop: boolean;
+  isCompleted?: boolean;
 };
 
 export type LessonsType = {

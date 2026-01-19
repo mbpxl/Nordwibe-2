@@ -8,6 +8,7 @@ interface ContinueProps {
   to?: string;
   isPending?: boolean;
   isQuizButton?: boolean;
+  isCompleted?: boolean;
 }
 
 const Continue: React.FC<ContinueProps> = ({
@@ -17,17 +18,44 @@ const Continue: React.FC<ContinueProps> = ({
   to,
   isPending,
   isQuizButton,
+  isCompleted = false,
 }) => {
-  const linkClasses =
-    "w-full block text-center py-[0.25rem] rounded-[30px] font-bold text-white transition bg-purple-main cursor-pointer";
-  const baseClasses =
-    "w-full py-[0.75rem] rounded-[30px] font-bold text-white transition";
+  // Определяем классы для различных состояний
+  const getButtonClasses = () => {
+    // Базовые классы
+    const baseClasses =
+      "w-full py-[0.75rem] rounded-[30px] font-bold text-white transition";
 
-  const activeClasses = "bg-purple-main cursor-pointer";
-  const disabledClasses =
-    "bg-purple-main-disabled cursor-not-allowed opacity-50";
+    // Для кнопки в виде ссылки (квизы)
+    if (isQuizButton) {
+      if (isCompleted) {
+        return "w-full block text-center py-[0.25rem] rounded-[30px] font-bold text-white transition bg-green-500 hover:bg-green-600 cursor-pointer";
+      }
+      return "w-full block text-center py-[0.25rem] rounded-[30px] font-bold text-white transition bg-purple-main hover:bg-purple-600 cursor-pointer";
+    }
 
-  const classes = `${baseClasses} ${isValid ? activeClasses : disabledClasses}`;
+    // Для обычной кнопки
+    if (isCompleted) {
+      return `${baseClasses} ${
+        isValid
+          ? "bg-green-500 hover:bg-green-600 cursor-pointer"
+          : "bg-green-500/50 cursor-not-allowed"
+      }`;
+    }
+
+    // Обычное состояние
+    return `${baseClasses} ${
+      isValid
+        ? "bg-purple-main hover:bg-purple-600 cursor-pointer"
+        : "bg-purple-main-disabled cursor-not-allowed opacity-50"
+    }`;
+  };
+
+  const linkClasses = isCompleted
+    ? "w-full block text-center py-[0.25rem] rounded-[30px] font-bold text-white transition bg-green-500 hover:bg-green-600 cursor-pointer"
+    : "w-full block text-center py-[0.25rem] rounded-[30px] font-bold text-white transition bg-purple-main hover:bg-purple-600 cursor-pointer";
+
+  const classes = getButtonClasses();
 
   if (to) {
     return (
@@ -46,18 +74,21 @@ const Continue: React.FC<ContinueProps> = ({
     <button
       onClick={handleNext}
       disabled={!isValid}
-      className={isQuizButton ? linkClasses : classes}
+      className={classes}
+      title={
+        isCompleted ? "Просмотреть материалы пройденного квиза" : undefined
+      }
     >
       {isPending ? (
         <div className="flex justify-center items-center">
           <img
             className="w-10 h-5"
             src="/icons/sign-in/loading-spinner.svg"
-            alt=""
+            alt="Загрузка"
           />
         </div>
       ) : (
-        title
+        <>{title}</>
       )}
     </button>
   );
