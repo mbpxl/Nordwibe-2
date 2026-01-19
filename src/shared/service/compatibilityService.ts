@@ -37,19 +37,22 @@ export interface ComparedTrait {
 
 export interface CompatibilityDetails {
   totalQuestions: number;
-  similarTraits: ComparedTrait[];
-  differentTraits: ComparedTrait[];
+  topSimilar: ComparedTrait[];
+  topDifferent: ComparedTrait[];
 }
 
 export class CompatibilityService {
   private targetTestId = "cfd48889-06ca-4edf-832e-248b7ed534b2";
 
-  async getCompatibilityDetails(
+  // В сервисе compatibilityService.ts обновите метод getCompatibilityDetails:
+  getCompatibilityDetails(
     myAnswers: UserAnswerPair[],
     otherUserAnswers: Array<[string, string]>,
     allTests: any[]
-  ): Promise<CompatibilityDetails> {
-    const targetTest = allTests.find((test: any) => test.uuid === this.targetTestId) as CompatibilityTest;
+  ): CompatibilityDetails {
+    const targetTest = allTests.find(
+      (test: any) => test.uuid === this.targetTestId
+    );
     if (!targetTest) {
       throw new Error(`Тест с ID ${this.targetTestId} не найден`);
     }
@@ -57,13 +60,19 @@ export class CompatibilityService {
     const compared: ComparedTrait[] = [];
 
     for (const myAnswer of myAnswers) {
-      const question = targetTest.questions.find((q: TestQuestion) => q.uuid === myAnswer.question_id);
+      const question = targetTest.questions.find(
+        (q: TestQuestion) => q.uuid === myAnswer.question_id
+      );
       if (!question) continue;
 
-      const otherUserAnswerPair = otherUserAnswers.find(([qId]) => qId === myAnswer.question_id);
+      const otherUserAnswerPair = otherUserAnswers.find(
+        ([qId]) => qId === myAnswer.question_id
+      );
       const otherAnswerId = otherUserAnswerPair ? otherUserAnswerPair[1] : null;
 
-      const myAnswerObj = question.answers.find((a: TestAnswer) => a.uuid === myAnswer.answer_id);
+      const myAnswerObj = question.answers.find(
+        (a: TestAnswer) => a.uuid === myAnswer.answer_id
+      );
       const otherAnswerObj = otherAnswerId
         ? question.answers.find((a: TestAnswer) => a.uuid === otherAnswerId)
         : null;
@@ -81,22 +90,102 @@ export class CompatibilityService {
       });
     }
 
-    const sortedByDifference = [...compared].sort((a, b) => a.difference - b.difference);
+    if (compared.length === 0) {
+      return {
+        totalQuestions: 0,
+        topSimilar: [],
+        topDifferent: [],
+      };
+    }
 
-    const similarTraits = sortedByDifference.filter(item => item.difference <= 1);
-    const differentTraits = [...compared]
-      .filter(item => item.difference >= 2)
-      .sort((a, b) => b.difference - a.difference);
+    const sortedByDifference = [...compared].sort(
+      (a, b) => a.difference - b.difference
+    );
+
+    const getTopSimilar = () => {
+      const same = sortedByDifference.filter((item) => item.difference === 0);
+      if (same.length >= 2) return same.slice(0, 2);
+      if (same.length === 1) {
+        const diff1 = sortedByDifference.filter(
+          (item) => item.difference === 1
+        );
+        return diff1.length >= 1 ? [same[0], diff1[0]] : [same[0]];
+      }
+
+      const diff1 = sortedByDifference.filter((item) => item.difference === 1);
+      if (diff1.length >= 2) return diff1.slice(0, 2);
+      if (diff1.length === 1) {
+        const diff2 = sortedByDifference.filter(
+          (item) => item.difference === 2
+        );
+        return diff2.length >= 1 ? [diff1[0], diff2[0]] : [diff1[0]];
+      }
+
+      const diff2 = sortedByDifference.filter((item) => item.difference === 2);
+      if (diff2.length >= 2) return diff2.slice(0, 2);
+      if (diff2.length === 1) {
+        const diff3 = sortedByDifference.filter(
+          (item) => item.difference === 3
+        );
+        return diff3.length >= 1 ? [diff2[0], diff3[0]] : [diff2[0]];
+      }
+
+      return sortedByDifference.slice(0, 2);
+    };
+
+    const getTopDifferent = () => {
+      const allQuestions = [...compared];
+      const similarIds = getTopSimilar().map((item) => item.questionId);
+
+      const availableForDifferent = allQuestions
+        .filter((item) => !similarIds.includes(item.questionId))
+        .sort((a, b) => b.difference - a.difference);
+
+      const diff3 = availableForDifferent.filter(
+        (item) => item.difference >= 3
+      );
+      if (diff3.length >= 2) return diff3.slice(0, 2);
+      if (diff3.length === 1) {
+        const diff2 = availableForDifferent.filter(
+          (item) => item.difference === 2
+        );
+        return diff2.length >= 1 ? [diff3[0], diff2[0]] : [diff3[0]];
+      }
+
+      const diff2 = availableForDifferent.filter(
+        (item) => item.difference === 2
+      );
+      if (diff2.length >= 2) return diff2.slice(0, 2);
+      if (diff2.length === 1) {
+        const diff1 = availableForDifferent.filter(
+          (item) => item.difference === 1
+        );
+        return diff1.length >= 1 ? [diff2[0], diff1[0]] : [diff2[0]];
+      }
+
+      const diff1 = availableForDifferent.filter(
+        (item) => item.difference === 1
+      );
+      if (diff1.length >= 2) return diff1.slice(0, 2);
+
+      return availableForDifferent.slice(0, 2);
+    };
+
+    const topSimilar = getTopSimilar();
+    const topDifferent = getTopDifferent();
 
     return {
       totalQuestions: compared.length,
-      similarTraits,
-      differentTraits,
+      topSimilar,
+      topDifferent,
     };
   }
 
-  findUserAnswers(rankingData: RankingUser[], userId: string): Array<[string, string]> {
-    const user = rankingData.find(u => u.user_id === userId);
+  findUserAnswers(
+    rankingData: RankingUser[],
+    userId: string
+  ): Array<[string, string]> {
+    const user = rankingData.find((u) => u.user_id === userId);
     return user ? user.answers : [];
   }
 }
