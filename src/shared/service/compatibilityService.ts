@@ -10,11 +10,6 @@ interface TestQuestion {
   answers: TestAnswer[];
 }
 
-interface CompatibilityTest {
-  uuid: string;
-  questions: TestQuestion[];
-}
-
 interface UserAnswerPair {
   question_id: string;
   answer_id: string;

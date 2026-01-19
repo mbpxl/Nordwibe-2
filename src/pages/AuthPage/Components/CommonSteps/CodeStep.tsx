@@ -42,6 +42,7 @@ const CodeStep: React.FC<Props> = ({
   const { performRedirect } = useRedirectAfterLogin();
 
   // Состояния для капчи
+  //@ts-ignore
   const [captchaToken, setCaptchaToken] = useState("");
   const [captchaKey, setCaptchaKey] = useState(0);
   const [isResendAfterCaptcha, setIsResendAfterCaptcha] = useState(false);
