@@ -2,13 +2,18 @@ import { Link, useNavigate } from "react-router-dom";
 import Continue from "../../../AuthPage/Components/Continue/Continue";
 import type { QuizCardType } from "../../../QuizPassingPage/types/quizDataTypes";
 
-const QuizItem: React.FC<QuizCardType> = ({
+interface ExtendedQuizCardType extends QuizCardType {
+  isCompleted?: boolean;
+}
+
+const QuizItem: React.FC<ExtendedQuizCardType> = ({
   uuid,
   time,
   title,
   description,
   image_url,
   isDesktop = false,
+  isCompleted = false,
 }) => {
   const navigate = useNavigate();
 
@@ -17,6 +22,9 @@ const QuizItem: React.FC<QuizCardType> = ({
       navigate(`/quiz/${uuid}`, { replace: true });
     }
   };
+
+  // Текст для кнопки в зависимости от статуса квиза
+  const buttonText = isCompleted ? "Просмотреть" : "Перейти";
 
   return (
     <>
@@ -30,9 +38,16 @@ const QuizItem: React.FC<QuizCardType> = ({
             <img src={image_url} alt="quiz_image" />
           </div>
           <div className="max-w-[350.7px]">
-            <p className="text-purple-heading text-[0.625rem] font-medium leading-[0.75rem] mb-1 max-[334px]:text-[0.58rem] max-[334px]:leading-[0.696rem]">
-              Время прохождения: {time} мин
-            </p>
+            {/* Время прохождения или бейдж "Пройден" */}
+            {isCompleted ? (
+              <div className="bg-green-500 text-white text-[0.625rem] font-bold px-2 py-1 rounded-full inline-block mb-1">
+                Пройден
+              </div>
+            ) : (
+              <p className="text-purple-heading text-[0.625rem] font-medium leading-[0.75rem] mb-1 max-[334px]:text-[0.58rem] max-[334px]:leading-[0.696rem]">
+                Время прохождения: {time} мин
+              </p>
+            )}
             <h1 className="text-black-heading text-[0.875rem] font-semibold leading-[1rem] mb-1 max-[334px]:text-[0.78rem] max-[334px]:leading-[0.888rem]">
               {title}
             </h1>
@@ -41,9 +56,10 @@ const QuizItem: React.FC<QuizCardType> = ({
             </p>
             <div className="text-white">
               <Continue
-                title={"Перейти"}
+                title={buttonText}
                 handleNext={() => navigate(`/quiz/${uuid}`)}
                 isQuizButton
+                isCompleted={isCompleted}
               />
             </div>
           </div>
@@ -64,9 +80,16 @@ const QuizItem: React.FC<QuizCardType> = ({
             />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-purple-heading text-xs font-medium mb-1">
-              Время прохождения: {time} мин
-            </p>
+            {/* Время прохождения или бейдж "Пройден" */}
+            {isCompleted ? (
+              <div className="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full inline-block mb-2">
+                Пройден
+              </div>
+            ) : (
+              <p className="text-purple-heading text-xs font-medium mb-1">
+                Время прохождения: {time} мин
+              </p>
+            )}
             <h1 className="text-black-heading text-lg font-semibold mb-2 truncate">
               {title}
             </h1>
@@ -74,13 +97,17 @@ const QuizItem: React.FC<QuizCardType> = ({
               {description}
             </p>
             <button
-              className="bg-purple-main text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-purple-600 transition-colors"
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                isCompleted
+                  ? "bg-green-500 text-white hover:bg-green-600"
+                  : "bg-purple-main text-white hover:bg-purple-600"
+              }`}
               onClick={(e) => {
                 e.stopPropagation();
                 navigate(`/quiz/${uuid}`);
               }}
             >
-              Перейти
+              {buttonText}
             </button>
           </div>
         </div>

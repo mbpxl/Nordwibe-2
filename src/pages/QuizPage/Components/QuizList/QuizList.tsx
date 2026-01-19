@@ -4,7 +4,6 @@ import Loading from "../../../../shared/Components/Loading/Loading";
 import Error from "../../../../shared/Components/ErrorPage/ErrorPage";
 import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
 import ProgressBar from "../../../../shared/Components/ProgressBar/ProgressBar";
-import AllQuizCompleted from "../../../QuizPage/Components/AllQuizCompleted/AllQuizCompleted";
 import QuizItem from "../QuizItem/QuizItem";
 import { baseURLforImages } from "../../../../shared/plugin/axios";
 
@@ -37,14 +36,9 @@ const QuizList = ({ isDesktop = false }: QuizListProps) => {
     return { ...quiz, isCompleted };
   });
 
-  const unCompletedQuizzes = quizzesWithCompletion.filter(
-    (q: any) => !q.isCompleted
-  );
-  const completedQuizessCount =
-    quizzesWithCompletion.length - unCompletedQuizzes.length;
-
-  const isAllQuizesCompleted =
-    completedQuizessCount === quizzesWithCompletion.length;
+  const completedQuizessCount = quizzesWithCompletion.filter(
+    (q: any) => q.isCompleted
+  ).length;
 
   return (
     <>
@@ -58,25 +52,20 @@ const QuizList = ({ isDesktop = false }: QuizListProps) => {
             totalProgress={quizzesWithCompletion.length}
             title={"квиз"}
           />
-          <div className="max-w-[600px]">
-            {isAllQuizesCompleted ? (
-              <AllQuizCompleted title={"квизы"} />
-            ) : (
-              <div className="">
-                {unCompletedQuizzes.map((item: any, index: any) => (
-                  <div key={index} className="mb-4">
-                    <QuizItem
-                      uuid={item.uuid}
-                      time={"5"}
-                      title={item.title}
-                      description={item.description}
-                      image_url={baseURLforImages + item.image_url}
-                      isDesktop={false}
-                    />
-                  </div>
-                ))}
+          <div className="max-w-[600px] w-full">
+            {quizzesWithCompletion.map((item: any, index: any) => (
+              <div key={index} className="mb-4 relative">
+                <QuizItem
+                  uuid={item.uuid}
+                  time={"5"}
+                  title={item.title}
+                  description={item.description}
+                  image_url={baseURLforImages + item.image_url}
+                  isDesktop={false}
+                  isCompleted={item.isCompleted}
+                />
               </div>
-            )}
+            ))}
           </div>
         </Wrapper>
       )}
@@ -94,32 +83,21 @@ const QuizList = ({ isDesktop = false }: QuizListProps) => {
 
           {/* Список квизов с прокруткой */}
           <div className="flex-1 overflow-y-auto px-6 pb-6">
-            {isAllQuizesCompleted ? (
-              <div className="flex flex-col items-center justify-center h-full text-gray-400 py-8">
-                <div className="text-4xl mb-3">🎓</div>
-                <h3 className="text-lg font-medium mb-2">
-                  Все квизы пройдены!
-                </h3>
-                <p className="text-gray-500 text-center">
-                  Вы успешно прошли все доступные квизы
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {unCompletedQuizzes.map((item: any, index: any) => (
-                  <div key={index}>
-                    <QuizItem
-                      uuid={item.uuid}
-                      time={"5"}
-                      title={item.title}
-                      description={item.description}
-                      image_url={baseURLforImages + item.image_url}
-                      isDesktop={true}
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+            <div className="space-y-4">
+              {quizzesWithCompletion.map((item: any, index: any) => (
+                <div key={index} className="relative">
+                  <QuizItem
+                    uuid={item.uuid}
+                    time={"5"}
+                    title={item.title}
+                    description={item.description}
+                    image_url={baseURLforImages + item.image_url}
+                    isDesktop={true}
+                    isCompleted={item.isCompleted}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
