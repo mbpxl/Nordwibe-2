@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, useEffect } from "react";
 import type { StepPropsTypes } from "../../types/SignUpTypes";
 import Continue from "../Continue/Continue";
 import React from "react";
@@ -13,8 +13,11 @@ import {
   forceRedirectToWelcome,
 } from "../../../../shared/plugin/redirectToLogin";
 import goBackIcon from "/icons/arrow-left.svg";
-
 import useFormatUnformatCode from "../../hooks/useFormatCode";
+import { usePhoneRequest } from "../../service/usePhoneRequest";
+import { useGetCaptchaToken } from "../../service/useGetCaptchaToken";
+import Modal from "../../../../shared/Components/Modal/Modal";
+import { SmartCaptcha } from "@yandex/smart-captcha";
 
 type Props = StepPropsTypes<"code">;
 
@@ -25,6 +28,7 @@ const CodeStep: React.FC<Props> = ({
   onBack,
 }) => {
   const [showDeletionModal, setShowDeletionModal] = useState(false);
+  const [showCaptchaModal, setShowCaptchaModal] = useState(false);
 
   const fullPhoneNumber = `+7${formData.phone}`;
   const inputRef = useRef<HTMLInputElement>(null);
@@ -36,6 +40,48 @@ const CodeStep: React.FC<Props> = ({
 
   const { mutate: getToken } = useAccessToken();
   const { performRedirect } = useRedirectAfterLogin();
+
+  // Состояния для капчи
+  const [captchaToken, setCaptchaToken] = useState("");
+  const [captchaKey, setCaptchaKey] = useState(0);
+  const [isResendAfterCaptcha, setIsResendAfterCaptcha] = useState(false);
+
+  // Таймер для кнопки повторной отправки
+  const [timer, setTimer] = useState(30);
+  const [isTimerActive, setIsTimerActive] = useState(true);
+
+  // Получаем публичный ключ для капчи
+  const { data: captchaPublicToken } = useGetCaptchaToken();
+
+  // Инициализируем капчу из localStorage
+  useEffect(() => {
+    const savedToken = localStorage.getItem("captcha_token");
+    if (savedToken) {
+      setCaptchaToken(savedToken);
+    }
+  }, []);
+
+  // Запускаем таймер при монтировании компонента
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+
+    if (isTimerActive && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setIsTimerActive(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isTimerActive]);
 
   const handleSuccess = () => {
     updateForm({ code });
@@ -56,8 +102,56 @@ const CodeStep: React.FC<Props> = ({
     });
   };
 
+  // Обработчик успеха для повторной отправки
+  const handleResendSuccess = useCallback(() => {
+    console.log("Код успешно отправлен повторно");
+    // Сбрасываем таймер
+    setTimer(30);
+    setIsTimerActive(true);
+  }, []);
+
+  // Обработчик ошибок для повторной отправки
+  const handleResendError = useCallback((error: any) => {
+    // Если ошибка связана с капчей, показываем модальное окно
+    if (error?.response?.data?.ru_message?.includes("Неверная капча")) {
+      localStorage.removeItem("captcha_token");
+      setCaptchaToken("");
+      setIsResendAfterCaptcha(true);
+      setShowCaptchaModal(true);
+    }
+  }, []);
+
+  // Обработчик успешной капчи
+  const handleCaptchaSuccess = useCallback(
+    (token: string) => {
+      setCaptchaToken(token);
+      localStorage.setItem("captcha_token", token);
+
+      // Если капча была вызвана для повторной отправки, сразу отправляем запрос
+      if (isResendAfterCaptcha) {
+        sendResendRequest({
+          phone: fullPhoneNumber,
+          captcha_token: token,
+        });
+        setIsResendAfterCaptcha(false);
+      }
+
+      setShowCaptchaModal(false);
+    },
+    [fullPhoneNumber, isResendAfterCaptcha]
+  );
+
+  // Функция для обновления капчи
+  const handleRefreshCaptcha = useCallback(() => {
+    setCaptchaKey((prev) => prev + 1);
+  }, []);
+
   const captcha_token = localStorage.getItem("captcha_token");
   const { mutate, isError, isPending, error } = useConfirmPhone(handleSuccess);
+
+  // Хук для повторной отправки кода
+  const { sendPhoneRequest: sendResendRequest, isPending: isResendPending } =
+    usePhoneRequest(handleResendSuccess, handleResendError);
 
   const handleNext = useCallback(
     (e?: React.FormEvent) => {
@@ -70,6 +164,29 @@ const CodeStep: React.FC<Props> = ({
     },
     [captcha_token, code, fullPhoneNumber, mutate]
   );
+
+  const handleResentCode = useCallback(() => {
+    // Если таймер активен, не отправляем запрос
+    if (isTimerActive && timer > 0) return;
+
+    const currentToken = localStorage.getItem("captcha_token");
+
+    if (currentToken) {
+      sendResendRequest({
+        phone: fullPhoneNumber,
+        captcha_token: currentToken,
+      });
+    } else {
+      setIsResendAfterCaptcha(true);
+      setShowCaptchaModal(true);
+    }
+  }, [fullPhoneNumber, sendResendRequest, isTimerActive, timer]);
+
+  // Обработчик закрытия модального окна капчи
+  const handleCloseCaptchaModal = useCallback(() => {
+    setShowCaptchaModal(false);
+    setIsResendAfterCaptcha(false);
+  }, []);
 
   const handleCloseDeletionModal = () => {
     forceRedirectToWelcome();
@@ -142,10 +259,22 @@ const CodeStep: React.FC<Props> = ({
               isError={isError}
             />
 
-            {/* === Предупреждение === */}
-            <p className="mt-4 text-[1rem] text-[#3D3D3D] font-medium lg:mt-2">
-              Никому не сообщайте номер
-            </p>
+            {/* === Кнопка повторной отправки === */}
+            <button
+              onClick={handleResentCode}
+              disabled={isResendPending || (isTimerActive && timer > 0)}
+              className={`mt-4 text-[1rem] font-medium lg:mt-2 px-4 py-2 rounded-lg transition-all duration-200 ${
+                isResendPending || (isTimerActive && timer > 0)
+                  ? "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+                  : "text-purple-main hover:text-white hover:bg-purple-main border border-purple-main hover:border-purple-dark"
+              }`}
+            >
+              {isResendPending
+                ? "Отправка..."
+                : isTimerActive && timer > 0
+                ? `Отправить повторно (${timer} сек)`
+                : "Отправить повторно"}
+            </button>
           </div>
 
           {/* === Второй блок - кнопка "Готово" === */}
@@ -160,6 +289,45 @@ const CodeStep: React.FC<Props> = ({
           </div>
         </div>
       </div>
+
+      {/* Модальное окно для капчи */}
+      <Modal
+        isOpen={showCaptchaModal}
+        closeModal={handleCloseCaptchaModal}
+        className="max-w-md"
+      >
+        <div className="flex flex-col items-center">
+          <h3 className="text-xl font-semibold text-gray-800 mb-4">
+            {isResendAfterCaptcha
+              ? "Подтвердите отправку кода"
+              : "Подтвердите, что вы не робот"}
+          </h3>
+
+          <div className="w-full mb-6">
+            <SmartCaptcha
+              key={captchaKey}
+              sitekey={captchaPublicToken}
+              language="ru"
+              onSuccess={handleCaptchaSuccess}
+            />
+          </div>
+
+          <div className="flex justify-between items-center w-full">
+            <button
+              onClick={handleRefreshCaptcha}
+              className="text-sm text-purple-main hover:text-purple-dark font-medium"
+            >
+              Обновить капчу
+            </button>
+
+            <p className="text-sm text-gray-600 text-center">
+              {isResendAfterCaptcha
+                ? "После подтверждения код будет отправлен повторно"
+                : "Требуется для повторной отправки кода"}
+            </p>
+          </div>
+        </div>
+      </Modal>
 
       <AccountDeletionModal
         isOpen={showDeletionModal}
