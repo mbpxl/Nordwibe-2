@@ -24,6 +24,7 @@ import QuizzesBar from "../Components/QuizzesBar/QuizzesBar";
 import { useMyQuizzes } from "../hooks/useMyQuizzes";
 import { useMyTestResults } from "../../../shared/hooks/useMyTestResults";
 import Modal from "../../../shared/Components/Modal/Modal";
+import toast from "react-hot-toast";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -42,6 +43,10 @@ const ProfilePage = () => {
   } | null>(null);
 
   const handleMyTestResultClick = (testId: string) => {
+    if (testId === "cfd48889-06ca-4edf-832e-248b7ed534b2") {
+      return;
+    }
+
     const result = myTestResults.find((r: any) => r.testId === testId);
     if (result) {
       setSelectedResult({
@@ -50,6 +55,8 @@ const ProfilePage = () => {
         description: result.result.description,
         imageUrl: result.result.imageUrl,
       });
+    } else {
+      toast.error("Результат теста не найден");
     }
   };
 
@@ -63,7 +70,7 @@ const ProfilePage = () => {
   } = useGetTests();
 
   const [showTooltip, setShowTooltip] = useState(
-    !!!localStorage.getItem("showToolTip")
+    !!!localStorage.getItem("showToolTip"),
   );
 
   const handleSetShowToolTip = () => {
@@ -94,10 +101,10 @@ const ProfilePage = () => {
     setIsActionsMenuOpen(false);
   };
 
-  const handleShare = () => { };
+  const handleShare = () => {};
 
   const compatibilityTest = allTests?.find(
-    (test: any) => test.title === "Тест на совместимость"
+    (test: any) => test.title === "Тест на совместимость",
   );
 
   if (isLoading || isAllTestsLoading || isMyTestsLoading || isQuizzesLoading) {
@@ -109,7 +116,7 @@ const ProfilePage = () => {
   const isFilledProfile = data.username && data.gender;
 
   const isCompatibilityTestCompleted = completedTests.some(
-    (test: any) => test.uuid == compatibilityTest.uuid
+    (test: any) => test.uuid == compatibilityTest.uuid,
   );
 
   return (
@@ -222,11 +229,11 @@ const ProfilePage = () => {
                 onResultClick={handleMyTestResultClick}
               />
             )}
-            <Modal closeModal={() => setSelectedResult(null)} isOpen={!!selectedResult}>
-              <div
-                className=""
-                onClick={() => setSelectedResult(null)}
-              >
+            <Modal
+              closeModal={() => setSelectedResult(null)}
+              isOpen={!!selectedResult}
+            >
+              <div className="" onClick={() => setSelectedResult(null)}>
                 <div
                   className="bg-white rounded-2xl w-full max-w-md mx-2"
                   onClick={(e) => e.stopPropagation()}

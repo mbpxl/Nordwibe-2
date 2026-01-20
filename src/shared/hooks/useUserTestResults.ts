@@ -23,44 +23,43 @@ export const useUserTestResults = (userId: string) => {
 
     const nonImportantTests = tests.filter(
       (test: any) =>
-        !test.is_important && userRanking.tests_ids.includes(test.uuid)
+        !test.is_important &&
+        userRanking.tests_ids.includes(test.uuid) &&
+        test.uuid !== "cfd48889-06ca-4edf-832e-248b7ed534b2",
     );
 
-    if (nonImportantTests.length === 0) {
-      return [];
-    }
+    return nonImportantTests
+      .map((test: any) => {
+        const userTestAnswers = userRanking.answers;
 
-    const targetTest = nonImportantTests[0];
-    const userTestAnswers = userRanking.answers;
+        try {
+          const result = calculateTestResult(test, userTestAnswers);
 
-    try {
-      const result = calculateTestResult(targetTest, userTestAnswers);
+          if (
+            result.letter === "—" ||
+            !result.description ||
+            result.description.includes("недостаточно данных")
+          ) {
+            return null;
+          }
 
-      if (
-        result.letter === "—" ||
-        !result.description ||
-        result.description.includes("недостаточно данных")
-      ) {
-        return [];
-      }
-
-      return [
-        {
-          testId: targetTest.uuid,
-          title: targetTest.title,
-          description: targetTest.description,
-          imageUrl: targetTest.image_url,
-          result: {
-            letter: result.letter,
-            test_title: result.test_title,
-            description: result.description,
-            imageUrl: result.imageUrl,
-          },
-        },
-      ];
-    } catch (error) {
-      return [];
-    }
+          return {
+            testId: test.uuid,
+            title: test.title,
+            description: test.description,
+            imageUrl: test.image_url,
+            result: {
+              letter: result.letter,
+              test_title: result.test_title,
+              description: result.description,
+              imageUrl: result.imageUrl,
+            },
+          };
+        } catch (error) {
+          return null;
+        }
+      })
+      .filter(Boolean);
   }, [tests, userRanking]);
 
   return {
