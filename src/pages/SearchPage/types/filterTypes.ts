@@ -1,15 +1,15 @@
 export interface FilterType {
-  sex: string | null;
-  age_from: number;
-  age_to: number;
-  city_id: string | null;
-  city_name: string | null;
-  budget_from: number | null;
-  budget_to: number | null;
-  occupation: string[] | null;
-  smoking_status: string[] | null;
-  pets: string[] | null;
-  profession: string | null;
+  sex?: string | null;
+  age_from?: number;
+  age_to?: number;
+  city_id?: string | null;
+  city_name?: string | null;
+  budget_from?: number | null;
+  budget_to?: number | null;
+  occupation?: string[] | null;
+  smoking_status?: string[] | null;
+  pets?: string[] | null;
+  profession?: string | null;
 }
 
 export const initialFilterState: FilterType = {

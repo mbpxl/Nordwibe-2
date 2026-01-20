@@ -1,12 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../../shared/plugin/axios";
 import type { rankingTypes } from "../types/rankingTypes";
-import type { FilterType } from "../types/filterTypes";
+import { initialFilterState, type FilterType } from "../types/filterTypes";
 
-const fetchRankingData = async (filters: FilterType) => {
+const fetchRankingData = async (filters?: FilterType) => {
   const params: Record<string, any> = {};
 
-  Object.entries(filters).forEach(([key, value]) => {
+  const mergedFilters = { ...initialFilterState, ...filters };
+
+  Object.entries(mergedFilters).forEach(([key, value]) => {
     if (value !== null && value !== undefined && value !== "" && value !== 0) {
       if (key === "occupation" || key === "pets" || key === "smoking_status") {
         if (Array.isArray(value) && value.length > 0) {
@@ -26,9 +28,9 @@ const fetchRankingData = async (filters: FilterType) => {
   return response.data;
 };
 
-export const useRanking = (filters: FilterType) => {
+export const useRanking = (filters?: FilterType) => {
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["ranking-users", filters],
+    queryKey: ["ranking-users", filters || {}],
     queryFn: () => fetchRankingData(filters),
     staleTime: 5 * 60 * 1000,
   });
