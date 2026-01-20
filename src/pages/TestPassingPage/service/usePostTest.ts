@@ -18,6 +18,7 @@ export const usePostTest = () => {
     mutationFn: postTest,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["completedTests"] });
+      queryClient.invalidateQueries({ queryKey: ["ranking-users"] });
     },
   });
 };
