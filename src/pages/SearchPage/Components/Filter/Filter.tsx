@@ -1,4 +1,3 @@
-// Filter.tsx (обновленная версия)
 import React, { useState, useEffect } from "react";
 import { GoBackButton } from "../../../../shared/Components/GoBackButton/GoBackButton";
 import TopicHeader from "../../../../shared/Components/TopicHeader/TopicHeader";
@@ -7,7 +6,7 @@ import Budget from "../../../EditProfilePage/components/Budget/Budget";
 import InlineSelect from "../../../EditProfilePage/components/InlineSelect/InlineSelect";
 import SuggestionField from "../../../EditProfilePage/components/SuggestionField/SuggestionField";
 import { useGetCities } from "../../../EditProfilePage/service/useGetCity";
-import type { FilterType } from "../../types/filterTypes";
+import { initialFilterState, type FilterType } from "../../types/filterTypes";
 import DoubleRangeSlider from "./DoubleRangeSlider";
 
 interface FilterProps {
@@ -17,24 +16,16 @@ interface FilterProps {
   isDesktop?: boolean;
 }
 
+const defaultFilters: FilterType = initialFilterState;
+
 const Filter: React.FC<FilterProps> = ({
   onCloseFilter,
   onApplyFilters,
-  initialFilters = {},
+  initialFilters = defaultFilters,
   isDesktop = false,
 }) => {
   const [filters, setFilters] = useState<FilterType>({
-    sex: null,
-    age_from: 18,
-    age_to: 100,
-    city_id: null,
-    city_name: null,
-    budget_from: null,
-    budget_to: null,
-    occupation: null,
-    smoking_status: null,
-    pets: null,
-    profession: null,
+    ...defaultFilters,
     ...initialFilters,
   });
 
@@ -60,6 +51,36 @@ const Filter: React.FC<FilterProps> = ({
       setCityInputValue(initialFilters.city_name);
     }
   }, [initialFilters.city_id, initialFilters.city_name]);
+
+  useEffect(() => {
+    const updateArrayField = (fieldName: keyof FilterType) => {
+      const value = initialFilters[fieldName];
+      if (value) {
+        let normalizedValue: string[] | null = null;
+
+        if (Array.isArray(value)) {
+          normalizedValue = value;
+        } else if (typeof value === "string") {
+          normalizedValue = [value];
+        }
+
+        if (normalizedValue) {
+          setFilters((prev) => ({
+            ...prev,
+            [fieldName]: normalizedValue,
+          }));
+        }
+      }
+    };
+
+    updateArrayField("occupation");
+    updateArrayField("pets");
+    updateArrayField("smoking_status");
+  }, [
+    initialFilters.occupation,
+    initialFilters.pets,
+    initialFilters.smoking_status,
+  ]);
 
   const handleAgeChange = (values: { min: number; max: number }) => {
     setFilters((prev) => ({
@@ -105,21 +126,7 @@ const Filter: React.FC<FilterProps> = ({
   };
 
   const handleReset = () => {
-    const resetFilters: FilterType = {
-      sex: null,
-      age_from: 18,
-      age_to: 100,
-      city_id: null,
-      city_name: null,
-      budget_from: null,
-      budget_to: null,
-      occupation: null,
-      smoking_status: null,
-      pets: null,
-      profession: null,
-    };
-
-    setFilters(resetFilters);
+    setFilters(defaultFilters);
     setSelectedCity(null);
     setCityInputValue("");
     setBudget({ min: "", max: "" });
@@ -127,7 +134,6 @@ const Filter: React.FC<FilterProps> = ({
 
   return (
     <>
-      {/* Мобильная версия */}
       {!isDesktop && (
         <Wrapper className="min-h-screen pb-22 overflow-hidden">
           <TopicHeader>
@@ -164,18 +170,22 @@ const Filter: React.FC<FilterProps> = ({
               title="Род занятий"
               options={["Учусь", "Работаю", "Работаю из дома", "Ищу работу"]}
               value={filters.occupation}
-              onChange={(value) =>
-                setFilters((prev) => ({ ...prev, occupation: value }))
+              onChange={(values) =>
+                setFilters((prev) => ({ ...prev, occupation: values }))
               }
+              multiple={true}
+              maxSelections={4}
             />
 
             <InlineSelect
               title="Домашние животные"
               options={["Нет", "Аллергия", "Есть"]}
               value={filters.pets}
-              onChange={(value) =>
-                setFilters((prev) => ({ ...prev, pets: value }))
+              onChange={(values) =>
+                setFilters((prev) => ({ ...prev, pets: values }))
               }
+              multiple={true}
+              maxSelections={3}
             />
 
             <InlineSelect
@@ -189,9 +199,11 @@ const Filter: React.FC<FilterProps> = ({
                 "Аллергия",
               ]}
               value={filters.smoking_status}
-              onChange={(value) =>
-                setFilters((prev) => ({ ...prev, smoking_status: value }))
+              onChange={(values) =>
+                setFilters((prev) => ({ ...prev, smoking_status: values }))
               }
+              multiple={true}
+              maxSelections={6}
             />
 
             <SuggestionField
@@ -223,7 +235,6 @@ const Filter: React.FC<FilterProps> = ({
         </Wrapper>
       )}
 
-      {/* Desktop версия */}
       {isDesktop && (
         <div className="bg-white rounded-xl p-6 shadow-sm">
           <h2 className="text-xl font-semibold mb-6 text-gray-800">Фильтры</h2>
@@ -257,18 +268,22 @@ const Filter: React.FC<FilterProps> = ({
               title="Род занятий"
               options={["Учусь", "Работаю", "Работаю из дома", "Ищу работу"]}
               value={filters.occupation}
-              onChange={(value) =>
-                setFilters((prev) => ({ ...prev, occupation: value }))
+              onChange={(values) =>
+                setFilters((prev) => ({ ...prev, occupation: values }))
               }
+              multiple={true}
+              maxSelections={4}
             />
 
             <InlineSelect
               title="Домашние животные"
               options={["Нет", "Аллергия", "Есть"]}
               value={filters.pets}
-              onChange={(value) =>
-                setFilters((prev) => ({ ...prev, pets: value }))
+              onChange={(values) =>
+                setFilters((prev) => ({ ...prev, pets: values }))
               }
+              multiple={true}
+              maxSelections={3}
             />
 
             <InlineSelect
@@ -282,9 +297,11 @@ const Filter: React.FC<FilterProps> = ({
                 "Аллергия",
               ]}
               value={filters.smoking_status}
-              onChange={(value) =>
-                setFilters((prev) => ({ ...prev, smoking_status: value }))
+              onChange={(values) =>
+                setFilters((prev) => ({ ...prev, smoking_status: values }))
               }
+              multiple={true}
+              maxSelections={6}
             />
 
             <SuggestionField

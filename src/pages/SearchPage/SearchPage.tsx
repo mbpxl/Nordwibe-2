@@ -4,11 +4,11 @@ import Filter from "./Components/Filter/Filter";
 import SearchPeopleList from "./Components/SearhPeople/SearchPeopleList/SearchPeopleList";
 import funnel from "/icons/funnel.svg";
 import { useState } from "react";
-import type { FilterType } from "./types/filterTypes";
+import { initialFilterState, type FilterType } from "./types/filterTypes";
 
 const SearchPage = () => {
   const [isFilterOpened, setIsFilterOpened] = useState<boolean>(false);
-  const [filters, setFilters] = useState<FilterType>({});
+  const [filters, setFilters] = useState<FilterType>(initialFilterState);
 
   const handleOpenFilter = () => {
     setIsFilterOpened((prev) => !prev);
