@@ -5,26 +5,25 @@ import { useGetCompletedTest } from "../../pages/TestPage/service/useGetComplete
 
 export const useMyTestResults = () => {
   const { data: tests, isLoading: testsLoading } = useGetTests();
-  const { data: completedTests, isLoading: completedTestsLoading } = useGetCompletedTest();
+  const { data: completedTests, isLoading: completedTestsLoading } =
+    useGetCompletedTest();
 
   const results = useMemo(() => {
     if (!tests?.length || !completedTests?.length) return [];
 
-    // Преобразуем данные из нового формата в старый
-    // Группируем ответы по тестам
-    const answersByTest: Record<string, [string, string][]> = {};
-
-    // Получаем все вопросы из всех тестов для поиска по question_id
     const allQuestions = tests.flatMap((test: any) =>
       test.questions.map((question: any) => ({
         ...question,
-        testUuid: test.uuid
-      }))
+        testUuid: test.uuid,
+      })),
     );
 
-    // Группируем ответы по тестам
+    const answersByTest: Record<string, [string, string][]> = {};
+
     completedTests.forEach((answer: any) => {
-      const question = allQuestions.find((q: any) => q.uuid === answer.question_id);
+      const question = allQuestions.find(
+        (q: any) => q.uuid === answer.question_id,
+      );
       if (question) {
         const testUuid = question.testUuid;
         if (!answersByTest[testUuid]) {
@@ -34,11 +33,12 @@ export const useMyTestResults = () => {
       }
     });
 
-    // Фильтруем тесты: исключаем тест на совместимость
     return tests
-      .filter((test: any) =>
-        !test.is_important &&
-        answersByTest[test.uuid]?.length > 0
+      .filter(
+        (test: any) =>
+          !test.is_important &&
+          test.uuid !== "cfd48889-06ca-4edf-832e-248b7ed534b2" &&
+          answersByTest[test.uuid]?.length > 0,
       )
       .map((test: any) => {
         const userTestAnswers = answersByTest[test.uuid] || [];
@@ -46,7 +46,7 @@ export const useMyTestResults = () => {
         try {
           const result = calculateTestResult(test, userTestAnswers);
 
-          if (result.letter === '—' || !result.description) {
+          if (result.letter === "—" || !result.description) {
             return null;
           }
 
@@ -66,7 +66,9 @@ export const useMyTestResults = () => {
           return null;
         }
       })
-      .filter((result: any): result is NonNullable<typeof result> => result !== null);
+      .filter(
+        (result: any): result is NonNullable<typeof result> => result !== null,
+      );
   }, [tests, completedTests]);
 
   return {

@@ -31,7 +31,7 @@ const TestNext: React.FC<Props> = React.memo(
     const buttonContent = isLast ? (
       <Link
         to={`/test/${uuid}/result`}
-        state={{ answers, scaleMap, isMainTest }}
+        state={{ answers, scaleMap, isMainTest, testId: uuid }}
         className={`bg-purple-main py-3 rounded-lg w-full flex gap-2 justify-center items-center ${
           disabled ? "opacity-50 pointer-events-none" : "hover:bg-purple-600"
         }`}
@@ -62,7 +62,7 @@ const TestNext: React.FC<Props> = React.memo(
         {buttonContent}
       </div>
     );
-  }
+  },
 );
 
 export default TestNext;

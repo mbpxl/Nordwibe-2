@@ -129,10 +129,11 @@ const UserProfilePage = () => {
   };
 
   const handleTestResultClick = (testId: string) => {
-    const result = userTestResults.find((r: any) => r.testId === testId);
-    if (testId == "cfd48889-06ca-4edf-832e-248b7ed534b2") {
+    if (testId === "cfd48889-06ca-4edf-832e-248b7ed534b2") {
       return;
     }
+
+    const result = userTestResults.find((r: any) => r.testId === testId);
 
     if (!result) {
       toast.error("Результат теста не найден");
