@@ -236,17 +236,31 @@ const UserProfilePage = () => {
           </div>
 
           <div className="lg:basis-[980px] lg:p-5 lg:bg-white lg:rounded-xl">
-            <h1
-              className={`max-lg:hidden ${isBlocked ? "text-[14px]" : "text-[20px]"}`}
-            >
-              {user.username || user.name || ""}
-              {user.birth_date ? ", " : ""} {calculateAge(user.birth_date)}
-              {isBlocked && (
-                <span className="ml-2 px-2 py-1 text-xs bg-red-100 text-red-600 rounded-full">
-                  Заблокирован
-                </span>
-              )}
-            </h1>
+            {/* Добавляем контейнер для заголовка и кнопки в desktop версии */}
+            <div className="max-lg:hidden flex items-center justify-between mb-4">
+              <h1
+                className={`${isBlocked ? "text-[14px]" : "text-[20px]"} font-semibold`}
+              >
+                {user.username || user.name || ""}
+                {user.birth_date ? ", " : ""} {calculateAge(user.birth_date)}
+                {isBlocked && (
+                  <span className="ml-2 px-2 py-1 text-xs bg-red-100 text-red-600 rounded-full">
+                    Заблокирован
+                  </span>
+                )}
+              </h1>
+              {/* Добавляем кнопку для desktop версии */}
+              <button
+                onClick={handleShowMoreClick}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <img
+                  src="/icons/show_more.svg"
+                  alt="Показать меню"
+                  className="w-6 h-6"
+                />
+              </button>
+            </div>
 
             <div className="mt-4">
               <AboutMyself

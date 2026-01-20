@@ -50,13 +50,13 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
     }
 
     return Array.from(map.values()).sort((a, b) =>
-      b.created_at > a.created_at ? 1 : -1
+      b.created_at > a.created_at ? 1 : -1,
     );
   }, [chatsData, currentUserId]);
 
   const ids = useMemo(
     () => (threads.length ? threads.map((t) => t.companionId).join(",") : ""),
-    [threads]
+    [threads],
   );
 
   const {

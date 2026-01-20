@@ -172,13 +172,28 @@ const ProfilePage = () => {
           </div>
 
           <div className="lg:basis-[980px] lg:p-5 lg:bg-white lg:rounded-xl">
+            {/* Добавляем контейнер для заголовка и кнопки в desktop версии */}
+            <div className="max-lg:hidden flex items-center justify-between mb-4">
+              <h1 className="text-2xl font-semibold leading-6">
+                {data.username || data.name || ""}
+                {data.birth_date ? ", " : ""} {calculateAge(data.birth_date)}
+              </h1>
+              {/* Добавляем кнопку для desktop версии */}
+              <button
+                onClick={handleShowMoreClick}
+                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <img
+                  src="/icons/show_more.svg"
+                  alt="Показать меню"
+                  className="w-6 h-6"
+                />
+              </button>
+            </div>
+
             {data.about && !isEditAbouMyself ? (
               <div className="">
-                <h1 className="max-lg:hidden lg:text-2xl lg:font-semibold lg:leading-6 lg:mb-4">
-                  {data.username || data.name || ""}
-                  {data.birth_date ? ", " : ""} {calculateAge(data.birth_date)}
-                </h1>
-
+                {/* Убираем дублирующий заголовок в desktop версии, т.к. мы уже добавили его выше */}
                 <AboutMyself
                   about={data.about}
                   handleChange={handleStartEditing}
