@@ -78,7 +78,7 @@ const UserProfilePage = () => {
     setIsActionsMenuOpen(false);
   };
 
-  const handleShare = () => { };
+  const handleShare = () => {};
 
   const handleBlock = () => {
     if (ids) {
@@ -102,7 +102,7 @@ const UserProfilePage = () => {
           onError: () => {
             toast.error("Ошибка при блокировке");
           },
-        }
+        },
       );
     }
   };
@@ -235,7 +235,9 @@ const UserProfilePage = () => {
           </div>
 
           <div className="lg:basis-[980px] lg:p-5 lg:bg-white lg:rounded-xl">
-            <h1 className={`max-lg:hidden ${isBlocked ? "text-[14px]" : "text-[20px]"}`}>
+            <h1
+              className={`max-lg:hidden ${isBlocked ? "text-[14px]" : "text-[20px]"}`}
+            >
               {user.username || user.name || ""}
               {user.birth_date ? ", " : ""} {calculateAge(user.birth_date)}
               {isBlocked && (
@@ -283,11 +285,11 @@ const UserProfilePage = () => {
           )}
         </div>
 
-        <Modal closeModal={() => setSelectedResult(null)} isOpen={!!selectedResult}>
-          <div
-            className=""
-            onClick={() => setSelectedResult(null)}
-          >
+        <Modal
+          closeModal={() => setSelectedResult(null)}
+          isOpen={!!selectedResult}
+        >
+          <div className="" onClick={() => setSelectedResult(null)}>
             <div
               className="bg-white rounded-2xl w-full max-w-md mx-2"
               onClick={(e) => e.stopPropagation()}
