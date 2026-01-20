@@ -129,7 +129,7 @@ const Filter: React.FC<FilterProps> = ({
     <>
       {/* Мобильная версия */}
       {!isDesktop && (
-        <Wrapper className="min-h-screen pb-22">
+        <Wrapper className="min-h-screen pb-22 overflow-hidden">
           <TopicHeader>
             <GoBackButton fromFilter={true} />
             <h1>Фильтры</h1>

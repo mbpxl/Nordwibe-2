@@ -73,3 +73,92 @@ body {
     background-position: 200% 0;
   }
 }
+
+
+/* Убираем стрелки у числовых инпутов */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Для Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Кастомные стили для range input'ов - УВЕЛИЧИВАЕМ РАЗМЕР THUMB */
+input[type="range"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  width: 100%;
+  background: none;
+  pointer-events: none;
+  position: absolute;
+  height: 20px; /* Увеличиваем высоту для лучшего касания */
+}
+
+/* Стили для ползунка в Chrome/Safari - УВЕЛИЧИВАЕМ */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 36px; /* Увеличен с 18px до 36px */
+  width: 36px; /* Увеличен с 18px до 36px */
+  border-radius: 50%;
+  background: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+  border: 2px solid transparent; /* Прозрачная граница для увеличения области */
+  box-shadow: 0 0 0 8px rgba(109, 40, 217, 0.2); /* Дополнительная видимая область */
+  transition: all 0.2s ease;
+}
+
+/* Эффект при наведении и активном состоянии */
+input[type="range"]::-webkit-slider-thumb:hover {
+  box-shadow: 0 0 0 12px rgba(109, 40, 217, 0.3);
+  transform: scale(1.1);
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  box-shadow: 0 0 0 14px rgba(109, 40, 217, 0.4);
+  transform: scale(1.2);
+}
+
+/* Стили для ползунка в Firefox */
+input[type="range"]::-moz-range-thumb {
+  height: 36px; /* Увеличен */
+  width: 36px; /* Увеличен */
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  pointer-events: auto;
+  cursor: pointer;
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 8px rgba(109, 40, 217, 0.2);
+  transition: all 0.2s ease;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  box-shadow: 0 0 0 12px rgba(109, 40, 217, 0.3);
+  transform: scale(1.1);
+}
+
+input[type="range"]::-moz-range-thumb:active {
+  box-shadow: 0 0 0 14px rgba(109, 40, 217, 0.4);
+  transform: scale(1.2);
+}
+
+/* Для мобильных устройств - делаем область касания еще больше */
+@media (max-width: 768px) {
+  input[type="range"]::-webkit-slider-thumb {
+    height: 44px;
+    width: 44px;
+    box-shadow: 0 0 0 10px rgba(109, 40, 217, 0.2);
+  }
+  
+  input[type="range"]::-moz-range-thumb {
+    height: 44px;
+    width: 44px;
+    box-shadow: 0 0 0 10px rgba(109, 40, 217, 0.2);
+  }
+}
