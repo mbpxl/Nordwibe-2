@@ -71,7 +71,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
       {
         rootMargin: "50px", // Начинаем загружать заранее
         threshold: 0.1,
-      }
+      },
     );
 
     if (imgRef.current) {
