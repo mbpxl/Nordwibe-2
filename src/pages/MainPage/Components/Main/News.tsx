@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Stories from "react-insta-stories";
-
 import { useGetStories } from "../../service/useGetStories";
 import Loading from "../../../../shared/Components/Loading/Loading";
 import { baseURLforImages } from "../../../../shared/plugin/axios";
@@ -39,14 +38,12 @@ const News = () => {
                     flex items-center justify-center
                   "
                 >
-                  {/* Мобильная версия — иконка */}
                   <img
                     src="/icons/nordwibe/nordwibe.svg"
                     alt={story.title}
                     className="object-cover w-full h-full lg:hidden"
                   />
 
-                  {/* Desktop версия — текст на фиолетовом фоне */}
                   <div className="hidden lg:flex w-full h-full bg-purple-main text-white font-bold text-center items-center justify-center rounded-lg">
                     Что такое Nordwibe?
                   </div>
@@ -57,39 +54,54 @@ const News = () => {
         </div>
       </div>
 
-      {/* Модалка Stories */}
       {isOpen && currentStory !== null && (
-        <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
-          <Stories
-            stories={data[currentStory].story_parts.map((part: any) => ({
-              url: baseURLforImages + part.image_url,
-              header: {
-                heading: data[currentStory].title,
-                subheading: "",
-                profileImage: "/icons/nordwibe/nordwibe.svg",
-              },
-              seeMore: ({ close }: any) => (
-                <div
-                  style={{ padding: 20, color: "#fff", cursor: "pointer" }}
-                  onClick={close}
-                >
-                  {part.description}
-                </div>
-              ),
-              duration: (part.auto_scroll_seconds || 5) * 1000,
-            }))}
-            defaultInterval={5000}
-            width="100%"
-            height="100%"
-            onAllStoriesEnd={() => setIsOpen(false)}
-          />
-
-          <button
-            onClick={() => setIsOpen(false)}
-            className="absolute top-4 right-4 text-white text-2xl"
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-md z-50 flex items-center justify-center"
+          onClick={() => setIsOpen(false)}
+        >
+          <div
+            className="relative lg:w-[27%]"
+            onClick={(e) => e.stopPropagation()}
           >
-            ✕
-          </button>
+            <Stories
+              stories={data[currentStory].story_parts.map((part: any) => ({
+                url: baseURLforImages + part.image_url,
+                header: {
+                  heading: data[currentStory].title,
+                  subheading: "",
+                  profileImage: "/icons/nordwibe/nordwibe.svg",
+                  headerStyle: {
+                    fontSize: "32px",
+                    fontWeight: "bold",
+                  },
+                  headingStyle: {
+                    fontSize: "32px",
+                    fontWeight: "bold",
+                  },
+                },
+                duration: (part.auto_scroll_seconds || 5) * 1000,
+              }))}
+              defaultInterval={5000}
+              width="100%"
+              height="100%"
+              onAllStoriesEnd={() => setIsOpen(false)}
+              storyStyles={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#000",
+              }}
+            />
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsOpen(false);
+              }}
+              className="absolute z-[9999] top-6 right-6 text-white text-3xl w-7 h-7 rounded-full flex items-center justify-center hover:bg-black/70 transition-colors lg:top-4 lg:right-4 lg:text-2xl lg:w-10 lg:h-10"
+            >
+              ✕
+            </button>
+          </div>
         </div>
       )}
     </div>
