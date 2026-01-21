@@ -57,21 +57,21 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
   if (photos.length === 1) {
     return (
       <>
-        <div className="w-full  flex justify-center items-center overflow-hidden">
+        <div className="w-full flex justify-center items-center overflow-hidden">
           <button
             onClick={handlePhotoClick}
-            className="w-[136px] h-[136px] lg:w-[300px] lg:h-[300px] lg:rounded-none rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-purple-main"
+            className="w-[136px] h-[150px] max-lg:flex max-lg:justify-center max-lg:items-center max-lg:w-full lg:w-[300px] lg:h-[300px] lg:rounded-none rounded-full overflow-hidden focus:outline-none focus:ring-2 focus:ring-purple-main"
           >
             {photos[0] ? (
               <OptimizedImage
-                className="object-cover"
+                className="object-contain w-full h-full max-lg:scale-50 max-lg:rounded-full"
                 src={baseURLforImages + photos[0]}
                 alt="avatar"
                 quality={30}
                 priority={true}
               />
             ) : (
-              <div className="flex justify-center items-center h-full bg-purple-sub-button text-white font-semibold text-4xl">
+              <div className="flex justify-center items-center max-lg:w-[150px] max-lg:rounded-full h-full bg-purple-sub-button text-white font-semibold text-4xl">
                 {username ? username[0].toUpperCase() : "П"}
               </div>
             )}
@@ -152,7 +152,7 @@ export const PhotoSlider: React.FC<PhotoSliderProps> = ({
                     <img
                       src={baseURLforImages + src}
                       alt={`photo-${i}`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                     />
                   ) : (
                     <div className="flex justify-center items-center h-full bg-purple-sub-button text-white font-semibold text-4xl">
