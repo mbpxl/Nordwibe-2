@@ -8,6 +8,7 @@ import SupportChat from "../SupportChat/SupportChat";
 import ChatItem from "../ChatItem/ChatItem";
 import { useGetMe } from "../../../../ProfilePage/service/useGetMe";
 import search from "/icons/search.svg";
+import { useChatWithNotifications } from "../../../service/useChatWithNotifications";
 
 type ChatMsg = {
   id: string;
@@ -31,13 +32,33 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
     data: chatsData,
     isLoading: isChatsLoading,
     isError: isChatsError,
+    refetch: refetchChats,
   } = useGetChats();
+
+  useChatWithNotifications({
+    userId: currentUserId,
+    onNewMessage: () => {
+      refetchChats();
+    },
+  });
+
+  const unreadCount = useMemo(() => {
+    if (!chatsData?.length || !currentUserId) return 0;
+
+    return chatsData.filter(
+      (message: ChatMsg) =>
+        message.to_user_id === currentUserId && !message.readed_at,
+    ).length;
+  }, [chatsData, currentUserId]);
 
   const threads = useMemo(() => {
     if (!chatsData?.length || !currentUserId)
       return [] as (ChatMsg & { companionId: string })[];
 
-    const map = new Map<string, ChatMsg & { companionId: string }>();
+    const map = new Map<
+      string,
+      ChatMsg & { companionId: string; unreadCount: number }
+    >();
 
     for (const m of chatsData as ChatMsg[]) {
       const companionId =
@@ -45,7 +66,18 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
 
       const prev = map.get(companionId);
       if (!prev || m.created_at > prev.created_at) {
-        map.set(companionId, { ...m, companionId });
+        const unreadCount = chatsData.filter(
+          (msg: ChatMsg) =>
+            msg.from_user_id === companionId &&
+            msg.to_user_id === currentUserId &&
+            !msg.readed_at,
+        ).length;
+
+        map.set(companionId, {
+          ...m,
+          companionId,
+          unreadCount,
+        });
       }
     }
 
@@ -83,7 +115,6 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
 
   return (
     <>
-      {/* Мобильная версия */}
       {!isDesktop && (
         <Wrapper className="bg-purple-background-wrap min-h-screen pt-1 pb-16">
           <div>
@@ -113,29 +144,45 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
         </Wrapper>
       )}
 
-      {/* Desktop версия */}
       {isDesktop && (
         <div className="h-full flex flex-col">
-          {/* Заголовок для desktop */}
           <div className="p-4 border-b border-gray-100 flex-shrink-0">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-gray-800">Чаты</h2>
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Поиск чатов..."
-                  className="w-48 pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                />
-                <img
-                  src={search}
-                  alt="search"
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4"
-                />
+              <div className="flex items-center gap-3">
+                {unreadCount > 0 && (
+                  <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
+                    {unreadCount}
+                  </span>
+                )}
+                <button
+                  onClick={() => refetchChats()}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+                  title="Обновить чаты"
+                >
+                  <img
+                    src="/icons/refresh.svg"
+                    alt="Обновить"
+                    className="w-5 h-5"
+                  />
+                </button>
               </div>
+            </div>
+
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Поиск чатов..."
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              />
+              <img
+                src={search}
+                alt="search"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4"
+              />
             </div>
           </div>
 
-          {/* Список чатов с прокруткой */}
           <div className="flex-1 overflow-y-auto">
             <div className="p-2">
               <SupportChat />
