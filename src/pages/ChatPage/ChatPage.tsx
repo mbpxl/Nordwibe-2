@@ -1,4 +1,3 @@
-// components/ChatPage/ChatPage.tsx
 import TopicHeader from "../../shared/Components/TopicHeader/TopicHeader";
 import { useGetMe } from "../ProfilePage/service/useGetMe";
 import ChatList from "./Components/Chat/ChatList/ChatList";

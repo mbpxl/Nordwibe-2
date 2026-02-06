@@ -7,6 +7,7 @@ import { useGetChats } from "../../../service/useGetChats";
 import SupportChat from "../SupportChat/SupportChat";
 import ChatItem from "../ChatItem/ChatItem";
 import { useGetMe } from "../../../../ProfilePage/service/useGetMe";
+import search from "/icons/search.svg";
 import { useChatWithNotifications } from "../../../service/useChatWithNotifications";
 
 type ChatMsg = {
@@ -27,6 +28,8 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
   const { data: meData, isLoading: isMeLoading } = useGetMe();
   const currentUserId = meData?.id;
 
+  console.log("ChatList: Current user ID:", currentUserId);
+
   const {
     data: chatsData,
     isLoading: isChatsLoading,
@@ -37,27 +40,22 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
   useChatWithNotifications({
     userId: currentUserId,
     onNewMessage: () => {
+      console.log("ChatList: Received SSE notification, refetching chats");
       refetchChats();
     },
   });
 
-  const unreadCount = useMemo(() => {
-    if (!chatsData?.length || !currentUserId) return 0;
-
-    return chatsData.filter(
-      (message: ChatMsg) =>
-        message.to_user_id === currentUserId && !message.readed_at,
-    ).length;
-  }, [chatsData, currentUserId]);
-
   const threads = useMemo(() => {
+    console.log(
+      "ChatList: Calculating threads from",
+      chatsData?.length,
+      "messages",
+    );
+
     if (!chatsData?.length || !currentUserId)
       return [] as (ChatMsg & { companionId: string })[];
 
-    const map = new Map<
-      string,
-      ChatMsg & { companionId: string; unreadCount: number }
-    >();
+    const map = new Map<string, ChatMsg & { companionId: string }>();
 
     for (const m of chatsData as ChatMsg[]) {
       const companionId =
@@ -65,24 +63,19 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
 
       const prev = map.get(companionId);
       if (!prev || m.created_at > prev.created_at) {
-        const unreadCount = chatsData.filter(
-          (msg: ChatMsg) =>
-            msg.from_user_id === companionId &&
-            msg.to_user_id === currentUserId &&
-            !msg.readed_at,
-        ).length;
-
         map.set(companionId, {
           ...m,
           companionId,
-          unreadCount,
         });
       }
     }
 
-    return Array.from(map.values()).sort((a, b) =>
+    const result = Array.from(map.values()).sort((a, b) =>
       b.created_at > a.created_at ? 1 : -1,
     );
+
+    console.log("ChatList: Threads count:", result.length);
+    return result;
   }, [chatsData, currentUserId]);
 
   const ids = useMemo(
@@ -96,14 +89,18 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
     isError: isUsersError,
   } = useGetUser([ids]);
 
+  console.log("ChatList: Users data loaded:", usersData?.length);
+
   const isLoading = isMeLoading || isChatsLoading || isUsersLoading;
   const isError = isChatsError || isUsersError;
 
   if (isLoading) {
+    console.log("ChatList: Loading state");
     return <Loading />;
   }
 
   if (isError) {
+    console.log("ChatList: Error state");
     return <Error />;
   }
 
@@ -111,6 +108,8 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
   usersData?.forEach((u: any) => {
     userMap[u.id] = u;
   });
+
+  console.log("ChatList: Rendering", threads.length, "threads");
 
   return (
     <>
@@ -149,16 +148,20 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-gray-800">Чаты</h2>
               <div className="flex items-center gap-3">
-                {unreadCount > 0 && (
-                  <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full">
-                    {unreadCount}
-                  </span>
-                )}
                 <button
-                  onClick={() => refetchChats()}
+                  onClick={() => {
+                    console.log("ChatList: Manual refresh clicked");
+                    refetchChats();
+                  }}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                   title="Обновить чаты"
-                ></button>
+                >
+                  <img
+                    src="/icons/refresh.svg"
+                    alt="Обновить"
+                    className="w-5 h-5"
+                  />
+                </button>
               </div>
             </div>
 
@@ -167,6 +170,11 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
                 type="text"
                 placeholder="Поиск чатов..."
                 className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              />
+              <img
+                src={search}
+                alt="search"
+                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4"
               />
             </div>
           </div>

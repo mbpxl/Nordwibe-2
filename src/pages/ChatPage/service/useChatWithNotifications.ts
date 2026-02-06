@@ -12,9 +12,12 @@ export const useChatWithNotifications = (
 
   const { isConnected } = useAlertSSE({
     onNewMessage: () => {
+      console.log("ChatNotifications: New message notification received");
       onNewMessage?.();
     },
   });
+
+  console.log("ChatNotifications: Connection status:", isConnected);
 
   return { isConnected };
 };
