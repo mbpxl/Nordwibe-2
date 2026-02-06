@@ -7,7 +7,6 @@ import { useGetChats } from "../../../service/useGetChats";
 import SupportChat from "../SupportChat/SupportChat";
 import ChatItem from "../ChatItem/ChatItem";
 import { useGetMe } from "../../../../ProfilePage/service/useGetMe";
-import search from "/icons/search.svg";
 import { useChatWithNotifications } from "../../../service/useChatWithNotifications";
 
 type ChatMsg = {
@@ -159,13 +158,7 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
                   onClick={() => refetchChats()}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors"
                   title="Обновить чаты"
-                >
-                  <img
-                    src="/icons/refresh.svg"
-                    alt="Обновить"
-                    className="w-5 h-5"
-                  />
-                </button>
+                ></button>
               </div>
             </div>
 
@@ -174,11 +167,6 @@ const ChatList = ({ isDesktop = false }: ChatListProps) => {
                 type="text"
                 placeholder="Поиск чатов..."
                 className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-              />
-              <img
-                src={search}
-                alt="search"
-                className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4"
               />
             </div>
           </div>
