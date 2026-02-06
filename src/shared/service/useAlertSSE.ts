@@ -7,11 +7,12 @@ interface UseAlertSSEOptions {
 export const useAlertSSE = (options: UseAlertSSEOptions = {}) => {
   const { onNewMessage } = options;
 
-  const eventSourceRef = useRef<EventSource | null>(null);
+  const eventSourceRef = useRef<any>(null);
   const [isConnected, setIsConnected] = useState(false);
 
   const connect = useCallback(() => {
     if (eventSourceRef.current) {
+      console.log("SSE: Closing previous connection");
       eventSourceRef.current.close();
     }
 
@@ -19,16 +20,15 @@ export const useAlertSSE = (options: UseAlertSSEOptions = {}) => {
       const accessToken = localStorage.getItem("access_token");
 
       if (!accessToken) {
-        console.error("No access token found");
+        console.log("SSE: No access token found");
         setIsConnected(false);
         return;
       }
 
-      // Создаем EventSource с кастомными заголовками через EventSource полифил
-      // Нужно установить npm пакет: npm install eventsource
+      console.log("SSE: Connecting to server...");
       const EventSource = require("eventsource");
 
-      const eventSource = new EventSource(
+      eventSourceRef.current = new EventSource(
         "https://nordwibe.com/api/v2/alert/sse",
         {
           headers: {
@@ -38,39 +38,36 @@ export const useAlertSSE = (options: UseAlertSSEOptions = {}) => {
         },
       );
 
-      eventSource.onopen = () => {
+      eventSourceRef.current.onopen = () => {
+        console.log("SSE: Connection opened");
         setIsConnected(true);
       };
 
-      eventSource.onmessage = (event: any) => {
-        const message = event.data;
-
-        try {
-          const data = JSON.parse(message);
-          if (data.type === "new_message") {
-            onNewMessage?.();
-          }
-        } catch {}
+      eventSourceRef.current.onmessage = (event: any) => {
+        console.log("SSE: Message received:", event.data);
+        onNewMessage?.();
       };
 
-      eventSource.onerror = () => {
+      eventSourceRef.current.onerror = (error: any) => {
+        console.log("SSE: Error:", error);
         setIsConnected(false);
-        if (eventSource.readyState === 2) {
-          // CLOSED
+
+        if (eventSourceRef.current?.readyState === 2) {
+          console.log("SSE: Reconnecting in 5 seconds...");
           setTimeout(() => {
             connect();
           }, 5000);
         }
       };
-
-      eventSourceRef.current = eventSource;
     } catch (error) {
+      console.log("SSE: Connection error:", error);
       setIsConnected(false);
     }
   }, [onNewMessage]);
 
   const disconnect = useCallback(() => {
     if (eventSourceRef.current) {
+      console.log("SSE: Disconnecting");
       eventSourceRef.current.close();
       eventSourceRef.current = null;
       setIsConnected(false);
@@ -78,9 +75,11 @@ export const useAlertSSE = (options: UseAlertSSEOptions = {}) => {
   }, []);
 
   useEffect(() => {
+    console.log("SSE: Setting up connection");
     connect();
 
     return () => {
+      console.log("SSE: Cleaning up");
       disconnect();
     };
   }, [connect, disconnect]);

@@ -16,6 +16,7 @@
     "@yandex/smart-captcha": "2.8.0",
     "axios": "^1.10.0",
     "browserslist": "^4.26.2",
+    "eventsource": "^4.1.0",
     "framer-motion": "^12.19.1",
     "lucide-react": "^0.561.0",
     "react": "^19.1.0",
