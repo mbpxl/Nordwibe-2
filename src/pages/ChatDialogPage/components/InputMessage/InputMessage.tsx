@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSendMessage } from "../../service/useSendMessage";
 import Modal from "../../../../shared/Components/Modal/Modal";
 
@@ -16,9 +16,10 @@ const InputMessage = ({
   const [message, setMessage] = useState("");
   const [showBlockModal, setShowBlockModal] = useState(false);
   const { mutate: sendMessage } = useSendMessage();
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
 
     if (isChatBlocked) {
       setShowBlockModal(true);
@@ -31,6 +32,11 @@ const InputMessage = ({
         to_user_id: toUserId,
       });
       setMessage("");
+
+      // Сбрасываем высоту textarea после отправки
+      if (textareaRef.current) {
+        textareaRef.current.style.height = "auto";
+      }
     }
   };
 
@@ -40,26 +46,54 @@ const InputMessage = ({
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    // Enter без Shift - отправить сообщение
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+    // Shift + Enter - новая строка (стандартное поведение)
+  };
+
+  // Автоматическое изменение высоты textarea
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${Math.min(
+        textareaRef.current.scrollHeight,
+        150, // Максимальная высота 150px
+      )}px`;
+    }
+  }, [message]);
+
   return (
     <div className="bg-white">
       <form onSubmit={handleSubmit}>
         <div className="px-2">
           <div className="relative flex justify-center gap-[2.5rem] px-2 py-3">
             <textarea
+              ref={textareaRef}
               value={message}
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={handleKeyDown}
               onClick={handleInputClick}
               readOnly={isChatBlocked}
-              className={`w-full outline-0 border-1 border-black pt-2 pl-3 pr-10 rounded-xl text-[1rem] leading-5 font-medium ${
+              rows={1}
+              className={`w-full outline-0 border-1 border-black pt-2 pl-3 pr-10 rounded-xl text-[1rem] leading-5 font-medium resize-none overflow-y-auto ${
                 isChatBlocked ? "bg-gray-100 cursor-not-allowed" : ""
               }`}
               placeholder={isChatBlocked ? "Чат заблокирован" : "Сообщение"}
+              style={{ minHeight: "40px", maxHeight: "150px" }}
             />
             <div className="absolute right-5 top-1/2 transform -translate-y-1/2">
               <button
                 type="submit"
-                disabled={isChatBlocked}
-                className={isChatBlocked ? "opacity-50 cursor-not-allowed" : ""}
+                disabled={isChatBlocked || !message.trim()}
+                className={
+                  isChatBlocked || !message.trim()
+                    ? "opacity-50 cursor-not-allowed"
+                    : "hover:opacity-80 transition-opacity"
+                }
               >
                 <img src="/icons/message/send-message.svg" alt="send" />
               </button>
