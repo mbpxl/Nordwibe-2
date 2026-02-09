@@ -20,15 +20,13 @@ export const useChatSSE = () => {
           return;
         }
 
-        // Для POST инициализации - прямой запрос к API
-        const directApiUrl = "https://nordwibe.com/api/v2";
-        // Для GET SSE - через proxy (same-site)
-        const proxyApiUrl = "/api/v2";
+        // Оба запроса через proxy для same-site контекста
+        const apiUrl = "/api/v2";
 
         console.log("Initializing SSE connection...");
 
-        // POST запрос напрямую к API (не через proxy)
-        const initResponse = await fetch(`${directApiUrl}/alert/sse`, {
+        // POST запрос через proxy (теперь same-site, cookie установится)
+        const initResponse = await fetch(`${apiUrl}/alert/sse`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -36,24 +34,23 @@ export const useChatSSE = () => {
             "Cache-Control": "no-cache",
             Pragma: "no-cache",
           },
-          credentials: "include",
+          credentials: "include", // Cookie будет установлена для localhost
         });
 
         if (!initResponse.ok) {
           throw new Error(`Failed to initialize SSE: ${initResponse.status}`);
         }
 
-        console.log("SSE initialized successfully");
+        console.log("SSE initialized successfully, sse_auth cookie set");
 
         await new Promise((resolve) => setTimeout(resolve, 100));
 
         abortControllerRef.current = new AbortController();
+        const sseUrl = `${apiUrl}/alert/sse`;
 
-        // GET SSE запрос через proxy (чтобы cookie работала)
-        const sseUrl = `${proxyApiUrl}/alert/sse`;
+        console.log("Opening SSE connection...");
 
-        console.log("Opening SSE connection through proxy...");
-
+        // GET SSE запрос через proxy (cookie будет отправлена)
         await fetchEventSource(sseUrl, {
           method: "GET",
           headers: {
@@ -61,7 +58,7 @@ export const useChatSSE = () => {
             "Cache-Control": "no-cache",
             Pragma: "no-cache",
           },
-          credentials: "include",
+          credentials: "include", // Отправит sse_auth cookie
           signal: abortControllerRef.current.signal,
 
           async onopen(response) {
@@ -75,6 +72,8 @@ export const useChatSSE = () => {
               response.status !== 429
             ) {
               console.error("❌ SSE client error:", response.status);
+              const text = await response.text();
+              console.error("Error response:", text);
               throw new FatalError(`Client error: ${response.status}`);
             } else {
               console.error("⚠️ SSE server error:", response.status);
