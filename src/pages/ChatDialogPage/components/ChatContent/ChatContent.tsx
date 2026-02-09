@@ -1,10 +1,10 @@
 import { useEffect, useRef, useMemo } from "react";
 import { useGetMe } from "../../../ProfilePage/service/useGetMe";
-import { useGetChats } from "../../../ChatPage/service/useGetChats";
 import ChatBubble from "../ChatBubble/ChatBubble";
 import Loading from "../../../../shared/Components/Loading/Loading";
 import Wrapper from "../../../../shared/Components/Wrapper/Wrapper";
 import { useMarkAsRead } from "../../service/useMarkAsRead";
+import { useGetChats } from "../../../ChatPage/service/useGetChats";
 
 interface ChatContentProps {
   companionId: string;
@@ -18,7 +18,8 @@ const ChatContent: React.FC<ChatContentProps> = ({
   blockReason,
 }) => {
   const { data: currentUser, isLoading: isUserLoading } = useGetMe();
-  const { data: allMessages, isLoading: isMessagesLoading } = useGetChats();
+  const { data: allMessages, isLoading: isMessagesLoading } =
+    useGetChats(companionId); // Используем новый хук
   const { mutate: markAsRead } = useMarkAsRead();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const lastReadMessageIdsRef = useRef<Set<string>>(new Set());
@@ -37,13 +38,9 @@ const ChatContent: React.FC<ChatContentProps> = ({
 
   // Автоматическое отмечивание сообщений как прочитанных
   useEffect(() => {
-    // Проверяем все условия
     if (!currentUser || !filteredMessages.length || isChatBlocked) return;
-
-    // Проверяем, что страница активна (пользователь видит чат)
     if (document.visibilityState !== "visible") return;
 
-    // Находим непрочитанные сообщения от собеседника
     const unreadMessagesFromCompanion = filteredMessages.filter(
       (message: any) =>
         message.from_user_id === companionId &&
@@ -54,20 +51,15 @@ const ChatContent: React.FC<ChatContentProps> = ({
     if (unreadMessagesFromCompanion.length > 0) {
       const messageIds = unreadMessagesFromCompanion.map((msg: any) => msg.id);
 
-      // Проверяем, что эти сообщения еще не были отмечены
       const newUnreadIds = messageIds.filter(
         (id: any) => !lastReadMessageIdsRef.current.has(id),
       );
 
       if (newUnreadIds.length > 0) {
         console.log(`📖 Marking ${newUnreadIds.length} message(s) as read`);
-
-        // Добавляем в ref, чтобы не отправлять повторно
         newUnreadIds.forEach((id: any) =>
           lastReadMessageIdsRef.current.add(id),
         );
-
-        // Отмечаем как прочитанные
         markAsRead(newUnreadIds);
       }
     }
@@ -77,7 +69,6 @@ const ChatContent: React.FC<ChatContentProps> = ({
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "visible") {
-        // Когда пользователь вернулся на вкладку - проверяем непрочитанные
         console.log("👀 Page became visible, checking for unread messages");
 
         if (!currentUser || !filteredMessages.length || isChatBlocked) return;
@@ -132,7 +123,6 @@ const ChatContent: React.FC<ChatContentProps> = ({
   return (
     <Wrapper className="h-full overflow-y-auto bg-purple-main-disabled">
       <div className="pt-3 pb-15">
-        {/* Баннер блокировки */}
         {isChatBlocked && (
           <div className="bg-red-50 border border-red-200 rounded-lg p-4 mx-4 mb-4">
             <div className="flex items-center gap-2 justify-center">
