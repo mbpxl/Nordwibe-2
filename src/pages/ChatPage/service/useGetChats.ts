@@ -1,4 +1,3 @@
-// service/useGetChats.ts
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../../shared/plugin/axios";
 
