@@ -30,7 +30,7 @@ const EditProfilePage = () => {
   const [nameValue, setNameValue] = useState<string>("");
   const [loginValue, setLoginValue] = useState<string>("");
   const [genderValue, setGenderValue] = useState<"Мужской" | "Женский" | null>(
-    null
+    null,
   );
 
   // Функция для преобразования даты из серверного формата в формат для поля ввода
@@ -97,7 +97,7 @@ const EditProfilePage = () => {
   const [isAddHashTagClick, setIsAddHashTagClick] = useState<boolean>(false);
   const [newHashTagValue, setNewHashTagValue] = useState<string>("");
   const [pendingCreatedTag, setPendingCreatedTag] = useState<string | null>(
-    null
+    null,
   );
 
   // Определяем, нужно ли показывать поле "Профессия"
@@ -186,7 +186,7 @@ const EditProfilePage = () => {
       // Инициализация даты рождения из сервера
       if (myProfileData.birth_date) {
         const formattedBirthDate = formatServerDateToInput(
-          myProfileData.birth_date
+          myProfileData.birth_date,
         );
 
         // Мы сохраняем в initial (если он нужен для какой-то другой логики сравнения)
@@ -226,7 +226,7 @@ const EditProfilePage = () => {
       // Хештеги
       if (myProfileData.hashtags_list) {
         const normalizedHashtags = normalizeHashtags(
-          myProfileData.hashtags_list
+          myProfileData.hashtags_list,
         );
         setHashtagsList(normalizedHashtags);
       } else {
@@ -256,6 +256,7 @@ const EditProfilePage = () => {
     occupation,
     occupationDetails,
     isInitialized,
+    genderValue, // Добавлена забытая зависимость
   ]);
 
   const isBirthDateValid = date && date.length === 10;
@@ -405,7 +406,7 @@ const EditProfilePage = () => {
     if (!text) return;
 
     const existingTag = hashtagSuggestions.find(
-      (h: any) => h.name.toLowerCase() === text.toLowerCase()
+      (h: any) => h.name.toLowerCase() === text.toLowerCase(),
     );
 
     if (existingTag) {
@@ -416,7 +417,7 @@ const EditProfilePage = () => {
     } else {
       setHashtagsList((prev) => {
         const exists = prev.some(
-          (t) => t.name.toLowerCase() === text.toLowerCase()
+          (t) => t.name.toLowerCase() === text.toLowerCase(),
         );
         return exists ? prev : [...prev, { id: "", name: text }];
       });
@@ -440,210 +441,240 @@ const EditProfilePage = () => {
 
   return (
     <>
-      <Wrapper className={"flex flex-col items-center pb-22"}>
+      <Wrapper className="flex flex-col items-center pb-22 md:pb-8">
         <TopicHeader>
           <GoBackButton />
           <h1>Редактирование</h1>
         </TopicHeader>
 
-        {/* Вкладки */}
-        <div className="flex justify-center w-full max-w-md mb-6">
-          <div className="flex bg-gray-100 rounded-lg p-1 w-full">
-            <button
-              onClick={() => setActiveTab("edit")}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                activeTab === "edit"
-                  ? "bg-white text-purple-main shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              Редактирование
-            </button>
-            <button
-              onClick={() => setActiveTab("privacy")}
-              className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-                activeTab === "privacy"
-                  ? "bg-white text-purple-main shadow-sm"
-                  : "text-gray-600 hover:text-gray-900"
-              }`}
-            >
-              Приватность
-            </button>
+        {/* Контейнер с ограниченной шириной для desktop */}
+        <div className="w-full max-w-4xl mx-auto px-4 md:px-6">
+          {/* Вкладки */}
+          <div className="flex justify-center w-full mb-6 md:mb-8">
+            <div className="flex bg-gray-100 rounded-lg p-1 w-full md:max-w-md">
+              <button
+                onClick={() => setActiveTab("edit")}
+                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                  activeTab === "edit"
+                    ? "bg-white text-purple-main shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Редактирование
+              </button>
+              <button
+                onClick={() => setActiveTab("privacy")}
+                className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+                  activeTab === "privacy"
+                    ? "bg-white text-purple-main shadow-sm"
+                    : "text-gray-600 hover:text-gray-900"
+                }`}
+              >
+                Приватность
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Контент вкладок */}
-        {activeTab === "edit" ? (
-          <div className="w-full">
-            <TextField
-              title={"Как вас зовут?"}
-              value={nameValue}
-              onChange={setNameValue}
-              placeholder={"Имя"}
-            />
-
-            <div className="mt-4">
-              <TextField
-                title={"Придумайте себе логин"}
-                value={loginValue}
-                onChange={setLoginValue}
-                placeholder={"Логин"}
-              />
-            </div>
-
-            <InlineSelect
-              title="Пол"
-              options={["Мужской", "Женский"]}
-              value={genderValue}
-              onChange={setGenderValue}
-            />
-
-            <div ref={birthFieldRef}>
-              <BirthField
-                title={"Дата рождения"}
-                value={date}
-                onChange={handleChange}
-                ref={inputRef}
-                error={ageError ? "Вам должно быть больше 18 лет" : undefined}
-                ageError={ageError}
-              />
-            </div>
-
-            {/* Убрано предупреждение о заполнении даты рождения */}
-
-            {/* Новый блок: Род занятий */}
-            <InlineSelect
-              title="Род занятий"
-              options={["Учусь", "Работаю", "Работаю из дома", "Ищу работу"]}
-              value={occupation}
-              onChange={setOccupation}
-            />
-
-            {/* Условное отображение поля "Профессия" */}
-            {shouldShowOccupationDetails && (
-              <div className="mt-4">
+          {/* Контент вкладок */}
+          {activeTab === "edit" ? (
+            <div className="w-full">
+              {/* Основная информация - две колонки на desktop */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <TextField
-                  title="Профессия"
-                  value={occupationDetails}
-                  onChange={setOccupationDetails}
+                  title="Как вас зовут?"
+                  value={nameValue}
+                  onChange={setNameValue}
+                  placeholder="Имя"
+                />
+
+                <TextField
+                  title="Придумайте себе логин"
+                  value={loginValue}
+                  onChange={setLoginValue}
+                  placeholder="Логин"
                 />
               </div>
-            )}
 
-            <InlineSelect
-              title="Цель"
-              options={[
-                "Поиск соседа",
-                "Поиск жилья",
-                "Сдать жильё",
-                "Поиск комнаты",
-              ]}
-              value={usageGoalOption}
-              onChange={setUsageGoalOption}
-            />
-
-            <InlineSelect
-              title="Домашние животные"
-              options={["Нет", "Аллергия", "Есть"]}
-              value={petOption}
-              onChange={setPetOption}
-            />
-
-            {petOption !== "Нет" &&
-              petOption !== "Аллергия" &&
-              petOption !== null && (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4">
                 <InlineSelect
-                  title="Какое у вас животное?"
-                  options={[
-                    "🐱",
-                    "🐶",
-                    "🐹",
-                    "🐭",
-                    "🐰",
-                    "🐟",
-                    "🦜",
-                    "🦎",
-                    "🐢",
-                    "🐍",
-                    "🕷️",
-                  ]}
-                  value={animalType}
-                  onChange={setAnimalType}
+                  title="Пол"
+                  options={["Мужской", "Женский"]}
+                  value={genderValue}
+                  onChange={setGenderValue}
                 />
-              )}
 
-            <InlineSelect
-              title="Курение"
-              options={[
-                "Не курю",
-                "Редко",
-                "Часто",
-                "Вейп",
-                "Нейтрально",
-                "Аллергия",
-              ]}
-              value={smokingOption}
-              onChange={setSmokingOption}
-            />
+                <div ref={birthFieldRef}>
+                  <BirthField
+                    title="Дата рождения"
+                    value={date}
+                    onChange={handleChange}
+                    ref={inputRef}
+                    error={
+                      ageError ? "Вам должно быть больше 18 лет" : undefined
+                    }
+                    ageError={ageError}
+                  />
+                </div>
+              </div>
 
-            <SuggestionField
-              title={"Родной город"}
-              value={cityValue}
-              onChange={setCityValue}
-              suggestions={cities}
-              isLoading={isLoading}
-              isError={isCitiesError}
-            />
+              {/* Род занятий и профессия */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4">
+                <InlineSelect
+                  title="Род занятий"
+                  options={[
+                    "Учусь",
+                    "Работаю",
+                    "Работаю из дома",
+                    "Ищу работу",
+                  ]}
+                  value={occupation}
+                  onChange={setOccupation}
+                />
 
-            <Budget budget={budget} setBudget={setBudget} />
+                {shouldShowOccupationDetails && (
+                  <TextField
+                    title="Профессия"
+                    value={occupationDetails}
+                    onChange={setOccupationDetails}
+                  />
+                )}
+              </div>
 
-            <InlineSelect
-              title="Длительность проживания"
-              options={[
-                "Несколько дней",
-                "До 3 месяцев",
-                "До полугода",
-                "Год",
-                "Больше года",
-              ]}
-              value={durationOption}
-              onChange={setDurationOption}
-            />
+              {/* Цель и город */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4">
+                <InlineSelect
+                  title="Цель"
+                  options={[
+                    "Поиск соседа",
+                    "Поиск жилья",
+                    "Сдать жильё",
+                    "Поиск комнаты",
+                  ]}
+                  value={usageGoalOption}
+                  onChange={setUsageGoalOption}
+                />
 
-            <SuggestionField
-              title="Интересы"
-              multiple
-              value={hashtagInput}
-              onChange={setHashtagInput}
-              chips={hashtagsList.map((t) => t.name)}
-              onAddChip={safeAddChip}
-              onRemoveChip={handleRemoveHashTag}
-              suggestions={hashtagSuggestions}
-              isLoading={isLoadingHashTags}
-              isError={isHashTagError}
-              notFoundLabel="Такого хэштега нет! Хотите добавить?"
-              onNotFoundClick={() => {
-                setNewHashTagValue(hashtagInput.trim());
-                setIsAddHashTagClick(true);
-              }}
-            />
+                <SuggestionField
+                  title="Родной город"
+                  value={cityValue}
+                  onChange={setCityValue}
+                  suggestions={cities}
+                  isLoading={isLoading}
+                  isError={isCitiesError}
+                />
+              </div>
 
-            <SaveButton
-              isDisabled={
-                isProfileDataError ||
-                isProfileDataLoading ||
-                !isBirthDateValid ||
-                ageError
-              }
-              isPending={isPending}
-              onSubmit={handleUpdateProfileData}
-            />
-          </div>
-        ) : (
-          <div className="w-full">
-            <PrivateSettingsList />
-          </div>
-        )}
+              {/* Животные */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4">
+                <InlineSelect
+                  title="Домашние животные"
+                  options={["Нет", "Аллергия", "Есть"]}
+                  value={petOption}
+                  onChange={setPetOption}
+                />
+
+                {petOption !== "Нет" &&
+                  petOption !== "Аллергия" &&
+                  petOption !== null && (
+                    <InlineSelect
+                      title="Какое у вас животное?"
+                      options={[
+                        "🐱",
+                        "🐶",
+                        "🐹",
+                        "🐭",
+                        "🐰",
+                        "🐟",
+                        "🦜",
+                        "🦎",
+                        "🐢",
+                        "🐍",
+                        "🕷️",
+                      ]}
+                      value={animalType}
+                      onChange={setAnimalType}
+                    />
+                  )}
+              </div>
+
+              {/* Курение и длительность */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4">
+                <InlineSelect
+                  title="Курение"
+                  options={[
+                    "Не курю",
+                    "Редко",
+                    "Часто",
+                    "Вейп",
+                    "Нейтрально",
+                    "Аллергия",
+                  ]}
+                  value={smokingOption}
+                  onChange={setSmokingOption}
+                />
+
+                <InlineSelect
+                  title="Длительность проживания"
+                  options={[
+                    "Несколько дней",
+                    "До 3 месяцев",
+                    "До полугода",
+                    "Год",
+                    "Больше года",
+                  ]}
+                  value={durationOption}
+                  onChange={setDurationOption}
+                />
+              </div>
+
+              {/* Бюджет - на всю ширину */}
+              <div className="mt-4">
+                <Budget budget={budget} setBudget={setBudget} />
+              </div>
+
+              {/* Интересы - на всю ширину */}
+              <div className="mt-4">
+                <SuggestionField
+                  title="Интересы"
+                  multiple
+                  value={hashtagInput}
+                  onChange={setHashtagInput}
+                  chips={hashtagsList.map((t) => t.name)}
+                  onAddChip={safeAddChip}
+                  onRemoveChip={handleRemoveHashTag}
+                  suggestions={hashtagSuggestions}
+                  isLoading={isLoadingHashTags}
+                  isError={isHashTagError}
+                  notFoundLabel="Такого хэштега нет! Хотите добавить?"
+                  onNotFoundClick={() => {
+                    setNewHashTagValue(hashtagInput.trim());
+                    setIsAddHashTagClick(true);
+                  }}
+                />
+              </div>
+
+              {/* Кнопка сохранения - центрирована на desktop */}
+              <div className="mt-6 md:flex md:justify-center">
+                <div className="md:w-full md:max-w-md">
+                  <SaveButton
+                    isDisabled={
+                      isProfileDataError ||
+                      isProfileDataLoading ||
+                      !isBirthDateValid ||
+                      ageError
+                    }
+                    isPending={isPending}
+                    onSubmit={handleUpdateProfileData}
+                  />
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="w-full">
+              <PrivateSettingsList />
+            </div>
+          )}
+        </div>
       </Wrapper>
 
       <Modal
@@ -660,13 +691,13 @@ const EditProfilePage = () => {
         />
         <div className="flex justify-end gap-2">
           <button
-            className="px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-300"
+            className="px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-300 transition-colors"
             onClick={() => setIsAddHashTagClick(false)}
           >
             Отмена
           </button>
           <button
-            className="px-4 py-2 rounded-xl bg-purple-main text-white hover:bg-purple-700"
+            className="px-4 py-2 rounded-xl bg-purple-main text-white hover:bg-purple-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => {
               const payload = newHashTagValue.trim();
               if (!payload) return;
