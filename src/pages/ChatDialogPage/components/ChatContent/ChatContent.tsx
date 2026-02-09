@@ -21,6 +21,7 @@ const ChatContent: React.FC<ChatContentProps> = ({
   const { data: allMessages, isLoading: isMessagesLoading } = useGetChats();
   const { mutate: markAsRead } = useMarkAsRead();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const lastReadMessageIdsRef = useRef<Set<string>>(new Set());
 
   const filteredMessages = useMemo(() => {
     if (!allMessages || !currentUser) return [];
@@ -30,25 +31,93 @@ const ChatContent: React.FC<ChatContentProps> = ({
         (message.from_user_id === currentUser.id &&
           message.to_user_id === companionId) ||
         (message.from_user_id === companionId &&
-          message.to_user_id === currentUser.id)
+          message.to_user_id === currentUser.id),
     );
   }, [allMessages, companionId, currentUser]);
 
+  // Автоматическое отмечивание сообщений как прочитанных
   useEffect(() => {
+    // Проверяем все условия
     if (!currentUser || !filteredMessages.length || isChatBlocked) return;
 
+    // Проверяем, что страница активна (пользователь видит чат)
+    if (document.visibilityState !== "visible") return;
+
+    // Находим непрочитанные сообщения от собеседника
     const unreadMessagesFromCompanion = filteredMessages.filter(
       (message: any) =>
         message.from_user_id === companionId &&
         message.to_user_id === currentUser.id &&
-        !message.readed_at
+        !message.readed_at,
     );
 
     if (unreadMessagesFromCompanion.length > 0) {
       const messageIds = unreadMessagesFromCompanion.map((msg: any) => msg.id);
-      markAsRead(messageIds);
+
+      // Проверяем, что эти сообщения еще не были отмечены
+      const newUnreadIds = messageIds.filter(
+        (id: any) => !lastReadMessageIdsRef.current.has(id),
+      );
+
+      if (newUnreadIds.length > 0) {
+        console.log(`📖 Marking ${newUnreadIds.length} message(s) as read`);
+
+        // Добавляем в ref, чтобы не отправлять повторно
+        newUnreadIds.forEach((id: any) =>
+          lastReadMessageIdsRef.current.add(id),
+        );
+
+        // Отмечаем как прочитанные
+        markAsRead(newUnreadIds);
+      }
     }
   }, [filteredMessages, companionId, currentUser, markAsRead, isChatBlocked]);
+
+  // Отслеживаем видимость страницы
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "visible") {
+        // Когда пользователь вернулся на вкладку - проверяем непрочитанные
+        console.log("👀 Page became visible, checking for unread messages");
+
+        if (!currentUser || !filteredMessages.length || isChatBlocked) return;
+
+        const unreadMessagesFromCompanion = filteredMessages.filter(
+          (message: any) =>
+            message.from_user_id === companionId &&
+            message.to_user_id === currentUser.id &&
+            !message.readed_at,
+        );
+
+        if (unreadMessagesFromCompanion.length > 0) {
+          const messageIds = unreadMessagesFromCompanion.map(
+            (msg: any) => msg.id,
+          );
+          const newUnreadIds = messageIds.filter(
+            (id: any) => !lastReadMessageIdsRef.current.has(id),
+          );
+
+          if (newUnreadIds.length > 0) {
+            newUnreadIds.forEach((id: any) =>
+              lastReadMessageIdsRef.current.add(id),
+            );
+            markAsRead(newUnreadIds);
+          }
+        }
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [filteredMessages, companionId, currentUser, markAsRead, isChatBlocked]);
+
+  // Очищаем ref при смене собеседника
+  useEffect(() => {
+    lastReadMessageIdsRef.current.clear();
+  }, [companionId]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
