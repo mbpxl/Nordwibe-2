@@ -3,7 +3,7 @@ import { getCookie } from "./getCookie";
 import { redirectToLogin } from "./redirectToLogin";
 import { clearUserData } from "./clearUserData";
 
-const baseURL = "https://nordwibe.com/api/v2/";
+const baseURL = "/api/v2";
 
 export const baseURLforImages = "https://nordwibe.com/";
 
@@ -52,10 +52,10 @@ api.interceptors.response.use(
               headers: {
                 "X-CSRFToken": csrfToken || "",
                 Authorization: `Bearer ${localStorage.getItem(
-                  "refresh_token"
+                  "refresh_token",
                 )}`,
               },
-            }
+            },
           );
 
           const { access_token, refresh_token } = refreshResponse.data;
@@ -84,5 +84,5 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
