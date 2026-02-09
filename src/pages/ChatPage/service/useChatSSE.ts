@@ -20,13 +20,15 @@ export const useChatSSE = () => {
           return;
         }
 
-        // Теперь это будет /api/v2 (через proxy)
-        const baseURL = import.meta.env.VITE_API_URL || "/api/v2";
+        // Для POST инициализации - прямой запрос к API
+        const directApiUrl = "https://nordwibe.com/api/v2";
+        // Для GET SSE - через proxy (same-site)
+        const proxyApiUrl = "/api/v2";
 
         console.log("Initializing SSE connection...");
 
-        // POST запрос для инициализации SSE и получения cookie
-        const initResponse = await fetch(`${baseURL}/alert/sse`, {
+        // POST запрос напрямую к API (не через proxy)
+        const initResponse = await fetch(`${directApiUrl}/alert/sse`, {
           method: "POST",
           headers: {
             Authorization: `Bearer ${token}`,
@@ -34,24 +36,24 @@ export const useChatSSE = () => {
             "Cache-Control": "no-cache",
             Pragma: "no-cache",
           },
-          credentials: "include", // Критически важно для cookies
+          credentials: "include",
         });
 
         if (!initResponse.ok) {
           throw new Error(`Failed to initialize SSE: ${initResponse.status}`);
         }
 
-        console.log("SSE initialized successfully, cookie should be set");
+        console.log("SSE initialized successfully");
 
-        // Небольшая задержка, чтобы убедиться что cookie установлена
         await new Promise((resolve) => setTimeout(resolve, 100));
 
         abortControllerRef.current = new AbortController();
-        const sseUrl = `${baseURL}/alert/sse`;
 
-        console.log("Opening SSE connection...");
+        // GET SSE запрос через proxy (чтобы cookie работала)
+        const sseUrl = `${proxyApiUrl}/alert/sse`;
 
-        // GET запрос для SSE - cookie sse_auth будет автоматически отправлена
+        console.log("Opening SSE connection through proxy...");
+
         await fetchEventSource(sseUrl, {
           method: "GET",
           headers: {
@@ -59,12 +61,12 @@ export const useChatSSE = () => {
             "Cache-Control": "no-cache",
             Pragma: "no-cache",
           },
-          credentials: "include", // Критически важно для отправки cookies
+          credentials: "include",
           signal: abortControllerRef.current.signal,
 
           async onopen(response) {
             if (response.ok) {
-              console.log("✅ SSE connection established successfully");
+              console.log("✅ SSE connection established");
               reconnectAttemptsRef.current = 0;
               return;
             } else if (
@@ -73,8 +75,6 @@ export const useChatSSE = () => {
               response.status !== 429
             ) {
               console.error("❌ SSE client error:", response.status);
-              const text = await response.text();
-              console.error("Error response:", text);
               throw new FatalError(`Client error: ${response.status}`);
             } else {
               console.error("⚠️ SSE server error:", response.status);
@@ -116,7 +116,7 @@ export const useChatSSE = () => {
         });
       } catch (error) {
         if (error instanceof FatalError) {
-          console.error("💀 Fatal SSE error, not reconnecting:", error.message);
+          console.error("💀 Fatal SSE error:", error.message);
         } else {
           console.error("⚠️ SSE connection failed:", error);
         }
