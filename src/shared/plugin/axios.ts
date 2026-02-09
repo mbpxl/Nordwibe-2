@@ -3,7 +3,7 @@ import { getCookie } from "./getCookie";
 import { redirectToLogin } from "./redirectToLogin";
 import { clearUserData } from "./clearUserData";
 
-const baseURL = "/api/v2";
+const baseURL = "https://nordwibe.com/api/v2/";
 
 export const baseURLforImages = "https://nordwibe.com/";
 
