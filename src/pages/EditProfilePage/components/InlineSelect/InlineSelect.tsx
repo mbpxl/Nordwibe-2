@@ -64,13 +64,6 @@ const InlineSelect: React.FC<InlineSelectProps> = React.memo(
       }
     };
 
-    const getSelectedCount = () => {
-      if (multiple && Array.isArray(value)) {
-        return value.length;
-      }
-      return 0;
-    };
-
     return (
       <div className="mt-4">
         <div className="flex justify-between items-center mb-2">
