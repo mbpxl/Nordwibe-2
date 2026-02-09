@@ -9,7 +9,7 @@ const fetchChats = async () => {
   );
 };
 
-export const useGetChats = (companionId: string | null) => {
+export const useGetChats = (companionId?: string | null) => {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["chats", "active", companionId],
     queryFn: fetchChats,
