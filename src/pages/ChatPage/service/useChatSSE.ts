@@ -61,7 +61,7 @@ export const useChatSSE = () => {
           credentials: "include", // Отправит sse_auth cookie
           signal: abortControllerRef.current.signal,
 
-          async onopen(response) {
+          async onopen(response: any) {
             if (response.ok) {
               console.log("✅ SSE connection established");
               reconnectAttemptsRef.current = 0;
@@ -81,13 +81,13 @@ export const useChatSSE = () => {
             }
           },
 
-          onmessage(event) {
+          onmessage(event: any) {
             console.log("📨 SSE message received:", event.data);
             queryClient.invalidateQueries({ queryKey: ["chats"] });
           },
 
-          onerror(error) {
-            console.error("❌ SSE error:", error);
+          onerror(error: any) {
+            console.error("SSE error:", error);
 
             if (error instanceof FatalError) {
               throw error;
