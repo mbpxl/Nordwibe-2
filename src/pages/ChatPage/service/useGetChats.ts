@@ -13,9 +13,7 @@ export const useGetChats = (companionId?: string | null) => {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["chats", "active", companionId],
     queryFn: fetchChats,
-    staleTime: 0,
-    refetchInterval: 5000,
-    refetchIntervalInBackground: false,
+    staleTime: 3600000,
   });
 
   return { data, isLoading, isError, refetch };
