@@ -39,7 +39,7 @@ export const useChatSSE = () => {
           throw new Error(`Failed to initialize SSE: ${initResponse.status}`);
         }
 
-        await new Promise((resolve) => setTimeout(resolve, 100));
+        await new Promise((resolve: any) => setTimeout(resolve, 100));
 
         abortControllerRef.current = new AbortController();
         const sseUrl = `${apiUrl}/alert/sse`;
@@ -54,7 +54,7 @@ export const useChatSSE = () => {
           credentials: "include",
           signal: abortControllerRef.current.signal,
 
-          async onopen(response) {
+          async onopen(response: any) {
             if (response.ok) {
               reconnectAttemptsRef.current = 0;
               return;
@@ -69,11 +69,11 @@ export const useChatSSE = () => {
             }
           },
 
-          onmessage(event) {
+          onmessage() {
             queryClient.invalidateQueries({ queryKey: ["chats"] });
           },
 
-          onerror(error) {
+          onerror(error: any) {
             if (error instanceof FatalError) {
               throw error;
             }
@@ -94,7 +94,7 @@ export const useChatSSE = () => {
 
           openWhenHidden: true,
         });
-      } catch (error) {
+      } catch (error: any) {
         if (!(error instanceof FatalError)) {
           return;
         }
