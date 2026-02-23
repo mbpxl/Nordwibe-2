@@ -1,5 +1,7 @@
 import { lazy } from "react";
 
+// delete ouath route
+
 import {
   BLACK_LIST,
   CHAT_DIALOG,
