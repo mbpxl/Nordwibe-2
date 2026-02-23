@@ -181,11 +181,6 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
             />
 
             <div className="w-full mt-4 px-4">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="flex-1 h-px bg-gray-200" />
-                <span className="text-sm text-gray-400">или войдите через</span>
-                <div className="flex-1 h-px bg-gray-200" />
-              </div>
               <OAuthButtons />
             </div>
           </div>
