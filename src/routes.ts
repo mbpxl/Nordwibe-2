@@ -33,7 +33,6 @@ import ErrorPage from "./shared/Components/ErrorPage/ErrorPage";
 import PrivacyPage from "./pages/PrivacyPage/PrivacyPage";
 import TestWrapper from "./pages/TestPage/TestWrapper";
 import QuizWrapper from "./pages/QuizPage/QuizWrapper";
-import OAuthCallback from "./pages/AuthPage/Components/OAuth2/OAuthCallback";
 
 // где lazy() - ленивая подгрузка. То есть компонента булет загружена в момент перехода, а не в момент запуска приложения
 
@@ -45,10 +44,6 @@ export const routes = [
   {
     path: WELCOME_ROUTE,
     Component: WelcomePage,
-  },
-  {
-    path: OAUTH_CALLBACK,
-    Component: OAuthCallback,
   },
   {
     path: SIGN_UP_ROUTE,
@@ -85,7 +80,7 @@ export const routes = [
   {
     path: USER_PROFILE_ROUTE,
     Component: lazy(
-      () => import("./pages/ProfilePage/UserProfilePage/UserProfilePage")
+      () => import("./pages/ProfilePage/UserProfilePage/UserProfilePage"),
     ),
   },
   {

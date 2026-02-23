@@ -13,7 +13,7 @@ import UserAgreement from "../UserAgreement/UserAgreement";
 import { WELCOME_ROUTE } from "../../../../shared/utils/consts";
 import WrongData from "../PhoneErrorMsg/PhoneErrorMsg";
 import { clearAuthUserData } from "../../../../shared/plugin/clearUserData";
-import OAuthButtons from "../OAuth2/OAuthButtons";
+import { OAuthButtons } from "../OAuth2/OAuthButtons";
 
 type Props = StepPropsTypes<"phone">;
 
@@ -29,7 +29,7 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
   const { formatPhone, handleInputChange } = usePhoneFormatter();
   const handleKeyDown = useCallback(
     useBackspacePhoneFix(inputRef, phone, formatPhone),
-    []
+    [],
   );
 
   const { data: captchaPublicToken } = useGetCaptchaToken();
@@ -131,7 +131,6 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
               </h1>
             </div>
 
-            {/* === Поле ввода === */}
             <form
               className="mt-4 w-[308px] mx-auto"
               onSubmit={(e) => {
@@ -158,7 +157,6 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
               </div>
             </form>
 
-            {/* === Капча === */}
             <div className="w-full flex justify-center mt-2 lg:mt-2">
               <div className="lg:p-4 lg:border lg:border-gray-200 lg:rounded-xl lg:shadow-sm lg:bg-gray-50">
                 <SmartCaptcha
@@ -182,13 +180,16 @@ const PhoneStep: React.FC<Props> = ({ formData, updateForm, onNext }) => {
               message="Неправильный формат номера телефона!"
             />
 
-            {/* === OAuth кнопки === */}
-            <div className="w-full">
+            <div className="w-full mt-4 px-4">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="flex-1 h-px bg-gray-200" />
+                <span className="text-sm text-gray-400">или войдите через</span>
+                <div className="flex-1 h-px bg-gray-200" />
+              </div>
               <OAuthButtons />
             </div>
           </div>
 
-          {/* === Второй блок - кнопка "Получить код" и UserAgreement === */}
           <div className="w-full flex flex-col items-center pb-[6.8vh] lg:pb-0">
             <div className="w-full mt-2 lg:mt-2">
               <Continue
