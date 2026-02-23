@@ -10,7 +10,8 @@ export const useBlockedUsers = () => {
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["blocked-users"],
     queryFn: fetchBlockedUsers,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 30 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
   });
 
   return {
