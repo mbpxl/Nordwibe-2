@@ -5,10 +5,13 @@ import { hideNavBarRoutes } from "./shared/utils/consts";
 import CookieConsent from "react-cookie-consent";
 import { Toaster } from "react-hot-toast";
 import { useIsDesktop } from "./shared/hooks/useIsDesktop";
+import { useOAuthCallback } from "./pages/AuthPage/service/useOAuthCallback";
 
 function AppContent() {
   const isDesktop = useIsDesktop();
   const location = useLocation();
+
+  useOAuthCallback();
 
   const shouldHideNavBar =
     hideNavBarRoutes.includes(location.pathname) ||
