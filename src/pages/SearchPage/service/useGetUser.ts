@@ -10,10 +10,14 @@ const fetchUser = async (ids: string[]) => {
 };
 
 export const useGetUser = (ids: string[]) => {
+  const sortedIds = [...ids].sort();
+  const idsKey = sortedIds.join(",");
+
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["user", ids],
-    queryFn: () => fetchUser(ids),
+    queryKey: ["user", idsKey],
+    queryFn: () => fetchUser(sortedIds),
     staleTime: 5 * 60 * 1000,
+    gcTime: 15 * 60 * 1000,
     enabled: ids.length > 0,
   });
 

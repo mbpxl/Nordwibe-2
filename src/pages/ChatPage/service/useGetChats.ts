@@ -14,6 +14,7 @@ export const useGetChats = (companionId?: string | null) => {
     queryKey: ["chats", "active", companionId],
     queryFn: fetchChats,
     staleTime: 3600000,
+    gcTime: 2 * 3600000,
   });
 
   return { data, isLoading, isError, refetch };
