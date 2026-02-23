@@ -1,7 +1,8 @@
 import React from "react";
-import { Check, X } from "lucide-react";
+import { Check, X, ClipboardList } from "lucide-react";
 import { useCompatibilityDetails } from "../../../../shared/hooks/useCompatibilityDetails";
 import { setCompatibilityStyle } from "../../../SearchPage/utils/setCompatibilityStyle";
+import { useNavigate } from "react-router-dom";
 
 interface CompatibilityDetailsModalProps {
   companionId: string;
@@ -30,6 +31,7 @@ export const CompatibilityDetailsModal: React.FC<
   CompatibilityDetailsModalProps
 > = ({ companionId, overallPercentage }) => {
   const { data, isLoading, isError } = useCompatibilityDetails(companionId);
+  const navigate = useNavigate();
 
   if (isLoading) {
     return (
@@ -55,13 +57,35 @@ export const CompatibilityDetailsModal: React.FC<
   const similarTraits = data.topSimilar || [];
   const differentTraits = data.topDifferent || [];
 
+  if (similarTraits.length === 0 && differentTraits.length === 0) {
+    return (
+      <div className="p-6 flex flex-col items-center text-center gap-4">
+        <ClipboardList className="h-12 w-12 text-purple-main opacity-60" />
+        <div>
+          <h3 className="text-lg font-semibold text-black-heading">
+            Статистика недоступна
+          </h3>
+          <p className="mt-1 text-gray-500 text-sm">
+            Пройдите тест на совместимость, чтобы увидеть сходства и различия
+          </p>
+        </div>
+        <button
+          onClick={() => navigate("/test/cfd48889-06ca-4edf-832e-248b7ed534b2")}
+          className="mt-2 w-full py-3 px-4 rounded-xl bg-purple-main text-white font-medium hover:opacity-90 transition-opacity"
+        >
+          Пройти тест
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-[352px] mx-auto lg:max-w-none lg:w-[480px] max-h-[70vh] lg:max-h-[80vh] flex flex-col">
       <div className="flex justify-center items-center gap-3 text-center mb-6">
         <h3 className="text-xl font-bold">Совместимость:</h3>
         <h3
           className={`rounded-[12px] mt-0.5 py-1 px-2 lg:py-2 lg:px-3 lg:text-nowrap text-white ${setCompatibilityStyle(
-            overallPercentage
+            overallPercentage,
           )}`}
         >
           {overallPercentage}%
