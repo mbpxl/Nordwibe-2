@@ -1,12 +1,13 @@
 import { lazy } from "react";
 
+// delete ouath route
+
 import {
   BLACK_LIST,
   CHAT_DIALOG,
   CHAT_ROUTE,
   MAIN_ROUTE,
   MY_PROFILE_ROUTE,
-  OAUTH_CALLBACK,
   PRIVACY_ROUTE,
   PROFILE_EDIT_ROUTE,
   QUIZ_PASSING_ROUTE,
