@@ -6,29 +6,20 @@ import TopicHeader from "../../shared/Components/TopicHeader/TopicHeader";
 import Wrapper from "../../shared/Components/Wrapper/Wrapper";
 import { useBlockedUsers } from "../ProfilePage/service/useBlockedUsers";
 import SearchPeopleItem from "../SearchPage/Components/SearhPeople/SearchPeopleItem/SearchPeopleItem";
-import { useRanking } from "../SearchPage/service/useRanking";
 
 const BlackListPage = () => {
-  const {
-    data: ranking,
-    isLoading: rankingLoading,
-    isError: rankingError,
-  } = useRanking();
-
   const { blockedUsers, isLoading, isError } = useBlockedUsers();
 
-  const usersMap = new Map(blockedUsers.map((u) => [u.id, u]));
-
-  if (rankingLoading || isLoading) {
+  if (isLoading) {
     return <Loading />;
   }
 
-  if (rankingError || isError) {
+  if (isError) {
     return <Error />;
   }
 
-  if (!ranking?.length || !blockedUsers?.length) {
-    return <NoResults message={"Заблокированных пользователей нет"}/>;
+  if (!blockedUsers.length) {
+    return <NoResults message={"Заблокированных пользователей нет"} />;
   }
 
   return (
@@ -39,18 +30,17 @@ const BlackListPage = () => {
       </TopicHeader>
 
       <Wrapper className={"bg-purple-background-wrap min-h-screen pt-1 pb-16"}>
-        {ranking.map((r) => {
-          const user = usersMap.get(r.user_id);
-          if (!user) return null;
-          return (
-            <SearchPeopleItem
-              key={r.user_id}
-              user={user}
-              compatibility={r.score}
-              isBlocked={true}
-            />
-          );
-        })}
+        <div className="flex flex-col items-center gap-2 w-full max-w-[600px] mx-auto">
+          {blockedUsers.map((user) => (
+            <div key={user.id} className="w-full">
+              <SearchPeopleItem
+                user={user}
+                compatibility={0}
+                isBlocked={true}
+              />
+            </div>
+          ))}
+        </div>
       </Wrapper>
     </>
   );
