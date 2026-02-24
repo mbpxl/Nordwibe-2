@@ -8,7 +8,6 @@ import SupportChat from "../SupportChat/SupportChat";
 import ChatItem from "../ChatItem/ChatItem";
 import { useGetMe } from "../../../../ProfilePage/service/useGetMe";
 import search from "/icons/search.svg";
-import { useChatSSE } from "../../../service/useChatSSE";
 
 type ChatMsg = {
   id: string;
@@ -25,9 +24,6 @@ interface ChatListProps {
 }
 
 const ChatList = ({ isDesktop = false }: ChatListProps) => {
-  // Инициализируем SSE соединение
-  useChatSSE();
-
   const { data: meData, isLoading: isMeLoading } = useGetMe();
   const currentUserId = meData?.id;
 
