@@ -47,13 +47,16 @@ const PrivateSettingsList: React.FC = () => {
           // откатываем локально к предыдущему значению
           setLocal((s) => ({ ...s, [field]: prev }));
         },
-      }
+      },
     );
   };
 
   return (
     <div className="bg-white rounded-2xl shadow p-4">
       <h2 className="text-lg font-semibold mb-3">Настройки приватности</h2>
+      <h3 className="text-[1rem] font-semibold mb-3">
+        Включите, если хотите скрыть это
+      </h3>
       {Object.entries(SETTINGS_LABELS).map(([key, label]) => {
         const k = key as keyof PrivateSettingsTypes;
         const value = local[k] ?? false; // default false if not set
