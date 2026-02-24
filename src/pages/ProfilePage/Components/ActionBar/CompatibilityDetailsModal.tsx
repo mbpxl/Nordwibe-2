@@ -1,13 +1,16 @@
 import React from "react";
-import { Check, X, ClipboardList } from "lucide-react";
+import { Check, X, ClipboardList, UserX } from "lucide-react";
 import { useCompatibilityDetails } from "../../../../shared/hooks/useCompatibilityDetails";
 import { setCompatibilityStyle } from "../../../SearchPage/utils/setCompatibilityStyle";
 import { useNavigate } from "react-router-dom";
+import { useCompletedTests } from "../../hooks/useCompletedTests";
 
 interface CompatibilityDetailsModalProps {
   companionId: string;
   overallPercentage: number;
 }
+
+const COMPATIBILITY_TEST_ID = "cfd48889-06ca-4edf-832e-248b7ed534b2";
 
 const questionTitles: Record<string, string> = {
   "96fbbc71-3796-4a8e-85dc-13c9df6e68af": "Обсуждение бытовых вопросов",
@@ -31,9 +34,11 @@ export const CompatibilityDetailsModal: React.FC<
   CompatibilityDetailsModalProps
 > = ({ companionId, overallPercentage }) => {
   const { data, isLoading, isError } = useCompatibilityDetails(companionId);
+  const { data: completedTests, isLoading: isLoadingTests } =
+    useCompletedTests();
   const navigate = useNavigate();
 
-  if (isLoading) {
+  if (isLoading || isLoadingTests) {
     return (
       <div className="p-6 text-center">
         <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-purple-main border-r-transparent"></div>
@@ -58,6 +63,27 @@ export const CompatibilityDetailsModal: React.FC<
   const differentTraits = data.topDifferent || [];
 
   if (similarTraits.length === 0 && differentTraits.length === 0) {
+    const hasCompletedTest = completedTests?.some(
+      (test: any) => test.uuid === COMPATIBILITY_TEST_ID,
+    );
+
+    if (hasCompletedTest) {
+      return (
+        <div className="p-6 flex flex-col items-center text-center gap-4">
+          <UserX className="h-12 w-12 text-purple-main opacity-60" />
+          <div>
+            <h3 className="text-lg font-semibold text-black-heading">
+              Пользователь не прошёл тест
+            </h3>
+            <p className="mt-1 text-gray-500 text-sm">
+              Как только он пройдёт тест на совместимость, здесь появится
+              статистика
+            </p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="p-6 flex flex-col items-center text-center gap-4">
         <ClipboardList className="h-12 w-12 text-purple-main opacity-60" />
@@ -70,7 +96,7 @@ export const CompatibilityDetailsModal: React.FC<
           </p>
         </div>
         <button
-          onClick={() => navigate("/test/cfd48889-06ca-4edf-832e-248b7ed534b2")}
+          onClick={() => navigate("/quiz/test")}
           className="mt-2 w-full py-3 px-4 rounded-xl bg-purple-main text-white font-medium hover:opacity-90 transition-opacity"
         >
           Пройти тест
