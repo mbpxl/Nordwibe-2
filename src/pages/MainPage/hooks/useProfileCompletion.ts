@@ -17,7 +17,7 @@ interface UserProfile {
   ready_for_smalltalk: boolean;
   id: string;
   status: string;
-  age: number;
+  birth_date: any;
   city_name: string;
   hometown_name: string;
   hashtags_list: string[];
@@ -35,7 +35,7 @@ const REQUIRED_FIELDS: (keyof UserProfile)[] = [
   "smoking_status",
   "pets",
   "about",
-  "age",
+  "birth_date",
   "hometown_name",
   "hashtags_list",
   "avatar_url",
@@ -62,14 +62,20 @@ export const useProfileCompletion = () => {
         case "pets":
         case "about":
         case "hometown_name":
+        case "avatar_url":
           if (typeof value === "string" && value.trim().length > 0) {
             filledFields++;
           }
           break;
 
         case "max_budget":
-        case "age":
           if (typeof value === "number" && value > 0) {
+            filledFields++;
+          }
+          break;
+
+        case "birth_date":
+          if (typeof value === "string" && value.length > 0) {
             filledFields++;
           }
           break;
@@ -79,20 +85,11 @@ export const useProfileCompletion = () => {
             filledFields++;
           }
           break;
-
-        case "avatar_url":
-          if (typeof value === "string" && value.trim().length > 0) {
-            filledFields++;
-          }
-          break;
-
-        default:
-          break;
       }
     });
 
     const percentage = Math.round(
-      (filledFields / REQUIRED_FIELDS.length) * 100
+      (filledFields / REQUIRED_FIELDS.length) * 100,
     );
     return percentage;
   }, [user, isLoading, isError]);
