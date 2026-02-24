@@ -6,12 +6,14 @@ import CookieConsent from "react-cookie-consent";
 import { Toaster } from "react-hot-toast";
 import { useIsDesktop } from "./shared/hooks/useIsDesktop";
 import { useOAuthCallback } from "./pages/AuthPage/service/useOAuthCallback";
+import { useChatSSE } from "./pages/ChatPage/service/useChatSSE";
 
 function AppContent() {
   const isDesktop = useIsDesktop();
   const location = useLocation();
 
   useOAuthCallback();
+  useChatSSE();
 
   const shouldHideNavBar =
     hideNavBarRoutes.includes(location.pathname) ||
