@@ -142,15 +142,6 @@ const Filter: React.FC<FilterProps> = ({
           </TopicHeader>
 
           <div className="space-y-6">
-            <InlineSelect
-              title="Пол"
-              options={["Мужской", "Женский"]}
-              value={filters.sex}
-              onChange={(value) =>
-                setFilters((prev) => ({ ...prev, sex: value }))
-              }
-            />
-
             <div className="mt-4">
               <h1 className="text-[0.875rem] font-semibold leading-[0.75rem] mb-2">
                 Возраст
@@ -240,15 +231,6 @@ const Filter: React.FC<FilterProps> = ({
           <h2 className="text-xl font-semibold mb-6 text-gray-800">Фильтры</h2>
 
           <div className="space-y-6">
-            <InlineSelect
-              title="Пол"
-              options={["Мужской", "Женский"]}
-              value={filters.sex}
-              onChange={(value) =>
-                setFilters((prev) => ({ ...prev, sex: value }))
-              }
-            />
-
             <div className="mt-4">
               <h1 className="text-base font-semibold mb-3 text-gray-700">
                 Возраст
